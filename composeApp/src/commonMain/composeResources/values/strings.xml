@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="app_name">CatanTimer</string>
+
+
+
+
+
+    <!-- Remote Errors -->
+    <string name="error_bad_request">Invalid request. Please try again.</string>
+    <string name="error_request_timeout">The request timed out. Please check your connection.</string>
+    <string name="error_unauthorized">You are not authorized to perform this action.</string>
+    <string name="error_forbidden">Access denied.</string>
+    <string name="error_not_found">The requested resource was not found.</string>
+    <string name="error_conflict">A conflict occurred. Please update your data and try again.</string>
+    <string name="error_too_many_requests">Too many requests. Please wait a moment and try again.</string>
+    <string name="error_no_internet">No internet connection.</string>
+    <string name="error_server">A server error occurred. Please try again later.</string>
+
+    <!-- Local Errors -->
+    <string name="error_disk_full">Not enough storage space on device.</string>
+    <string name="error_local_not_found">The requested item could not be found locally.</string>
+
+    <!-- Fallback -->
+    <string name="error_unknown">An unknown error occurred.</string>
+</resources>
