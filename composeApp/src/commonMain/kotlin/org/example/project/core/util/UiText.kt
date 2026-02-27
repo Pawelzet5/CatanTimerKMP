@@ -1,4 +1,4 @@
-package org.example.pantrywisecmp.core.domain.util
+package org.example.project.core.util
 
 import androidx.compose.runtime.Composable
 import org.jetbrains.compose.resources.StringResource

@@ -1,20 +1,20 @@
 package org.example.project.core.presentation
 
-import org.example.pantrywisecmp.core.domain.util.DataError
-import org.example.pantrywisecmp.core.domain.util.UiText
-import pantrywisecmp.composeapp.generated.resources.Res
-import pantrywisecmp.composeapp.generated.resources.error_bad_request
-import pantrywisecmp.composeapp.generated.resources.error_conflict
-import pantrywisecmp.composeapp.generated.resources.error_disk_full
-import pantrywisecmp.composeapp.generated.resources.error_forbidden
-import pantrywisecmp.composeapp.generated.resources.error_local_not_found
-import pantrywisecmp.composeapp.generated.resources.error_no_internet
-import pantrywisecmp.composeapp.generated.resources.error_not_found
-import pantrywisecmp.composeapp.generated.resources.error_request_timeout
-import pantrywisecmp.composeapp.generated.resources.error_server
-import pantrywisecmp.composeapp.generated.resources.error_too_many_requests
-import pantrywisecmp.composeapp.generated.resources.error_unauthorized
-import pantrywisecmp.composeapp.generated.resources.error_unknown
+import catantimer.composeapp.generated.resources.Res
+import org.example.project.core.util.DataError
+import org.example.project.core.util.UiText
+import catantimer.composeapp.generated.resources.error_bad_request
+import catantimer.composeapp.generated.resources.error_conflict
+import catantimer.composeapp.generated.resources.error_disk_full
+import catantimer.composeapp.generated.resources.error_forbidden
+import catantimer.composeapp.generated.resources.error_local_not_found
+import catantimer.composeapp.generated.resources.error_no_internet
+import catantimer.composeapp.generated.resources.error_not_found
+import catantimer.composeapp.generated.resources.error_request_timeout
+import catantimer.composeapp.generated.resources.error_server
+import catantimer.composeapp.generated.resources.error_too_many_requests
+import catantimer.composeapp.generated.resources.error_unauthorized
+import catantimer.composeapp.generated.resources.error_unknown
 
 
 fun DataError.toErrorMessage(): UiText {

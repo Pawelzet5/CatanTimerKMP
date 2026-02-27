@@ -1,4 +1,4 @@
-package org.example.pantrywisecmp.core.domain.util
+package org.example.project.core.util
 
 sealed interface DataError : Error {
     enum class Remote : DataError {

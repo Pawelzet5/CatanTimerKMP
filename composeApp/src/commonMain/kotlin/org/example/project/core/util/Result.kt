@@ -1,4 +1,4 @@
-package org.example.pantrywisecmp.core.domain.util
+package org.example.project.core.util
 
 sealed interface Result<out D, out E : Error> {
     data class Success<out D>(val data: D): Result<D, Nothing>

@@ -1,3 +1,3 @@
-package org.example.pantrywisecmp.core.domain.util
+package org.example.project.core.util
 
 interface Error
