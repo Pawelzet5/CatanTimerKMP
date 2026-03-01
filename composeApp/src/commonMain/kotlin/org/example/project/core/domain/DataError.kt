@@ -1,4 +1,4 @@
-package org.example.project.core.util
+package org.example.project.core.domain
 
 sealed interface DataError : Error {
     enum class Remote : DataError {

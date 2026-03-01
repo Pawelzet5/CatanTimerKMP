@@ -1,7 +1,7 @@
 package org.example.project.core.presentation
 
 import catantimer.composeapp.generated.resources.Res
-import org.example.project.core.util.DataError
+import org.example.project.core.domain.DataError
 import org.example.project.core.util.UiText
 import catantimer.composeapp.generated.resources.error_bad_request
 import catantimer.composeapp.generated.resources.error_conflict
