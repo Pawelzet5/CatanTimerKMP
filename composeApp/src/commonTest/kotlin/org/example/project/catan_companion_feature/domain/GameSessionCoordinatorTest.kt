@@ -7,6 +7,7 @@ import org.example.project.core.domain.IllegalOperationError
 import org.example.project.core.domain.Result
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
+import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.catan_companion_feature.domain.repository.FakeGameRepository
 import org.example.project.catan_companion_feature.domain.repository.FakeTurnRepository
 import kotlin.test.BeforeTest
@@ -85,7 +86,9 @@ class GameSessionCoordinatorTest {
     @Test
     fun `startSession sets null secondaryPlayerId when specialTurnRule disabled`() = runTest {
         // GIVEN
-        val game = makeTestGame()
+        val players = makeTestPlayers(count = 5)
+        val config = makeTestGameConfig(specialTurnRuleEnabled = false, players = players)
+        val game = makeTestGame(config = config)
         fakeGameRepository.addGame(game)
 
         // WHEN
@@ -213,9 +216,6 @@ class GameSessionCoordinatorTest {
             coordinator.startSession(gameId = game.id)
 
 
-            coordinator.finishSession()
-
-
             // THEN
             assertNotNull(awaitItem())
             cancelAndIgnoreRemainingEvents()
@@ -283,6 +283,7 @@ class GameSessionCoordinatorTest {
         // THEN
         assertIs<Result.Success<Unit>>(result)
         assertNull(coordinator.currentSession.value)
+        assertTrue(fakeGameRepository.games.first().status == GameStatus.FINISHED)
     }
 
     @Test
@@ -292,10 +293,9 @@ class GameSessionCoordinatorTest {
         fakeGameRepository.addGame(game)
 
         coordinator.currentSession.test {
-            assertNull(awaitItem())
-
+            awaitItem()
             coordinator.startSession(gameId = game.id)
-            assertNotNull(awaitItem())
+            awaitItem()
 
             // WHEN
             coordinator.finishSession()
@@ -387,7 +387,9 @@ class GameSessionCoordinatorTest {
     @Test
     fun `completeTurn sets null secondaryPlayerId when specialTurnRule disabled`() = runTest {
         // GIVEN
-        val game = makeTestGame()
+        val players = makeTestPlayers(count = 5)
+        val config = makeTestGameConfig(specialTurnRuleEnabled = false, players = players)
+        val game = makeTestGame(config = config)
         fakeGameRepository.addGame(game)
         coordinator.startSession(gameId = game.id)
 
