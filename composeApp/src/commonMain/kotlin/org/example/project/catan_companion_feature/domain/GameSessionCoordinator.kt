@@ -1,12 +1,12 @@
 package org.example.project.catan_companion_feature.domain
 
-import org.example.project.core.util.DataError
-import org.example.project.core.util.EmptyResult
-import org.example.project.core.util.Error
-import org.example.project.core.util.IllegalOperationError
-import org.example.project.core.util.Result
-import org.example.project.core.util.onFailure
-import org.example.project.core.util.onSuccess
+import org.example.project.core.domain.DataError
+import org.example.project.core.domain.EmptyResult
+import org.example.project.core.domain.Error
+import org.example.project.core.domain.IllegalOperationError
+import org.example.project.core.domain.Result
+import org.example.project.core.domain.onFailure
+import org.example.project.core.domain.onSuccess
 import org.example.project.catan_companion_feature.domain.dataclass.GameSession
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.factory.TurnFactory

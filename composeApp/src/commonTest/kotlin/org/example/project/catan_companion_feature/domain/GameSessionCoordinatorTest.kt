@@ -2,9 +2,9 @@ package org.example.project.catan_companion_feature.domain
 
 import app.cash.turbine.test
 import kotlinx.coroutines.test.runTest
-import org.example.project.core.util.DataError
-import org.example.project.core.util.IllegalOperationError
-import org.example.project.core.util.Result
+import org.example.project.core.domain.DataError
+import org.example.project.core.domain.IllegalOperationError
+import org.example.project.core.domain.Result
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.FakeGameRepository

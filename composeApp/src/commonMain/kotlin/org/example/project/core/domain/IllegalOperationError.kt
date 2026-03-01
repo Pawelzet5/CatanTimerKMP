@@ -1,3 +1,3 @@
-package org.example.project.core.util
+package org.example.project.core.domain
 
 data object IllegalOperationError: Error

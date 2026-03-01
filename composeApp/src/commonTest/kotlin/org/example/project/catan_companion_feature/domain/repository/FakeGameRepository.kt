@@ -1,8 +1,8 @@
 package org.example.project.catan_companion_feature.domain.repository
 
-import org.example.project.core.util.DataError
-import org.example.project.core.util.EmptyResult
-import org.example.project.core.util.Result
+import org.example.project.core.domain.DataError
+import org.example.project.core.domain.EmptyResult
+import org.example.project.core.domain.Result
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.GameConfig
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
