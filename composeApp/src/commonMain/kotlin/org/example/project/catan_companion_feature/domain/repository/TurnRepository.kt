@@ -8,6 +8,5 @@ import org.example.project.core.util.EmptyResult
 interface TurnRepository {
     suspend fun addTurn(turn: Turn): Result<Long, DataError.Local>
     suspend fun updateTurn(turn: Turn): EmptyResult<DataError.Local>
-    suspend fun getLastTurn(gameId: Long): Result<Turn, DataError.Local>
     suspend fun getTurnsForGame(gameId: Long): Result<List<Turn>, DataError.Local>
 }

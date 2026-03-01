@@ -6,7 +6,6 @@ import org.example.project.core.util.Result
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.GameConfig
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
 
 class FakeGameRepository : GameRepository {
 
@@ -23,16 +22,6 @@ class FakeGameRepository : GameRepository {
 
     fun addGame(game: Game) {
         _games[game.id] = game
-    }
-
-    fun clear() {
-        _games.clear()
-        shouldFailOnGetGame = false
-        shouldFailOnGetActiveGame = false
-        shouldFailOnGetGames = false
-        shouldFailOnAddGame = false
-        shouldFailOnFinishGame = false
-        nextId = 1L
     }
 
     override suspend fun addGame(config: GameConfig): Result<Long, DataError.Local> {

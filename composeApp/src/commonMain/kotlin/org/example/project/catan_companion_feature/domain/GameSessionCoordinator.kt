@@ -61,6 +61,7 @@ class GameSessionCoordinator(
         _currentSession.update {
             GameSession(
                 game = game,
+                latestTurn = currentTurn,
                 selectedTurn = currentTurn,
                 recentTurns = recentTurns
             )
@@ -94,9 +95,7 @@ class GameSessionCoordinator(
             return Result.Failure(IllegalOperationError)
         }
 
-        val activeTurn = turnRepository.getLastTurn(session.game.id)
-            .onFailure { return Result.Failure(it) }
-            .let { (it as Result.Success).data }
+        val activeTurn = session.latestTurn
 
         val completedTurn = activeTurn.copy(durationMillis = durationMillis)
         turnRepository.updateTurn(completedTurn)
@@ -113,6 +112,7 @@ class GameSessionCoordinator(
 
         _currentSession.update {
             session.copy(
+                latestTurn = nextTurnWithId,
                 selectedTurn = nextTurnWithId,
                 recentTurns = updatedRecentTurns
             )
@@ -137,15 +137,11 @@ class GameSessionCoordinator(
      * Restores selectedTurn to the currently active turn (last turn in db).
      * Used when user navigates back to the current turn from history.
      */
-    suspend fun selectActiveTurn(): EmptyResult<DataError.Local> {
+    fun selectActiveTurn(): EmptyResult<DataError.Local> {
         val session = _currentSession.value
             ?: return Result.Failure(DataError.Local.NOT_FOUND)
 
-        val activeTurn = turnRepository.getLastTurn(session.game.id)
-            .onFailure { return Result.Failure(it) }
-            .let { (it as Result.Success).data }
-
-        _currentSession.update { it?.copy(selectedTurn = activeTurn) }
+        _currentSession.update { it?.copy(selectedTurn = session.latestTurn) }
         return Result.Success(Unit)
     }
 

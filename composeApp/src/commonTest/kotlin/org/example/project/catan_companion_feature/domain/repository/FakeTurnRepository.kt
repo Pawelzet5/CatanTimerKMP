@@ -12,7 +12,6 @@ class FakeTurnRepository : TurnRepository {
 
     var shouldFailOnAdd = false
     var shouldFailOnUpdate = false
-    var shouldFailOnGetLast = false
     var shouldFailOnGetAll = false
 
     private var nextId = 1L
@@ -25,15 +24,6 @@ class FakeTurnRepository : TurnRepository {
         _turns.addAll(turns)
         // keep nextId ahead of any manually inserted ids to avoid collisions
         nextId = (_turns.maxOfOrNull { it.id } ?: 0L) + 1L
-    }
-
-    fun clear() {
-        _turns.clear()
-        nextId = 1L
-        shouldFailOnAdd = false
-        shouldFailOnUpdate = false
-        shouldFailOnGetLast = false
-        shouldFailOnGetAll = false
     }
 
     override suspend fun addTurn(turn: Turn): Result<Long, DataError.Local> {
@@ -50,14 +40,6 @@ class FakeTurnRepository : TurnRepository {
         _turns[index] = turn
         return Result.Success(Unit)
     }
-
-    override suspend fun getLastTurn(gameId: Long): Result<Turn, DataError.Local> {
-        if (shouldFailOnGetLast) return Result.Failure(DataError.Local.UNKNOWN)
-        return _turns.lastOrNull()
-            ?.let { Result.Success(it) }
-            ?: Result.Failure(DataError.Local.NOT_FOUND)
-    }
-
     override suspend fun getTurnsForGame(gameId: Long): Result<List<Turn>, DataError.Local> {
         if (shouldFailOnGetAll) return Result.Failure(DataError.Local.UNKNOWN)
         return Result.Success(_turns.toList())

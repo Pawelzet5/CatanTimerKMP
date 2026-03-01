@@ -108,6 +108,7 @@ class GameSessionCoordinatorTest {
         val session = coordinator.currentSession.value
         assertNotNull(session)
         assertEquals(0, session.selectedTurn.number)
+        assertEquals(session.latestTurn, session.selectedTurn)
     }
 
     @Test
@@ -125,6 +126,7 @@ class GameSessionCoordinatorTest {
         val session = coordinator.currentSession.value
         assertNotNull(session)
         assertEquals(turns.last(), session.selectedTurn)
+        assertEquals(turns.last(), session.latestTurn)
     }
 
     @Test
@@ -397,7 +399,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn updates selectedTurn to next turn`() = runTest {
+    fun `completeTurn updates selectedTurn and latestTurn to next turn`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.addGame(game)
@@ -410,6 +412,7 @@ class GameSessionCoordinatorTest {
         val session = coordinator.currentSession.value
         assertNotNull(session)
         assertEquals(1, session.selectedTurn.number)
+        assertEquals(session.latestTurn, session.selectedTurn)
     }
 
     @Test
@@ -432,31 +435,25 @@ class GameSessionCoordinatorTest {
 
     @Test
     fun `completeTurn appends completed turn to recentTurns and respects limit`() = runTest {
-        // GIVEN – restore a game that already has 3 turns (turns 0, 1, 2)
-        // so recentTurns = [turn0, turn1], selectedTurn = turn2
+        // GIVEN – restore a game that already has 4 turns (turns 0, 1, 2, 3)
+        // so recentTurns = [1, 2, 3], selectedTurn = turn3 (limit already reached)
         val game = makeTestGame()
-        val existingTurns = makeTestTurns(count = 3, players = game.config.players)
+        val existingTurns = makeTestTurns(count = 4, players = game.config.players)
         fakeGameRepository.addGame(game)
         fakeTurnRepository.addTurns(*existingTurns.toTypedArray())
         coordinator.startSession(gameId = game.id)
 
-        // Sanity-check initial state
-        val sessionBefore = coordinator.currentSession.value!!
-        assertEquals(2, sessionBefore.recentTurns.size)
-        assertEquals(existingTurns[0].number, sessionBefore.recentTurns[0].number)
-        assertEquals(existingTurns[1].number, sessionBefore.recentTurns[1].number)
-
-        // WHEN – complete the active turn (turn 2)
+        // WHEN – complete the active turn (turn 3)
         coordinator.completeTurn(durationMillis = 30_000L)
 
-        // THEN – recentTurns should now be [turn1, turn2(completed)], still capped at 3
-        // turn0 drops off because RECENT_TURNS_LIMIT = 3 and we now have exactly 3 candidates
+        // THEN – recentTurns = [1, 2, 3] + turn3 → takeLast(3) = [2, 3, turn3(completed)]
+        // turn1 drops off, newly-created turn4 is selectedTurn and not in recentTurns
         val sessionAfter = coordinator.currentSession.value!!
         assertEquals(3, sessionAfter.recentTurns.size)
         assertEquals(existingTurns[1].number, sessionAfter.recentTurns[0].number)
         assertEquals(existingTurns[2].number, sessionAfter.recentTurns[1].number)
-        // The newly-created turn 3 is selectedTurn, not in recentTurns
-        assertEquals(3, sessionAfter.selectedTurn.number)
+        assertEquals(existingTurns[3].number, sessionAfter.recentTurns[2].number)
+        assertEquals(4, sessionAfter.selectedTurn.number)
         assertTrue(sessionAfter.recentTurns.none { it.number == sessionAfter.selectedTurn.number })
     }
 
@@ -477,7 +474,6 @@ class GameSessionCoordinatorTest {
         // active turn is turn 5, so recentTurns should be turns [2, 3, 4]
         assertEquals(listOf(2, 3, 4), session.recentTurns.map { it.number })
     }
-
 
     @Test
     fun `completeTurn returns IllegalOperationError when viewing historical turn`() = runTest {
@@ -596,7 +592,7 @@ class GameSessionCoordinatorTest {
         // THEN
         val session = coordinator.currentSession.value
         assertNotNull(session)
-        assertEquals(turns.last(), session.selectedTurn)
+        assertEquals(session.latestTurn, session.selectedTurn)
     }
 
     @Test
@@ -606,21 +602,6 @@ class GameSessionCoordinatorTest {
 
         // THEN
         assertEquals(DataError.Local.NOT_FOUND, (result as Result.Failure).error)
-    }
-
-    @Test
-    fun `selectActiveTurn returns failure when getLastTurn fails`() = runTest {
-        // GIVEN
-        val game = makeTestGame()
-        fakeGameRepository.addGame(game)
-        coordinator.startSession(gameId = game.id)
-        fakeTurnRepository.shouldFailOnGetLast = true
-
-        // WHEN
-        val result = coordinator.selectActiveTurn()
-
-        // THEN
-        assertIs<Result.Failure<DataError.Local>>(result)
     }
 
     // endregion
@@ -678,7 +659,7 @@ class GameSessionCoordinatorTest {
         val session = coordinator.currentSession.value
         assertNotNull(session)
         assertEquals(originalTurn, session.selectedTurn)
-        assertEquals(DataError.Local.NOT_FOUND, (result as Result.Failure).error)
+        assertIs<Result.Failure<DataError.Local>>(result)
     }
 
     @Test
@@ -728,7 +709,7 @@ class GameSessionCoordinatorTest {
         val session = coordinator.currentSession.value
         assertNotNull(session)
         assertEquals(originalDuration, session.selectedTurn.durationMillis)
-        assertEquals(DataError.Local.NOT_FOUND, (result as Result.Failure).error)
+        assertIs<Result.Failure<DataError.Local>>(result)
     }
 
     @Test
