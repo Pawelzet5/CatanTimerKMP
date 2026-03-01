@@ -130,12 +130,8 @@ class GameSessionCoordinator(
      * Restores selectedTurn to the currently active turn (last turn in db).
      * Used when user navigates back to the current turn from history.
      */
-    fun selectActiveTurn(): EmptyResult<DataError.Local> {
-        val session = _currentSession.value
-            ?: return Result.Failure(DataError.Local.NOT_FOUND)
-
-        _currentSession.update { it?.copy(selectedTurn = session.latestTurn) }
-        return Result.Success(Unit)
+    fun selectActiveTurn(){
+        _currentSession.update { it?.copy(selectedTurn = it.latestTurn) }
     }
 
     /**

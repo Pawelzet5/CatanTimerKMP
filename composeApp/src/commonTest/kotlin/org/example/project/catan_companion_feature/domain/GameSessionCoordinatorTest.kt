@@ -597,15 +597,6 @@ class GameSessionCoordinatorTest {
         assertEquals(session.latestTurn, session.selectedTurn)
     }
 
-    @Test
-    fun `selectActiveTurn returns failure when no active session exists`() = runTest {
-        // WHEN
-        val result = coordinator.selectActiveTurn()
-
-        // THEN
-        assertEquals(DataError.Local.NOT_FOUND, (result as Result.Failure).error)
-    }
-
     // endregion
 
     // region updateSelectedTurnDice
