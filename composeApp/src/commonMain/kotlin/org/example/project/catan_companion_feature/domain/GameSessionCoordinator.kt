@@ -17,14 +17,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.core.util.LogUtils
 
 class GameSessionCoordinator(
     private val gameRepository: GameRepository,
     private val turnRepository: TurnRepository
 ) {
-    private val TAG = "GameSessionCoordinator"
-
     private val _currentSession = MutableStateFlow<GameSession?>(null)
     val currentSession: StateFlow<GameSession?> = _currentSession.asStateFlow()
 
@@ -126,10 +123,6 @@ class GameSessionCoordinator(
      * Used for navigating between turns in UI.
      */
     fun selectTurn(turn: Turn) {
-        if (_currentSession.value == null) {
-            LogUtils.debug(TAG, "Select Turn failed - current session is null")
-            return
-        }
         _currentSession.update { it?.copy(selectedTurn = turn) }
     }
 
