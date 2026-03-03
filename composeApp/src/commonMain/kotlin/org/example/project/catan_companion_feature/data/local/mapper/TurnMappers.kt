@@ -15,7 +15,7 @@ fun TurnEntity.toDomain(): Turn = Turn(
 )
 
 fun Turn.toEntity(gameId: Long): TurnEntity = TurnEntity(
-    id = if (id == 0L) 0L else id,
+    id = id,
     gameId = gameId,
     number = number,
     playerId = playerId,
