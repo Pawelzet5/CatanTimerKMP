@@ -2,31 +2,47 @@ package org.example.project.catan_companion_feature.data.local.mapper
 
 import org.example.project.catan_companion_feature.data.local.entity.GameEntity
 import org.example.project.catan_companion_feature.data.local.entity.GamePlayerCrossRefEntity
-import org.example.project.catan_companion_feature.data.local.entity.GameWithPlayers
+import org.example.project.catan_companion_feature.data.local.entity.GameSummaryProjection
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.GameConfig
+import org.example.project.catan_companion_feature.domain.dataclass.GameSummary
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
 
-fun GameWithPlayers.toDomain(): Game {
-    // Players are sorted by ORDER BY playerIndex in the DAO query.
-    // @Relation does not guarantee order – use getPlayersForGame instead
-    // when order is critical (see GameRepositoryImpl).
-    val playerList = players.map { it.toDomain() }
+fun GameEntity.toDomain(players: List<Player>): Game {
     val config = GameConfig(
-        turnDurationMillis = game.turnDurationMillis,
-        expansions = game.expansions,
-        specialTurnRuleEnabled = game.specialTurnRuleEnabled,
-        players = playerList
+        turnDurationMillis = turnDurationMillis,
+        expansions = expansions,
+        specialTurnRuleEnabled = specialTurnRuleEnabled,
+        players = players
     )
-    return Game(id = game.id, config = config, status = game.status)
+    return Game(
+        id = id,
+        config = config,
+        status = status,
+        startedAt = startedAt,
+        finishedAt = finishedAt
+    )
 }
 
-fun GameConfig.toEntity(): GameEntity = GameEntity(
+fun GameSummaryProjection.toDomain(): GameSummary = GameSummary(
+    id = id,
+    status = status,
+    playerCount = playerCount,
+    turnCount = turnCount,
+    startedAt = startedAt,
+    finishedAt = finishedAt
+)
+
+fun GameConfig.toEntity(
+    startedAt: Long,
+    status: GameStatus = GameStatus.ACTIVE
+): GameEntity = GameEntity(
     turnDurationMillis = turnDurationMillis,
     expansions = expansions,
     specialTurnRuleEnabled = specialTurnRuleEnabled,
-    status = GameStatus.ACTIVE
+    status = status,
+    startedAt = startedAt
 )
 
 fun buildGamePlayerCrossRefs(gameId: Long, players: List<Player>): List<GamePlayerCrossRefEntity> =

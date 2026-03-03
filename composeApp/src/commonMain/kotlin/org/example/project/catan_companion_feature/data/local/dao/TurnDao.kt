@@ -16,7 +16,6 @@ interface TurnDao {
     @Update
     suspend fun updateTurn(turn: TurnEntity): Int  // returns number of rows affected
 
-    // Used internally by TurnRepositoryImpl
     @Query("SELECT * FROM turns WHERE gameId = :gameId ORDER BY number DESC LIMIT 1")
     suspend fun getLastTurn(gameId: Long): TurnEntity?
 
