@@ -6,7 +6,7 @@ import org.example.project.core.domain.DataError
 import org.example.project.core.domain.EmptyResult
 
 interface TurnRepository {
-    suspend fun addTurn(turn: Turn): Result<Long, DataError.Local>
-    suspend fun updateTurn(turn: Turn): EmptyResult<DataError.Local>
+    suspend fun addTurn(gameId: Long, turn: Turn): Result<Long, DataError.Local>
+    suspend fun updateTurn(gameId: Long, turn: Turn): EmptyResult<DataError.Local>
     suspend fun getTurnsForGame(gameId: Long): Result<List<Turn>, DataError.Local>
 }

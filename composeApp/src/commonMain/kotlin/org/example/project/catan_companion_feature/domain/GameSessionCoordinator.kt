@@ -43,7 +43,7 @@ class GameSessionCoordinator(
 
         val currentTurn = if (turns.isEmpty()) {
             val initialTurn = TurnFactory.createFirst(game.config)
-            val initialTurnId = turnRepository.addTurn(initialTurn)
+            val initialTurnId = turnRepository.addTurn(gameId, initialTurn)
                 .onFailure { return Result.Failure(it) }
                 .let { (it as Result.Success).data }
             initialTurn.copy(id = initialTurnId)
@@ -70,11 +70,11 @@ class GameSessionCoordinator(
     /**
      * Marks the current game as finished and clears the session.
      */
-    suspend fun finishSession(): EmptyResult<DataError.Local> {
+    suspend fun finishSession(finishedAtTimestamp: Long): EmptyResult<DataError.Local> {
         val gameId = _currentSession.value?.game?.id
             ?: return Result.Failure(DataError.Local.NOT_FOUND)
 
-        return gameRepository.saveGameAsFinished(gameId)
+        return gameRepository.saveGameAsFinished(gameId, finishedAtTimestamp)
             .onSuccess { clearSession() }
     }
 
@@ -91,15 +91,16 @@ class GameSessionCoordinator(
         if (!session.isActiveTurnSelected) {
             return Result.Failure(IllegalOperationError)
         }
+        val gameId = session.game.id
 
         val activeTurn = session.latestTurn
 
         val completedTurn = activeTurn.copy(durationMillis = durationMillis)
-        turnRepository.updateTurn(completedTurn)
+        turnRepository.updateTurn(gameId, completedTurn)
             .onFailure { return Result.Failure(it) }
 
         val nextTurn = TurnFactory.createNext(completedTurn, session.game.config)
-        val nextTurnId = turnRepository.addTurn(nextTurn)
+        val nextTurnId = turnRepository.addTurn(gameId, nextTurn)
             .onFailure { return Result.Failure(it) }
             .let { (it as Result.Success).data }
         val nextTurnWithId = nextTurn.copy(id = nextTurnId)
@@ -151,7 +152,7 @@ class GameSessionCoordinator(
             eventDice = eventDice
         )
 
-        return turnRepository.updateTurn(updatedTurn)
+        return turnRepository.updateTurn(session.game.id, updatedTurn)
             .onSuccess {
                 _currentSession.update { it?.copy(selectedTurn = updatedTurn) }
             }
@@ -166,7 +167,7 @@ class GameSessionCoordinator(
 
         val updatedTurn = session.selectedTurn.copy(durationMillis = durationMillis)
 
-        return turnRepository.updateTurn(updatedTurn)
+        return turnRepository.updateTurn(session.game.id, updatedTurn)
             .onSuccess {
                 _currentSession.update { it?.copy(selectedTurn = updatedTurn) }
             }
