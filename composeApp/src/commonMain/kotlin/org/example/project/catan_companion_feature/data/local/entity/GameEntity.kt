@@ -12,5 +12,7 @@ data class GameEntity(
     val turnDurationMillis: Long,
     val expansions: Set<GameExpansion>,
     val specialTurnRuleEnabled: Boolean,
-    val status: GameStatus
+    val status: GameStatus,
+    val startedAt: Long,
+    val finishedAt: Long? = null
 )
