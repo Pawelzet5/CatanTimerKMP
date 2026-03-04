@@ -25,7 +25,7 @@ val coreModule = module {
 }
 
 
-val productModule = module {
+val catanCompanionModule = module {
     single { get<CatanTimerDatabase>().turnDao() }
     single { get<CatanTimerDatabase>().playerDao() }
     single { get<CatanTimerDatabase>().gameDao() }
