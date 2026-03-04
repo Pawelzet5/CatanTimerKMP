@@ -1,7 +1,6 @@
 package org.example.project.catan_companion_feature.data.local.mapper
 
 import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerCrossRefEntity
 import org.example.project.catan_companion_feature.data.local.entity.GameSummaryProjection
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.GameConfig
