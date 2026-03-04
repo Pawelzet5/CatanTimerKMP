@@ -44,12 +44,3 @@ fun GameConfig.toEntity(
     status = status,
     startedAt = startedAt
 )
-
-fun buildGamePlayerCrossRefs(gameId: Long, players: List<Player>): List<GamePlayerCrossRefEntity> =
-    players.mapIndexed { index, player ->
-        GamePlayerCrossRefEntity(
-            gameId = gameId,
-            playerId = player.id,
-            playerIndex = index
-        )
-    }

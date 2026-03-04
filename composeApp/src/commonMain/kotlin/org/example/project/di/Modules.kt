@@ -3,7 +3,11 @@ package org.example.project.di
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import org.example.project.catan_companion_feature.data.local.CatanTimerDatabase
 import org.example.project.catan_companion_feature.data.local.DatabaseFactory
+import org.example.project.catan_companion_feature.data.repository.GameRepositoryImpl
+import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.koin.core.module.Module
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 expect val platformModule: Module
@@ -22,5 +26,5 @@ val productModule = module {
     single { get<CatanTimerDatabase>().playerDao() }
     single { get<CatanTimerDatabase>().gameDao() }
 
-    //singleOf(::GameRepositoryImpl).bind<GameRepository>()
+    singleOf(::GameRepositoryImpl).bind<GameRepository>()
 }
