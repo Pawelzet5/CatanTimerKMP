@@ -5,8 +5,10 @@ import org.example.project.catan_companion_feature.data.local.CatanTimerDatabase
 import org.example.project.catan_companion_feature.data.local.DatabaseFactory
 import org.example.project.catan_companion_feature.data.repository.GameRepositoryImpl
 import org.example.project.catan_companion_feature.data.repository.PlayerRepositoryImpl
+import org.example.project.catan_companion_feature.data.repository.TurnRepositoryImpl
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
+import org.example.project.catan_companion_feature.domain.repository.TurnRepository
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -30,4 +32,5 @@ val productModule = module {
 
     singleOf(::GameRepositoryImpl).bind<GameRepository>()
     singleOf(::PlayerRepositoryImpl).bind<PlayerRepository>()
+    singleOf(::TurnRepositoryImpl).bind<TurnRepository>()
 }
