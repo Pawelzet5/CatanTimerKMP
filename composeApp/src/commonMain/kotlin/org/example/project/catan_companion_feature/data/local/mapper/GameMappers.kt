@@ -1,7 +1,6 @@
 package org.example.project.catan_companion_feature.data.local.mapper
 
 import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerCrossRefEntity
 import org.example.project.catan_companion_feature.data.local.entity.GameSummaryProjection
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.GameConfig
@@ -44,12 +43,3 @@ fun GameConfig.toEntity(
     status = status,
     startedAt = startedAt
 )
-
-fun buildGamePlayerCrossRefs(gameId: Long, players: List<Player>): List<GamePlayerCrossRefEntity> =
-    players.mapIndexed { index, player ->
-        GamePlayerCrossRefEntity(
-            gameId = gameId,
-            playerId = player.id,
-            playerIndex = index
-        )
-    }
