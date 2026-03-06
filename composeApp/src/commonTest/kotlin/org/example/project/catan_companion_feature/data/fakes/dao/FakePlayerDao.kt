@@ -21,9 +21,9 @@ class FakePlayerDao : PlayerDao {
     // region error flags
 
     /**
-     *SQLiteConstraintException is not a subclass of SQLiteException in androidx.sqlite —
-     *Room wraps it as a plain RuntimeException, so tryLocalWrite maps it to UNKNOWN.
-     *Simulates Room throwing SQLiteConstraintException when player is linked to a game/turn.
+     *  Simulates Room throwing SQLiteConstraintException when player is linked to a game/turn.
+     *  SQLiteConstraintException is not a subclass of SQLiteException in androidx.sqlite —
+     *  Room wraps it as a plain RuntimeException, so tryLocalWrite maps it to UNKNOWN.
      */
     var shouldThrowConstraintExceptionOnDelete = false
 
@@ -60,9 +60,9 @@ class FakePlayerDao : PlayerDao {
     // region PlayerDao impl
 
     override suspend fun insertPlayer(player: PlayerEntity): Long {
-        // Zawsze generujemy nowe id — ignorujemy player.id z encji wejściowej.
-        // Room również ignoruje wartość pola @PrimaryKey(autoGenerate=true) przy INSERT
-        // i zawsze przydziela własne id. Fake odwzorowuje to zachowanie.
+        // Always generating new id - ignoring player.id from input entity.
+        // Room also ignores the field value for @PrimaryKey(autoGenerate=true) on INSERT
+        // and always assigns the new id. Fake reflects this behavior.
         val id = nextId++
         val stored = player.copy(id = id)
         _players[id] = stored
@@ -78,9 +78,9 @@ class FakePlayerDao : PlayerDao {
         _players.values.sortedBy { it.name }
 
     /**
-     * StateFlow.map tworzy cold Flow który przy każdej subskrypcji natychmiast emituje
-     * wyfiltrowaną wartość aktualnego stanu, a następnie reaguje na każdą kolejną zmianę.
-     * To dokładnie odwzorowuje zachowanie Room @Query z Flow.
+     * StateFlow.map creates a cold flow that on every subscription immediately emits
+     * filtered value for current state, then reacts to every following change.
+     * That precisely reflects the Room @Query with Flow behavior.
      */
     override fun searchPlayers(query: String): Flow<List<PlayerEntity>> =
         _playersState.map { players ->
