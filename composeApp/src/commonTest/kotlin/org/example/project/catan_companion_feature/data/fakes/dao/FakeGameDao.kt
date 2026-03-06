@@ -1,6 +1,5 @@
 package org.example.project.catan_companion_feature.data.fakes.dao
 
-import androidx.sqlite.SQLiteException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.example.project.catan_companion_feature.data.local.dao.GameDao
@@ -14,21 +13,6 @@ class FakeGameDao : GameDao {
 
     // Backing flow for getGameSummaries — updated on every insert / status change
     private val _summariesFlow = MutableStateFlow<List<GameSummaryProjection>>(emptyList())
-
-    // region error flags
-
-    var shouldThrowSQLiteExceptionOnInsert = false
-    var shouldThrowUnexpectedExceptionOnInsert = false
-
-    var shouldThrowSQLiteExceptionOnCrossRefInsert = false
-
-    var shouldThrowSQLiteExceptionOnRead = false
-    var shouldThrowUnexpectedExceptionOnRead = false
-
-    var shouldThrowSQLiteExceptionOnStatusUpdate = false
-    var shouldThrowUnexpectedExceptionOnStatusUpdate = false
-
-    // endregion
 
     // region state controls
 
@@ -49,9 +33,6 @@ class FakeGameDao : GameDao {
     // region GameDao impl
 
     override suspend fun insertGame(game: GameEntity): Long {
-        if (shouldThrowSQLiteExceptionOnInsert) throw SQLiteException("Fake: disk full")
-        if (shouldThrowUnexpectedExceptionOnInsert) throw RuntimeException("Fake: unexpected error")
-
         val id = if (game.id != 0L) game.id else nextId++
         val stored = game.copy(id = id)
         _games[id] = stored
@@ -61,25 +42,17 @@ class FakeGameDao : GameDao {
     }
 
     override suspend fun insertGamePlayerCrossRefs(crossRefs: List<GamePlayerCrossRefEntity>) {
-        if (shouldThrowSQLiteExceptionOnCrossRefInsert) throw SQLiteException("Fake: disk full on cross-ref")
-
         _crossRefs.addAll(crossRefs)
         rebuildSummariesFlow()
     }
 
-    override suspend fun getGame(gameId: Long): GameEntity? {
-        if (shouldThrowSQLiteExceptionOnRead) throw SQLiteException("Fake: read error")
-        if (shouldThrowUnexpectedExceptionOnRead) throw RuntimeException("Fake: unexpected error")
+    override suspend fun getGame(gameId: Long): GameEntity? =
+        _games[gameId]
 
-        return _games[gameId]
-    }
-
-    override fun getGameSummaries(): Flow<List<GameSummaryProjection>> = _summariesFlow
+    override fun getGameSummaries(): Flow<List<GameSummaryProjection>> =
+        _summariesFlow
 
     override suspend fun updateGameStatusToFinished(gameId: Long, finishedAt: Long): Int {
-        if (shouldThrowSQLiteExceptionOnStatusUpdate) throw SQLiteException("Fake: disk full")
-        if (shouldThrowUnexpectedExceptionOnStatusUpdate) throw RuntimeException("Fake: unexpected error")
-
         if (updateStatusRowCount != -1) return updateStatusRowCount
 
         val game = _games[gameId] ?: return 0
@@ -94,18 +67,17 @@ class FakeGameDao : GameDao {
 
     /**
      * Recomputes the summaries flow to mirror the GROUP BY query in the real DAO.
-     * playerCount and turnCount are intentionally left as 0 here — tests that need
-     * accurate counts should assert on the repository layer, not on the projection directly.
+     * turnCount is intentionally 0 — TurnDao owns that data, not GameDao.
+     * Tests that need accurate turnCount should use integration tests against real Room.
      */
     private fun rebuildSummariesFlow() {
         _summariesFlow.value = _games.values
             .sortedByDescending { it.id }
             .map { game ->
-                val playerCount = _crossRefs.count { it.gameId == game.id }
                 GameSummaryProjection(
                     id = game.id,
                     status = game.status,
-                    playerCount = playerCount,
+                    playerCount = _crossRefs.count { it.gameId == game.id },
                     turnCount = 0,
                     startedAt = game.startedAt,
                     finishedAt = game.finishedAt

@@ -1,6 +1,5 @@
 package org.example.project.catan_companion_feature.data.fakes.dao
 
-import androidx.sqlite.SQLiteException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -17,30 +16,16 @@ class FakePlayerDao : PlayerDao {
      */
     private val _gamePlayerMap = mutableMapOf<Long, List<Long>>()
 
-    // Backing flow for searchPlayers — updated on every insert/delete
-    private val _playersFlow = MutableStateFlow<List<PlayerEntity>>(emptyList())
+    private val _playersState = MutableStateFlow<List<PlayerEntity>>(emptyList())
 
     // region error flags
 
-    var shouldThrowSQLiteExceptionOnInsert = false
-    var shouldThrowUnexpectedExceptionOnInsert = false
-
-    var shouldThrowSQLiteExceptionOnRead = false
-    var shouldThrowUnexpectedExceptionOnRead = false
-
-    var shouldThrowSQLiteExceptionOnGetForGame = false
-    var shouldThrowUnexpectedExceptionOnGetForGame = false
-
-    var shouldThrowSQLiteExceptionOnDelete = false
-
     /**
-     * Simulates a foreign key constraint violation on delete (e.g. player linked to a game or turn).
-     *
-     * Note: in androidx.sqlite, SQLiteConstraintException is NOT a subclass of SQLiteException —
-     * Room wraps it in a plain RuntimeException on affected versions. We therefore throw
-     * RuntimeException here, which [tryLocalWrite] maps to [DataError.Local.UNKNOWN].
+     *SQLiteConstraintException is not a subclass of SQLiteException in androidx.sqlite —
+     *Room wraps it as a plain RuntimeException, so tryLocalWrite maps it to UNKNOWN.
+     *Simulates Room throwing SQLiteConstraintException when player is linked to a game/turn.
      */
-    var shouldThrowForeignKeyConstraintViolationOnDelete = false
+    var shouldThrowConstraintExceptionOnDelete = false
 
     // endregion
 
@@ -50,6 +35,17 @@ class FakePlayerDao : PlayerDao {
         private set
 
     private var nextId = 1L
+
+    /**
+     * Prepopulates the DAO with existing entities, bypassing id generation.
+     * Use when you need players in _players map without going through the repository
+     * (e.g. when setting up getGame tests that use setPlayersForGame).
+     */
+    fun addPlayers(vararg players: PlayerEntity) {
+        players.forEach { _players[it.id] = it }
+        nextId = (_players.keys.maxOrNull() ?: 0L) + 1L
+        _playersState.value = _players.values.toList()
+    }
 
     /**
      * Defines which players belong to a game, in playerIndex order.
@@ -64,42 +60,36 @@ class FakePlayerDao : PlayerDao {
     // region PlayerDao impl
 
     override suspend fun insertPlayer(player: PlayerEntity): Long {
-        if (shouldThrowSQLiteExceptionOnInsert) throw SQLiteException("Fake: disk full")
-        if (shouldThrowUnexpectedExceptionOnInsert) throw RuntimeException("Fake: unexpected error")
-
-        val id = if (player.id != 0L) player.id else nextId++
+        // Zawsze generujemy nowe id — ignorujemy player.id z encji wejściowej.
+        // Room również ignoruje wartość pola @PrimaryKey(autoGenerate=true) przy INSERT
+        // i zawsze przydziela własne id. Fake odwzorowuje to zachowanie.
+        val id = nextId++
         val stored = player.copy(id = id)
         _players[id] = stored
         lastInsertedId = id
-        _playersFlow.value = _players.values.toList()
+        _playersState.value = _players.values.toList()
         return id
     }
 
-    override suspend fun getPlayer(playerId: Long): PlayerEntity? {
-        if (shouldThrowSQLiteExceptionOnRead) throw SQLiteException("Fake: read error")
-        if (shouldThrowUnexpectedExceptionOnRead) throw RuntimeException("Fake: unexpected error")
+    override suspend fun getPlayer(playerId: Long): PlayerEntity? =
+        _players[playerId]
 
-        return _players[playerId]
-    }
+    override suspend fun getAllPlayers(): List<PlayerEntity> =
+        _players.values.sortedBy { it.name }
 
-    override suspend fun getAllPlayers(): List<PlayerEntity> {
-        if (shouldThrowSQLiteExceptionOnRead) throw SQLiteException("Fake: read error")
-        if (shouldThrowUnexpectedExceptionOnRead) throw RuntimeException("Fake: unexpected error")
-
-        return _players.values.sortedBy { it.name }
-    }
-
+    /**
+     * StateFlow.map tworzy cold Flow który przy każdej subskrypcji natychmiast emituje
+     * wyfiltrowaną wartość aktualnego stanu, a następnie reaguje na każdą kolejną zmianę.
+     * To dokładnie odwzorowuje zachowanie Room @Query z Flow.
+     */
     override fun searchPlayers(query: String): Flow<List<PlayerEntity>> =
-        _playersFlow.map { players ->
+        _playersState.map { players ->
             players
                 .filter { it.name.contains(query, ignoreCase = true) }
                 .sortedBy { it.name }
         }
 
     override suspend fun getPlayersForGame(gameId: Long): List<PlayerEntity> {
-        if (shouldThrowSQLiteExceptionOnGetForGame) throw SQLiteException("Fake: read error")
-        if (shouldThrowUnexpectedExceptionOnGetForGame) throw RuntimeException("Fake: unexpected error")
-
         val ids = _gamePlayerMap[gameId] ?: return emptyList()
         return ids.mapNotNull { _players[it] }
     }
@@ -108,11 +98,11 @@ class FakePlayerDao : PlayerDao {
         _gamePlayerMap.values.count { playerIds -> playerId in playerIds }
 
     override suspend fun deletePlayer(playerId: Long) {
-        if (shouldThrowSQLiteExceptionOnDelete) throw SQLiteException("Fake: disk full")
-        if (shouldThrowForeignKeyConstraintViolationOnDelete) throw RuntimeException("Fake: FOREIGN KEY constraint failed")
-
+        if (shouldThrowConstraintExceptionOnDelete) {
+            throw RuntimeException("Fake: FOREIGN KEY constraint failed")
+        }
         _players.remove(playerId)
-        _playersFlow.value = _players.values.toList()
+        _playersState.value = _players.values.toList()
     }
 
     // endregion
