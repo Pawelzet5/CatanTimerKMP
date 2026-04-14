@@ -1,16 +1,19 @@
 package org.example.project.catan_companion_feature.domain.factory
 
-import org.example.project.catan_companion_feature.domain.dataclass.GamePlayer
+import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.Turn
 
 object TurnFactory {
 
-    fun createFirst(gameId: Long, players: List<GamePlayer>, specialTurnRuleEnabled: Boolean): Turn {
-        val firstPlayer = players.first()
-        val secondaryPlayer = if (specialTurnRuleEnabled) players[3 % players.size] else null
+    fun createFirst(game: Game): Turn {
+        val firstPlayer = game.players.first()
+        val secondaryPlayer = if (game.specialTurnRuleEnabled) {
+            game.players[3 % game.players.size]
+        } else null
+
         return Turn(
-            gameId = gameId,
             number = 0,
+            gameId = game.id,
             playerId = firstPlayer.playerId,
             playerName = firstPlayer.playerName,
             secondaryPlayerId = secondaryPlayer?.playerId,
@@ -18,21 +21,18 @@ object TurnFactory {
         )
     }
 
-    fun createNext(
-        gameId: Long,
-        currentTurn: Turn,
-        players: List<GamePlayer>,
-        specialTurnRuleEnabled: Boolean
-    ): Turn {
+    fun createNext(currentTurn: Turn, game: Game): Turn {
         val nextNumber = currentTurn.number + 1
+        val players = game.players
         val playerIndex = nextNumber % players.size
         val nextPlayer = players[playerIndex]
-        val secondaryPlayer = if (specialTurnRuleEnabled) {
+        val secondaryPlayer = if (game.specialTurnRuleEnabled) {
             players[(playerIndex + 3) % players.size]
         } else null
+
         return Turn(
-            gameId = gameId,
             number = nextNumber,
+            gameId = game.id,
             playerId = nextPlayer.playerId,
             playerName = nextPlayer.playerName,
             secondaryPlayerId = secondaryPlayer?.playerId,
