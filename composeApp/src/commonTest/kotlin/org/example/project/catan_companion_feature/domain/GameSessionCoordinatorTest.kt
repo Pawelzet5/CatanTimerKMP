@@ -8,6 +8,7 @@ import org.example.project.core.domain.Result
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
+import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
 import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
 import org.example.project.catan_companion_feature.data.fakes.repository.FakeTurnRepository
 import org.example.project.catan_companion_feature.makeTestGame
@@ -280,7 +281,7 @@ class GameSessionCoordinatorTest {
         coordinator.startSession(gameId = game.id)
 
         // WHEN
-        val result = coordinator.finishSession(finishedAtTimestamp = 30_000L)
+        val result = coordinator.finishSession(finishedAt = 30_000L, winnerId = null)
 
         // THEN
         assertIs<Result.Success<Unit>>(result)
@@ -300,7 +301,7 @@ class GameSessionCoordinatorTest {
             awaitItem()
 
             // WHEN
-            coordinator.finishSession(finishedAtTimestamp = 30_000L)
+            coordinator.finishSession(finishedAt = 30_000L, winnerId = null)
 
             // THEN
             assertNull(awaitItem())
@@ -311,7 +312,7 @@ class GameSessionCoordinatorTest {
     @Test
     fun `finishSession returns failure when no active session exists`() = runTest {
         // WHEN
-        val result = coordinator.finishSession(finishedAtTimestamp = 30_000L)
+        val result = coordinator.finishSession(finishedAt = 30_000L, winnerId = null)
 
         // THEN
         assertEquals(DataError.Local.NOT_FOUND, (result as Result.Failure).error)
@@ -326,7 +327,7 @@ class GameSessionCoordinatorTest {
         fakeGameRepository.shouldFailOnFinishGame = true
 
         // WHEN
-        val result = coordinator.finishSession(finishedAtTimestamp = 30_000L)
+        val result = coordinator.finishSession(finishedAt = 30_000L, winnerId = null)
 
         // THEN
         assertIs<Result.Failure<DataError.Local>>(result)
@@ -478,24 +479,6 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn returns IllegalOperationError when viewing historical turn`() = runTest {
-        // GIVEN
-        val game = makeTestGame()
-        val turns = makeTestTurns(count = 2, players = game.players)
-        fakeGameRepository.seedGame(game)
-        fakeTurnRepository.seedTurns(gameId = game.id, *turns.toTypedArray())
-        coordinator.startSession(gameId = game.id)
-        coordinator.selectTurn(turns.first())
-
-        // WHEN
-        val result = coordinator.completeTurn(durationMillis = 60_000L)
-
-        // THEN
-        assertIs<Result.Failure<IllegalOperationError>>(result)
-        assertEquals(IllegalOperationError, (result as Result.Failure).error)
-    }
-
-    @Test
     fun `completeTurn returns failure when updateTurn fails`() = runTest {
         // GIVEN
         val game = makeTestGame()
@@ -533,68 +516,6 @@ class GameSessionCoordinatorTest {
         // THEN
         assertIs<Result.Failure<DataError.Local>>(result)
         assertEquals(DataError.Local.NOT_FOUND, (result as Result.Failure).error)
-    }
-
-    // endregion
-
-    // region selectTurn
-
-    @Test
-    fun `selectTurn updates selectedTurn in memory`() = runTest {
-        // GIVEN
-        val game = makeTestGame()
-        val turns = makeTestTurns(count = 2, players = game.players)
-        fakeGameRepository.seedGame(game)
-        fakeTurnRepository.seedTurns(gameId = game.id, *turns.toTypedArray())
-        coordinator.startSession(gameId = game.id)
-
-        // WHEN
-        coordinator.selectTurn(turns.first())
-
-        // THEN
-        val session = coordinator.currentSession.value
-        assertNotNull(session)
-        assertEquals(turns.first(), session.selectedTurn)
-    }
-
-    @Test
-    fun `selectTurn does not call any repository operation`() = runTest {
-        // GIVEN
-        val game = makeTestGame()
-        val turns = makeTestTurns(count = 2, players = game.players)
-        fakeGameRepository.seedGame(game)
-        fakeTurnRepository.seedTurns(gameId = game.id, *turns.toTypedArray())
-        coordinator.startSession(gameId = game.id)
-        val turnsCountBefore = fakeTurnRepository.allTurns.size
-
-        // WHEN
-        coordinator.selectTurn(turns.first())
-
-        // THEN
-        assertEquals(turnsCountBefore, fakeTurnRepository.allTurns.size)
-    }
-
-    // endregion
-
-    // region selectActiveTurn
-
-    @Test
-    fun `selectActiveTurn restores selectedTurn to last turn in db`() = runTest {
-        // GIVEN
-        val game = makeTestGame()
-        val turns = makeTestTurns(count = 3, players = game.players)
-        fakeGameRepository.seedGame(game)
-        fakeTurnRepository.seedTurns(gameId = game.id, *turns.toTypedArray())
-        coordinator.startSession(gameId = game.id)
-        coordinator.selectTurn(turns.first())
-
-        // WHEN
-        coordinator.selectActiveTurn()
-
-        // THEN
-        val session = coordinator.currentSession.value
-        assertNotNull(session)
-        assertEquals(session.latestTurn, session.selectedTurn)
     }
 
     // endregion

@@ -1,12 +1,10 @@
-package org.example.project.catan_companion_feature.domain
+package org.example.project.catan_companion_feature.domain.session
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import org.example.project.catan_companion_feature.domain.session.GameSession
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.factory.TurnFactory
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
@@ -79,18 +77,18 @@ class GameSessionCoordinator(
     /**
      * Marks the current game as finished and clears the session.
      */
-    suspend fun finishSession(finishedAtTimestamp: Long): EmptyResult<DataError.Local> {
+    suspend fun finishSession(finishedAt: Long, winnerId: Long?): EmptyResult<DataError.Local> {
         val gameId = _currentSession.value?.game?.id
             ?: return Result.Failure(DataError.Local.NOT_FOUND)
 
-        return gameRepository.endGame(gameId, winnerId = null)
+        return gameRepository.endGame(gameId, winnerId = winnerId)
             .onSuccess { clearSession() }
     }
 
     /**
      * Completes the currently active turn with the given duration,
      * then creates and persists the next turn.
-     * Returns IllegalOperationError if called while user is viewing a historical turn –
+     * Returns IllegalOperationError if called while user is viewing a historical turn —
      * UI is responsible for preventing this from happening.
      */
     suspend fun completeTurn(durationMillis: Long): Result<Unit, Error> {
@@ -128,22 +126,6 @@ class GameSessionCoordinator(
         }
 
         return Result.Success(Unit)
-    }
-
-    /**
-     * Updates the selectedTurn in-memory only – no db operation.
-     * Used for navigating between turns in UI.
-     */
-    fun selectTurn(turn: Turn) {
-        _currentSession.update { it?.copy(selectedTurn = turn) }
-    }
-
-    /**
-     * Restores selectedTurn to the currently active turn (last turn in db).
-     * Used when user navigates back to the current turn from history.
-     */
-    fun selectActiveTurn() {
-        _currentSession.update { it?.copy(selectedTurn = it.latestTurn) }
     }
 
     /**
