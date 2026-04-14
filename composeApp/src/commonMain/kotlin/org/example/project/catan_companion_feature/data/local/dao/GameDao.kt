@@ -1,38 +1,36 @@
 package org.example.project.catan_companion_feature.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerCrossRefEntity
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import org.example.project.catan_companion_feature.data.local.entity.GameSummaryProjection
+import org.example.project.catan_companion_feature.data.local.entity.GameEntity
 
 @Dao
 interface GameDao {
+    @Query("SELECT * FROM games ORDER BY startedAt DESC")
+    fun getAll(): Flow<List<GameEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertGame(game: GameEntity): Long
+    @Query("SELECT * FROM games WHERE status = 'IN_PROGRESS' ORDER BY startedAt DESC")
+    fun getInProgress(): Flow<List<GameEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertGamePlayerCrossRefs(crossRefs: List<GamePlayerCrossRefEntity>)
+    @Query("SELECT * FROM games WHERE status = 'COMPLETED' ORDER BY finishedAt DESC")
+    fun getCompleted(): Flow<List<GameEntity>>
 
-    @Query("SELECT * FROM games WHERE id = :gameId")
-    suspend fun getGame(gameId: Long): GameEntity?
+    @Query("SELECT * FROM games WHERE id = :id")
+    fun getById(id: Long): Flow<GameEntity?>
 
-    @Query("""
-        SELECT g.id, g.status, g.startedAt, g.finishedAt,
-               COUNT(DISTINCT ref.playerId) AS playerCount,
-               COUNT(DISTINCT t.id)         AS turnCount
-        FROM games g
-        LEFT JOIN game_player_cross_ref ref ON ref.gameId = g.id
-        LEFT JOIN turns t                   ON t.gameId   = g.id
-        GROUP BY g.id
-        ORDER BY g.id DESC
-    """)
-    fun getGameSummaries(): Flow<List<GameSummaryProjection>>  // bez suspend
+    @Query("SELECT * FROM games WHERE status = 'IN_PROGRESS' ORDER BY startedAt DESC LIMIT 1")
+    fun getMostRecentInProgress(): Flow<GameEntity?>
 
-    @Query("UPDATE games SET status = 'FINISHED', finishedAt = :finishedAt WHERE id = :gameId")
-    suspend fun updateGameStatusToFinished(gameId: Long, finishedAt: Long): Int
+    @Insert
+    suspend fun insert(game: GameEntity): Long
+
+    @Update
+    suspend fun update(game: GameEntity)
+
+    @Delete
+    suspend fun delete(game: GameEntity)
 }

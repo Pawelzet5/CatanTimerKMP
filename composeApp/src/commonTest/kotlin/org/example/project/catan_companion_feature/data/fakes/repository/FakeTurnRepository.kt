@@ -1,6 +1,9 @@
 package org.example.project.catan_companion_feature.data.fakes.repository
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import org.example.project.catan_companion_feature.domain.dataclass.Turn
+import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.repository.TurnRepository
 import org.example.project.core.domain.DataError
 import org.example.project.core.domain.EmptyResult
@@ -8,10 +11,13 @@ import org.example.project.core.domain.Result
 
 class FakeTurnRepository : TurnRepository {
 
-    // gameId → ordered list of turns
-    private val _turnsByGame = mutableMapOf<Long, MutableList<Turn>>()
+    // turnId -> Turn (current state)
+    private val _turns = mutableMapOf<Long, Turn>()
+    // gameId -> ordered list of turn IDs (insertion order)
+    private val _gameToTurnIds = mutableMapOf<Long, MutableList<Long>>()
 
-    val allTurns: List<Turn> get() = _turnsByGame.values.flatten()
+    val allTurns: List<Turn>
+        get() = _gameToTurnIds.values.flatten().mapNotNull { _turns[it] }
 
     var shouldFailOnAdd = false
     var shouldFailOnUpdate = false
@@ -20,36 +26,82 @@ class FakeTurnRepository : TurnRepository {
     private var nextId = 1L
 
     /**
-     * Prepopulates the repository with existing turns associated with [gameId]
-     * (e.g. for session restore tests). IDs are set by the caller — [nextId]
-     * is advanced to avoid future collisions.
+     * Prepopulates the repository with existing turns for test setup.
+     * IDs are taken from the Turn objects — [nextId] is advanced to avoid future collisions.
      */
     fun seedTurns(gameId: Long, vararg turns: Turn) {
-        val bucket = _turnsByGame.getOrPut(gameId) { mutableListOf() }
-        bucket.addAll(turns)
-        val maxId = _turnsByGame.values.flatten().maxOfOrNull { it.id } ?: 0L
+        val bucket = _gameToTurnIds.getOrPut(gameId) { mutableListOf() }
+        turns.forEach { turn ->
+            _turns[turn.id] = turn
+            bucket.add(turn.id)
+        }
+        val maxId = _turns.keys.maxOrNull() ?: 0L
         nextId = maxId + 1L
     }
 
-    override suspend fun addTurn(gameId: Long, turn: Turn): Result<Long, DataError.Local> {
+    override fun getTurnsForGame(gameId: Long): Flow<List<Turn>> = flow {
+        if (shouldFailOnGetAll) throw Exception("Fake: get turns failure")
+        val ids = _gameToTurnIds[gameId] ?: emptyList()
+        emit(ids.mapNotNull { _turns[it] })
+    }
+
+    override fun getTurnById(id: Long): Flow<Turn?> = flow {
+        emit(_turns[id])
+    }
+
+    override fun getCurrentTurn(gameId: Long): Flow<Turn?> = flow {
+        val ids = _gameToTurnIds[gameId] ?: emptyList()
+        emit(ids.mapNotNull { _turns[it] }.maxByOrNull { it.number })
+    }
+
+    override suspend fun createTurn(
+        gameId: Long,
+        playerId: Long,
+        number: Int
+    ): Result<Long, DataError.Local> {
         if (shouldFailOnAdd) return Result.Failure(DataError.Local.UNKNOWN)
         val id = nextId++
-        val bucket = _turnsByGame.getOrPut(gameId) { mutableListOf() }
-        bucket.add(turn.copy(id = id))
+        val turn = Turn(id = id, gameId = gameId, number = number, playerId = playerId, playerName = "")
+        _turns[id] = turn
+        _gameToTurnIds.getOrPut(gameId) { mutableListOf() }.add(id)
         return Result.Success(id)
     }
 
-    override suspend fun updateTurn(gameId: Long, turn: Turn): EmptyResult<DataError.Local> {
+    override suspend fun updateTurn(turn: Turn): EmptyResult<DataError.Local> {
         if (shouldFailOnUpdate) return Result.Failure(DataError.Local.UNKNOWN)
-        val bucket = _turnsByGame[gameId] ?: return Result.Failure(DataError.Local.NOT_FOUND)
-        val index = bucket.indexOfFirst { it.id == turn.id }
-        if (index == -1) return Result.Failure(DataError.Local.NOT_FOUND)
-        bucket[index] = turn
+        if (!_turns.containsKey(turn.id)) return Result.Failure(DataError.Local.NOT_FOUND)
+        _turns[turn.id] = turn
         return Result.Success(Unit)
     }
 
-    override suspend fun getTurnsForGame(gameId: Long): Result<List<Turn>, DataError.Local> {
-        if (shouldFailOnGetAll) return Result.Failure(DataError.Local.UNKNOWN)
-        return Result.Success(_turnsByGame[gameId]?.toList() ?: emptyList())
+    override suspend fun updateDiceRoll(
+        turnId: Long,
+        redDice: Int,
+        yellowDice: Int,
+        eventDice: EventDiceType?
+    ): EmptyResult<DataError.Local> {
+        if (shouldFailOnUpdate) return Result.Failure(DataError.Local.UNKNOWN)
+        val turn = _turns[turnId] ?: return Result.Failure(DataError.Local.NOT_FOUND)
+        _turns[turnId] = turn.copy(redDice = redDice, yellowDice = yellowDice, eventDice = eventDice)
+        return Result.Success(Unit)
+    }
+
+    override suspend fun updateDuration(
+        turnId: Long,
+        durationMillis: Long
+    ): EmptyResult<DataError.Local> {
+        if (shouldFailOnUpdate) return Result.Failure(DataError.Local.UNKNOWN)
+        val turn = _turns[turnId] ?: return Result.Failure(DataError.Local.NOT_FOUND)
+        _turns[turnId] = turn.copy(durationMillis = durationMillis)
+        return Result.Success(Unit)
+    }
+
+    override suspend fun setSecondaryPlayer(
+        turnId: Long,
+        playerId: Long
+    ): EmptyResult<DataError.Local> {
+        val turn = _turns[turnId] ?: return Result.Failure(DataError.Local.NOT_FOUND)
+        _turns[turnId] = turn.copy(secondaryPlayerId = playerId)
+        return Result.Success(Unit)
     }
 }
