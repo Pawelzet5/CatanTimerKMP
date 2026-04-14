@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CatanCompanion — UI Mockups</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ============================================================
+       DESIGN TOKENS — from CatanCompanion Design System v0.1
+    ============================================================ */
+    :root {
+      --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-size-xs: 11px;
+      --font-size-sm: 13px;
+      --font-size-md: 15px;
+      --font-size-lg: 18px;
+      --font-size-xl: 22px;
+      --font-size-2xl: 26px;
+      --font-size-3xl: 32px;
+      --font-size-display: 48px;
+      --font-weight-regular: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+      --line-height-tight: 1.2;
+      --line-height-normal: 1.5;
+      --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+      --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px;
+      --radius-sm: 6px; --radius-md: 10px; --radius-lg: 12px; --radius-xl: 16px; --radius-full: 9999px;
+      --border-thin: 1px; --border-medium: 1.5px; --border-thick: 2px;
+      --transition-fast: 150ms ease; --transition-normal: 200ms ease; --transition-slow: 300ms ease;
+    }
+
+    [data-theme="light"] {
+      --color-bg-primary: #FFFFFF;
+      --color-bg-secondary: #FFF7ED;
+      --color-bg-tertiary: #F5F5F4;
+      --color-bg-elevated: #FFFFFF;
+      --color-surface-primary: #FFFFFF;
+      --color-surface-secondary: #F5F5F4;
+      --color-surface-accent: #FFEDD5;
+      --color-text-primary: #1C1917;
+      --color-text-secondary: #57534E;
+      --color-text-tertiary: #A8A29E;
+      --color-text-inverse: #FAFAF9;
+      --color-accent-primary: #D97706;
+      --color-accent-primary-hover: #B45309;
+      --color-accent-primary-subtle: #FFEDD5;
+      --color-accent-secondary: #9A3412;
+      --color-border-primary: #D6D3D1;
+      --color-border-secondary: #E7E5E4;
+      --color-border-accent: #E8B87A;
+      --color-border-focus: #D97706;
+      --color-success: #059669;
+      --color-success-subtle: #D1FAE5;
+      --color-success-text: #065F46;
+      --color-warning: #D97706;
+      --color-warning-subtle: #FEF3C7;
+      --color-warning-text: #92400E;
+      --color-error: #DC2626;
+      --color-error-subtle: #FEE2E2;
+      --color-error-text: #991B1B;
+      --color-info: #2563EB;
+      --color-info-subtle: #DBEAFE;
+      --color-info-text: #1E40AF;
+      --color-input-bg: #F5F5F4;
+      --color-input-bg-hover: #E7E5E4;
+      --color-input-bg-focus: #FFFFFF;
+      --color-dice-red-bg: #DC2626;
+      --color-dice-red-dot: #FDE047;
+      --color-dice-yellow-bg: #EAB308;
+      --color-dice-yellow-dot: #DC2626;
+      --color-dice-event-bg: #FFFFFF;
+      --color-dice-event-icon: #1C1917;
+      --color-dice-selected-border: #059669;
+      --color-category-games: #7C3AED;
+      --color-category-games-subtle: #EDE9FE;
+      --color-category-players: #2563EB;
+      --color-category-players-subtle: #DBEAFE;
+      --color-category-new: #D97706;
+      --color-category-new-subtle: #FFEDD5;
+    }
+
+    [data-theme="dark"] {
+      --color-bg-primary: #0C0A09;
+      --color-bg-secondary: #1C1917;
+      --color-bg-tertiary: #292524;
+      --color-bg-elevated: #292524;
+      --color-surface-primary: #1C1917;
+      --color-surface-secondary: #292524;
+      --color-surface-accent: #451A03;
+      --color-text-primary: #FAFAF9;
+      --color-text-secondary: #D6D3D1;
+      --color-text-tertiary: #A8A29E;
+      --color-text-inverse: #1C1917;
+      --color-accent-primary: #F59E0B;
+      --color-accent-primary-hover: #FBBF24;
+      --color-accent-primary-subtle: #451A03;
+      --color-accent-secondary: #FDBA74;
+      --color-border-primary: #57534E;
+      --color-border-secondary: #44403C;
+      --color-border-accent: #78350F;
+      --color-border-focus: #F59E0B;
+      --color-success: #34D399;
+      --color-success-subtle: #064E3B;
+      --color-success-text: #A7F3D0;
+      --color-warning: #FBBF24;
+      --color-warning-subtle: #451A03;
+      --color-warning-text: #FDE68A;
+      --color-error: #F87171;
+      --color-error-subtle: #7F1D1D;
+      --color-error-text: #FECACA;
+      --color-info: #60A5FA;
+      --color-info-subtle: #1E3A8A;
+      --color-info-text: #BFDBFE;
+      --color-input-bg: #292524;
+      --color-input-bg-hover: #33302E;
+      --color-input-bg-focus: #1C1917;
+      --color-dice-red-bg: #DC2626;
+      --color-dice-red-dot: #FDE047;
+      --color-dice-yellow-bg: #EAB308;
+      --color-dice-yellow-dot: #DC2626;
+      --color-dice-event-bg: #F5F5F4;
+      --color-dice-event-icon: #1C1917;
+      --color-dice-selected-border: #34D399;
+      --color-category-games: #A78BFA;
+      --color-category-games-subtle: #2E1065;
+      --color-category-players: #60A5FA;
+      --color-category-players-subtle: #1E3A8A;
+      --color-category-new: #FBBF24;
+      --color-category-new-subtle: #451A03;
+    }
+
+    /* ============================================================
+       BASE STYLES
+    ============================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-regular);
+      line-height: var(--line-height-normal);
+      background: #111;
+      padding: 32px 16px 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================================
+       SHOWCASE LAYOUT
+    ============================================================ */
+    .showcase-title {
+      font-family: var(--font-family);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #888;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-label {
+      font-family: var(--font-family);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #555;
+      text-align: center;
+      margin: 56px 0 24px;
+      position: relative;
+    }
+    .section-label::before, .section-label::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: calc(50% - 100px);
+      height: 1px;
+      background: #333;
+    }
+    .section-label::before { left: 0; }
+    .section-label::after { right: 0; }
+
+    .screen-pair {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .screen-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .screen-mode-label {
+      font-family: var(--font-family);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #555;
+    }
+
+    /* ============================================================
+       PHONE FRAME
+    ============================================================ */
+    .phone-frame {
+      width: 375px;
+      min-height: 812px;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 0 10px #1a1a1a, 0 0 0 11px #333, 0 32px 80px rgba(0,0,0,0.7);
+      flex-shrink: 0;
+    }
+
+    .phone-frame::before {
+      content: '';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 30px;
+      background: #1a1a1a;
+      border-radius: 0 0 16px 16px;
+      z-index: 100;
+    }
+
+    .screen {
+      width: 100%;
+      min-height: 812px;
+      color: var(--color-text-primary);
+      background-color: var(--color-bg-primary);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ============================================================
+       SHARED COMPONENTS
+    ============================================================ */
+
+    /* App Bar */
+    .app-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 52px var(--space-5) var(--space-4);
+      background-color: var(--color-bg-primary);
+      border-bottom: 1px solid var(--color-border-secondary);
+      flex-shrink: 0;
+    }
+    .app-bar-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-text-primary);
+    }
+    .app-bar-action {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-full);
+      background: var(--color-surface-secondary);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--color-text-secondary);
+    }
+    .app-bar-back {
+      display: flex; align-items: center; gap: var(--space-2);
+      font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+      color: var(--color-accent-primary); cursor: pointer;
+      background: none; border: none;
+    }
+
+    /* App Header (branded) */
+    .app-header {
+      padding: 52px var(--space-6) var(--space-5);
+      background: linear-gradient(160deg, var(--color-accent-secondary) 0%, #7B2010 100%);
+      text-align: center;
+      flex-shrink: 0;
+    }
+    .app-header-title {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: #FFF7ED;
+      letter-spacing: 1px;
+    }
+    .app-header-subtitle {
+      font-size: var(--font-size-sm);
+      color: rgba(255,247,237,0.65);
+      margin-top: var(--space-1);
+    }
+
+    /* Screen body */
+    .screen-body {
+      flex: 1;
+      padding: var(--space-5) var(--space-5) var(--space-8);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-5);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-5);
+      font-family: var(--font-family); font-size: var(--font-size-md);
+      font-weight: var(--font-weight-medium); line-height: 1;
+      border-radius: var(--radius-lg); border: var(--border-medium) solid transparent;
+      cursor: pointer; transition: all var(--transition-normal); text-decoration: none;
+    }
+    .btn-primary { background-color: var(--color-accent-primary); color: var(--color-text-inverse); border-color: var(--color-accent-primary); }
+    .btn-secondary { background-color: transparent; color: var(--color-text-primary); border-color: var(--color-border-primary); }
+    .btn-ghost { background-color: transparent; color: var(--color-text-secondary); border-color: transparent; }
+    .btn-success { background-color: var(--color-success); color: var(--color-text-inverse); border-color: var(--color-success); }
+    .btn-danger { background-color: var(--color-error); color: #fff; border-color: var(--color-error); }
+    .btn-lg { padding: var(--space-4) var(--space-6); font-size: var(--font-size-lg); }
+    .btn-full { width: 100%; }
+    .btn-sm { padding: var(--space-2) var(--space-3); font-size: var(--font-size-sm); }
+
+    /* Cards */
+    .card {
+      background-color: var(--color-surface-primary);
+      border: var(--border-thick) solid var(--color-border-accent);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+    }
+    .card-elevated {
+      background-color: var(--color-surface-secondary);
+      border: none;
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+    }
+
+    /* List items */
+    .list-item {
+      display: flex; align-items: center; gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+      background-color: var(--color-surface-secondary);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+    }
+    .list-item-content { flex: 1; min-width: 0; }
+    .list-item-title { font-size: var(--font-size-md); font-weight: var(--font-weight-medium); color: var(--color-text-primary); }
+    .list-item-subtitle { font-size: var(--font-size-sm); color: var(--color-text-secondary); margin-top: var(--space-1); }
+
+    /* Avatar */
+    .avatar {
+      width: 44px; height: 44px; border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      font-size: var(--font-size-md); font-weight: var(--font-weight-semibold); flex-shrink: 0;
+    }
+    .avatar-sm { width: 32px; height: 32px; font-size: var(--font-size-sm); }
+    .avatar-lg { width: 56px; height: 56px; font-size: var(--font-size-lg); }
+
+    /* Badge */
+    .badge {
+      display: inline-flex; align-items: center;
+      padding: var(--space-1) var(--space-3);
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
+      border-radius: var(--radius-full); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-success { background-color: var(--color-success-subtle); color: var(--color-success-text); }
+    .badge-warning { background-color: var(--color-warning-subtle); color: var(--color-warning-text); }
+    .badge-error { background-color: var(--color-error-subtle); color: var(--color-error-text); }
+    .badge-info { background-color: var(--color-info-subtle); color: var(--color-info-text); }
+
+    /* Chip */
+    .chip {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: var(--space-2) var(--space-4);
+      font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+      color: var(--color-text-secondary);
+      background-color: var(--color-input-bg);
+      border: var(--border-medium) solid var(--color-input-bg);
+      border-radius: var(--radius-md); cursor: pointer;
+    }
+    .chip.active {
+      color: var(--color-accent-secondary);
+      background-color: var(--color-accent-primary-subtle);
+      border-color: var(--color-accent-primary);
+    }
+    .chip-lg { padding: var(--space-3) var(--space-5); font-size: var(--font-size-md); }
+
+    /* Checkbox */
+    .checkbox-wrapper { display: flex; align-items: center; gap: var(--space-3); cursor: pointer; }
+    .checkbox {
+      width: 20px; height: 20px;
+      background-color: var(--color-input-bg);
+      border: var(--border-medium) solid var(--color-border-primary);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .checkbox.checked {
+      background-color: var(--color-accent-primary-subtle);
+      border-color: var(--color-accent-primary);
+    }
+    .checkbox.checked::after {
+      content: ''; width: 10px; height: 10px;
+      background-color: var(--color-accent-primary); border-radius: 2px;
+    }
+    .checkbox-label { font-size: var(--font-size-md); color: var(--color-text-primary); }
+
+    /* Input */
+    .input {
+      width: 100%; padding: var(--space-3) var(--space-4);
+      font-family: var(--font-family); font-size: var(--font-size-md);
+      color: var(--color-text-primary); background-color: var(--color-input-bg);
+      border: var(--border-medium) solid var(--color-border-primary);
+      border-radius: var(--radius-md); outline: none;
+    }
+    .input::placeholder { color: var(--color-text-tertiary); }
+
+    /* Form */
+    .form-label {
+      display: block; font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+      color: var(--color-text-tertiary); margin-bottom: var(--space-2);
+      text-transform: uppercase; letter-spacing: 0.8px;
+    }
+    .form-group { display: flex; flex-direction: column; gap: var(--space-2); }
+
+    /* Timer */
+    .timer-display {
+      font-size: var(--font-size-display);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-text-primary);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: -2px;
+    }
+    .timer-display.warning { color: var(--color-warning); }
+    .timer-display.danger { color: var(--color-error); }
+
+    /* Dice */
+    .dice {
+      width: 48px; height: 48px;
+      border-radius: var(--radius-md);
+      border: var(--border-thick) solid var(--color-border-primary);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .dice.selected {
+      border-color: var(--color-dice-selected-border);
+      box-shadow: 0 0 0 2px var(--color-dice-selected-border);
+    }
+    .dice-red { background-color: var(--color-dice-red-bg); }
+    .dice-yellow { background-color: var(--color-dice-yellow-bg); }
+    .dice-event { background-color: var(--color-dice-event-bg); }
+
+    /* Bottom Sheet */
+    .bottom-sheet {
+      background-color: var(--color-surface-primary);
+      border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+      padding: var(--space-4) var(--space-5) var(--space-6);
+    }
+    .bottom-sheet-handle {
+      width: 36px; height: 4px;
+      background-color: var(--color-border-primary);
+      border-radius: var(--radius-full);
+      margin: 0 auto var(--space-5);
+    }
+    .bottom-sheet-item {
+      display: flex; align-items: center; gap: var(--space-4);
+      padding: var(--space-4) 0;
+      font-size: var(--font-size-md); color: var(--color-text-primary);
+      cursor: pointer;
+      border-bottom: 1px solid var(--color-border-secondary);
+    }
+    .bottom-sheet-item:last-child { border-bottom: none; }
+
+    /* Divider */
+    .divider { height: 1px; background: var(--color-border-secondary); margin: var(--space-3) 0; }
+
+    /* Section header */
+    .section-header {
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold);
+      color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.8px;
+    }
+
+    /* Stat row */
+    .stat-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--color-border-secondary);
+      font-size: var(--font-size-sm);
+    }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-row-label { color: var(--color-text-secondary); }
+    .stat-row-value { font-weight: var(--font-weight-semibold); color: var(--color-text-primary); }
+
+    /* Dice dots SVG grid */
+    .dice-dots-container {
+      display: grid; width: 100%; height: 100%;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      padding: 8px; position: absolute; top:0; left:0;
+    }
+    .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dot-red { background: var(--color-dice-red-dot); }
+    .dot-yellow { background: var(--color-dice-yellow-dot); }
+
+    /* Timer control button */
+    .timer-btn {
+      width: 64px; height: 64px;
+      border-radius: var(--radius-full);
+      border: var(--border-thick) solid var(--color-border-primary);
+      background: var(--color-surface-secondary);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--color-text-primary);
+      font-size: var(--font-size-xs); font-weight: var(--font-weight-medium);
+      gap: 4px;
+    }
+    .timer-btn.primary {
+      background: var(--color-accent-primary);
+      border-color: var(--color-accent-primary);
+      color: white;
+      width: 72px; height: 72px;
+    }
+
+    /* Player order row */
+    .player-row {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-surface-secondary);
+      border-radius: var(--radius-md);
+    }
+    .player-row-handle { color: var(--color-text-tertiary); font-size: 18px; cursor: grab; }
+    .player-row-name { flex: 1; font-size: var(--font-size-md); font-weight: var(--font-weight-medium); color: var(--color-text-primary); }
+    .player-row-remove {
+      width: 24px; height: 24px; border-radius: var(--radius-full);
+      background: var(--color-error-subtle); color: var(--color-error);
+      border: none; display: flex; align-items: center; justify-content: center; cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* Turn nav bar */
+    .turn-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--space-3) var(--space-5);
+      background: var(--color-bg-secondary);
+      border-bottom: 1px solid var(--color-border-accent);
+    }
+    .turn-nav-btn {
+      width: 36px; height: 36px; border-radius: var(--radius-md);
+      background: var(--color-surface-secondary);
+      border: 1px solid var(--color-border-primary);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: var(--color-text-secondary); font-size: 14px;
+    }
+    .turn-nav-btn.disabled { opacity: 0.3; cursor: not-allowed; }
+    .turn-nav-info { text-align: center; }
+    .turn-nav-label { font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); color: var(--color-text-primary); }
+    .turn-nav-sub { font-size: var(--font-size-xs); color: var(--color-text-tertiary); }
+
+    /* Bar chart */
+    .bar-chart {
+      display: flex; align-items: flex-end; gap: 6px;
+      height: 80px;
+      padding: 0 4px;
+    }
+    .bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+    .bar {
+      width: 100%; border-radius: 3px 3px 0 0;
+      background: var(--color-accent-primary);
+      min-height: 4px;
+      transition: height 0.5s ease;
+    }
+    .bar-label { font-size: 9px; color: var(--color-text-tertiary); }
+    .bar-count { font-size: 9px; color: var(--color-text-secondary); font-weight: 600; }
+
+    /* Barbarian tracker */
+    .barbarian-tracker {
+      display: flex; align-items: center; gap: var(--space-2);
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-surface-accent);
+      border: 1px solid var(--color-border-accent);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm); font-weight: var(--font-weight-medium);
+      color: var(--color-accent-secondary);
+    }
+
+    /* Warning banner */
+    .warning-banner {
+      display: flex; gap: var(--space-3); align-items: flex-start;
+      padding: var(--space-4);
+      background: var(--color-warning-subtle);
+      border: 1px solid var(--color-warning);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm); color: var(--color-warning-text);
+    }
+
+    /* Radio */
+    .radio-item {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-surface-secondary);
+      border-radius: var(--radius-lg); cursor: pointer;
+    }
+    .radio {
+      width: 20px; height: 20px; border-radius: var(--radius-full);
+      border: 2px solid var(--color-border-primary);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .radio.selected { border-color: var(--color-accent-primary); }
+    .radio.selected::after {
+      content: ''; width: 10px; height: 10px;
+      border-radius: var(--radius-full); background: var(--color-accent-primary);
+    }
+    .radio-label { flex: 1; font-size: var(--font-size-md); color: var(--color-text-primary); }
+
+    /* Event screen */
+    .event-screen-center {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: var(--space-8) var(--space-6);
+      gap: var(--space-6); text-align: center;
+    }
+    .event-illustration {
+      width: 120px; height: 120px; border-radius: var(--radius-xl);
+      background: var(--color-surface-accent);
+      border: 2px solid var(--color-border-accent);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px;
+    }
+    .event-title { font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); }
+    .event-description { font-size: var(--font-size-md); color: var(--color-text-secondary); line-height: var(--line-height-relaxed); }
+
+    /* Stepper */
+    .stepper {
+      display: flex; align-items: center; gap: var(--space-4);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-surface-secondary);
+      border-radius: var(--radius-md);
+    }
+    .stepper-btn {
+      width: 36px; height: 36px; border-radius: var(--radius-full);
+      background: var(--color-accent-primary-subtle);
+      border: 1px solid var(--color-border-accent);
+      color: var(--color-accent-primary);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 20px; font-weight: 300;
+    }
+    .stepper-value { flex: 1; text-align: center; font-size: var(--font-size-xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); }
+
+    /* Overlay */
+    .overlay-bg {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      z-index: 10;
+    }
+
+    /* Summary trophy */
+    .trophy-banner {
+      background: linear-gradient(135deg, var(--color-accent-secondary) 0%, var(--color-accent-primary) 100%);
+      padding: var(--space-6);
+      text-align: center;
+      border-radius: var(--radius-lg);
+    }
+    .trophy-emoji { font-size: 40px; display: block; margin-bottom: var(--space-2); }
+    .trophy-title { font-size: var(--font-size-xs); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,247,237,0.7); }
+    .trophy-name { font-size: var(--font-size-2xl); font-weight: var(--font-weight-bold); color: #FFF7ED; margin-top: var(--space-1); }
+  </style>
+</head>
+<body>
+  <h1 class="showcase-title">CatanCompanion — UI Mockups v1.0</h1>
+
+  <!-- ================================================================
+       1. DASHBOARD
+  ================================================================ -->
+  <div class="section-label">01 — Dashboard</div>
+  <div class="screen-pair">
+    <!-- Light -->
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-header">
+            <div class="app-header-title">CatanCompanion</div>
+            <div class="app-header-subtitle">Board game timer & tracker</div>
+          </div>
+          <div class="screen-body" style="gap: var(--space-4);">
+            <!-- Resume Card -->
+            <div class="card" style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-5);cursor:pointer;">
+              <div style="width:48px;height:48px;border-radius:var(--radius-full);background:var(--color-success-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><polygon points="7,4 18,11 7,18" fill="#059669"/></svg>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:var(--font-size-md);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">Resume Last Game</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);margin-top:2px;">Alice, Bob, Charlie • Turn 23</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+            </div>
+
+            <!-- 3 action cards -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);">
+              <div class="card" style="text-align:center;padding:var(--space-5) var(--space-3);cursor:pointer;border-color:var(--color-category-new);">
+                <div class="avatar-lg" style="background:var(--color-category-new-subtle);color:var(--color-category-new);margin:0 auto var(--space-3);width:52px;height:52px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8V16M8 12H16"/></svg>
+                </div>
+                <div style="font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">New Game</div>
+              </div>
+              <div class="card" style="text-align:center;padding:var(--space-5) var(--space-3);cursor:pointer;border-color:var(--color-category-games);">
+                <div style="background:var(--color-category-games-subtle);color:var(--color-category-games);width:52px;height:52px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-3);">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="4" rx="1" fill="currentColor"/><rect x="3" y="11" width="18" height="4" rx="1" fill="currentColor" opacity=".65"/><rect x="3" y="17" width="18" height="4" rx="1" fill="currentColor" opacity=".3"/></svg>
+                </div>
+                <div style="font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">Games</div>
+              </div>
+              <div class="card" style="text-align:center;padding:var(--space-5) var(--space-3);cursor:pointer;border-color:var(--color-category-players);">
+                <div style="background:var(--color-category-players-subtle);color:var(--color-category-players);width:52px;height:52px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-3);">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20C5 16.134 8.134 13 12 13s7 3.134 7 7"/></svg>
+                </div>
+                <div style="font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">Players</div>
+              </div>
+            </div>
+
+            <!-- Quick stats -->
+            <div class="card-elevated" style="margin-top:var(--space-2);">
+              <div class="section-header" style="margin-bottom:var(--space-3);">Recent Activity</div>
+              <div style="display:flex;gap:var(--space-8);padding:var(--space-2) 0;">
+                <div style="text-align:center;">
+                  <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent-secondary);">5</div>
+                  <div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);margin-top:2px;">Games</div>
+                </div>
+                <div style="width:1px;background:var(--color-border-secondary);"></div>
+                <div style="text-align:center;">
+                  <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent-secondary);">3</div>
+                  <div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);margin-top:2px;">Players</div>
+                </div>
+                <div style="width:1px;background:var(--color-border-secondary);"></div>
+                <div style="text-align:center;">
+                  <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent-secondary);">2h</div>
+                  <div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);margin-top:2px;">Avg. Time</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark -->
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-header">
+            <div class="app-header-title">CatanCompanion</div>
+            <div class="app-header-subtitle">Board game timer & tracker</div>
+          </div>
+          <div class="screen-body" style="gap: var(--space-4);">
+            <div class="card" style="display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-5);cursor:pointer;">
+              <div style="width:48px;height:48px;border-radius:var(--radius-full);background:var(--color-success-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><polygon points="7,4 18,11 7,18" fill="var(--color-success)"/></svg>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:var(--font-size-md);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">Resume Last Game</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);margin-top:2px;">Alice, Bob, Charlie • Turn 23</div>
+              </div>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-3);">
+              <div class="card" style="text-align:center;padding:var(--space-5) var(--space-3);cursor:pointer;border-color:var(--color-category-new);">
+                <div style="background:var(--color-category-new-subtle);color:var(--color-category-new);width:52px;height:52px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-3);">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 8V16M8 12H16"/></svg>
+                </div>
+                <div style="font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">New Game</div>
+              </div>
+              <div class="card" style="text-align:center;padding:var(--space-5) var(--space-3);cursor:pointer;border-color:var(--color-category-games);">
+                <div style="background:var(--color-category-games-subtle);color:var(--color-category-games);width:52px;height:52px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-3);">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="4" rx="1" fill="currentColor"/><rect x="3" y="11" width="18" height="4" rx="1" fill="currentColor" opacity=".65"/><rect x="3" y="17" width="18" height="4" rx="1" fill="currentColor" opacity=".3"/></svg>
+                </div>
+                <div style="font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">Games</div>
+              </div>
+              <div class="card" style="text-align:center;padding:var(--space-5) var(--space-3);cursor:pointer;border-color:var(--color-category-players);">
+                <div style="background:var(--color-category-players-subtle);color:var(--color-category-players);width:52px;height:52px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-3);">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M5 20C5 16.134 8.134 13 12 13s7 3.134 7 7"/></svg>
+                </div>
+                <div style="font-size:var(--font-size-sm);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">Players</div>
+              </div>
+            </div>
+            <div class="card-elevated" style="margin-top:var(--space-2);">
+              <div class="section-header" style="margin-bottom:var(--space-3);">Recent Activity</div>
+              <div style="display:flex;gap:var(--space-8);padding:var(--space-2) 0;">
+                <div style="text-align:center;"><div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent-secondary);">5</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);margin-top:2px;">Games</div></div>
+                <div style="width:1px;background:var(--color-border-secondary);"></div>
+                <div style="text-align:center;"><div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent-secondary);">3</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);margin-top:2px;">Players</div></div>
+                <div style="width:1px;background:var(--color-border-secondary);"></div>
+                <div style="text-align:center;"><div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-accent-secondary);">2h</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);margin-top:2px;">Avg. Time</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       2. GAME CONFIGURATION
+  ================================================================ -->
+  <div class="section-label">02 — Game Configuration</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">New Game</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <!-- Turn duration -->
+            <div class="form-group">
+              <label class="form-label">Turn Duration</label>
+              <div class="stepper">
+                <button class="stepper-btn">−</button>
+                <div class="stepper-value">02:00</div>
+                <button class="stepper-btn">+</button>
+              </div>
+            </div>
+
+            <!-- Number of players -->
+            <div class="form-group">
+              <label class="form-label">Number of Players</label>
+              <div style="display:flex;gap:var(--space-2);">
+                <button class="chip">3</button>
+                <button class="chip active">4</button>
+                <button class="chip">5</button>
+                <button class="chip">6</button>
+              </div>
+            </div>
+
+            <!-- Players list -->
+            <div class="form-group">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3);">
+                <label class="form-label" style="margin-bottom:0;">Players</label>
+                <button class="btn btn-sm" style="background:var(--color-accent-primary-subtle);color:var(--color-accent-primary);border-color:var(--color-border-accent);">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 2V12M2 7H12"/></svg>
+                  Add Player
+                </button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+                <div class="player-row"><span class="player-row-handle">⠿</span><span class="player-row-name">1. Alice</span><button class="player-row-remove">✕</button></div>
+                <div class="player-row"><span class="player-row-handle">⠿</span><span class="player-row-name">2. Bob</span><button class="player-row-remove">✕</button></div>
+                <div class="player-row"><span class="player-row-handle">⠿</span><span class="player-row-name">3. Charlie</span><button class="player-row-remove">✕</button></div>
+                <div class="player-row"><span class="player-row-handle">⠿</span><span class="player-row-name">4. Dave</span><button class="player-row-remove">✕</button></div>
+              </div>
+            </div>
+
+            <!-- Game options -->
+            <div class="form-group">
+              <label class="form-label">Game Options</label>
+              <div class="card-elevated" style="display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-4);">
+                <label class="checkbox-wrapper">
+                  <span class="checkbox"></span>
+                  <span class="checkbox-label">In-Between Turns (5–6 players)</span>
+                </label>
+                <label class="checkbox-wrapper">
+                  <span class="checkbox checked"></span>
+                  <span class="checkbox-label">Seafarers</span>
+                </label>
+                <label class="checkbox-wrapper">
+                  <span class="checkbox checked"></span>
+                  <span class="checkbox-label">Cities &amp; Knights</span>
+                </label>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-full" style="margin-top:auto;">Start Game</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">New Game</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div class="form-group">
+              <label class="form-label">Turn Duration</label>
+              <div class="stepper">
+                <button class="stepper-btn">−</button>
+                <div class="stepper-value">02:00</div>
+                <button class="stepper-btn">+</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Number of Players</label>
+              <div style="display:flex;gap:var(--space-2);">
+                <button class="chip">3</button>
+                <button class="chip active">4</button>
+                <button class="chip">5</button>
+                <button class="chip">6</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3);">
+                <label class="form-label" style="margin-bottom:0;">Players</label>
+                <button class="btn btn-sm" style="background:var(--color-accent-primary-subtle);color:var(--color-accent-primary);border-color:var(--color-border-accent);">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 2V12M2 7H12"/></svg>
+                  Add Player
+                </button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+                <div class="player-row"><span class="player-row-handle">⠿</span><span class="player-row-name">1. Alice</span><button class="player-row-remove">✕</button></div>
+                <div class="player-row"><span class="player-row-handle">⠿</span><span class="player-row-name">2. Bob</span><button class="player-row-remove">✕</button></div>
+                <div class="player-row"><span class="player-row-handle">⠿</span><span class="player-row-name">3. Charlie</span><button class="player-row-remove">✕</button></div>
+                <div class="player-row"><span class="player-row-handle">⠿</span><span class="player-row-name">4. Dave</span><button class="player-row-remove">✕</button></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Game Options</label>
+              <div class="card-elevated" style="display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-4);">
+                <label class="checkbox-wrapper"><span class="checkbox"></span><span class="checkbox-label">In-Between Turns (5–6 players)</span></label>
+                <label class="checkbox-wrapper"><span class="checkbox checked"></span><span class="checkbox-label">Seafarers</span></label>
+                <label class="checkbox-wrapper"><span class="checkbox checked"></span><span class="checkbox-label">Cities &amp; Knights</span></label>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-lg btn-full" style="margin-top:auto;">Start Game</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       3. DICE SELECTION
+  ================================================================ -->
+  <div class="section-label">03 — Dice Selection Phase</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="turn-nav">
+            <button class="turn-nav-btn disabled">←</button>
+            <div class="turn-nav-info">
+              <div class="turn-nav-label">Turn 5</div>
+              <div class="turn-nav-sub">Alice's Turn</div>
+            </div>
+            <button class="turn-nav-btn">→</button>
+          </div>
+          <div class="screen-body" style="gap:var(--space-6);">
+            <!-- Red dice row -->
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">Red Dice</div>
+              <div style="display:flex;gap:var(--space-2);">
+                <!-- Die 1 -->
+                <div class="dice dice-red">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="5" fill="#FDE047"/></svg>
+                </div>
+                <!-- Die 2 -->
+                <div class="dice dice-red">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4.5" fill="#FDE047"/><circle cx="33" cy="33" r="4.5" fill="#FDE047"/></svg>
+                </div>
+                <!-- Die 3 selected -->
+                <div class="dice dice-red selected">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4" fill="#FDE047"/><circle cx="24" cy="24" r="4" fill="#FDE047"/><circle cx="33" cy="33" r="4" fill="#FDE047"/></svg>
+                </div>
+                <!-- Die 4 -->
+                <div class="dice dice-red">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4" fill="#FDE047"/><circle cx="33" cy="15" r="4" fill="#FDE047"/><circle cx="15" cy="33" r="4" fill="#FDE047"/><circle cx="33" cy="33" r="4" fill="#FDE047"/></svg>
+                </div>
+                <!-- Die 5 -->
+                <div class="dice dice-red">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="14" cy="14" r="4" fill="#FDE047"/><circle cx="34" cy="14" r="4" fill="#FDE047"/><circle cx="24" cy="24" r="4" fill="#FDE047"/><circle cx="14" cy="34" r="4" fill="#FDE047"/><circle cx="34" cy="34" r="4" fill="#FDE047"/></svg>
+                </div>
+                <!-- Die 6 -->
+                <div class="dice dice-red">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="14" cy="13" r="4" fill="#FDE047"/><circle cx="34" cy="13" r="4" fill="#FDE047"/><circle cx="14" cy="24" r="4" fill="#FDE047"/><circle cx="34" cy="24" r="4" fill="#FDE047"/><circle cx="14" cy="35" r="4" fill="#FDE047"/><circle cx="34" cy="35" r="4" fill="#FDE047"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Yellow dice row -->
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">Yellow Dice</div>
+              <div style="display:flex;gap:var(--space-2);">
+                <div class="dice dice-yellow">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="5" fill="#DC2626"/></svg>
+                </div>
+                <div class="dice dice-yellow">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4.5" fill="#DC2626"/><circle cx="33" cy="33" r="4.5" fill="#DC2626"/></svg>
+                </div>
+                <div class="dice dice-yellow">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4" fill="#DC2626"/><circle cx="24" cy="24" r="4" fill="#DC2626"/><circle cx="33" cy="33" r="4" fill="#DC2626"/></svg>
+                </div>
+                <div class="dice dice-yellow selected">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4" fill="#DC2626"/><circle cx="33" cy="15" r="4" fill="#DC2626"/><circle cx="15" cy="33" r="4" fill="#DC2626"/><circle cx="33" cy="33" r="4" fill="#DC2626"/></svg>
+                </div>
+                <div class="dice dice-yellow">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="14" cy="14" r="4" fill="#DC2626"/><circle cx="34" cy="14" r="4" fill="#DC2626"/><circle cx="24" cy="24" r="4" fill="#DC2626"/><circle cx="14" cy="34" r="4" fill="#DC2626"/><circle cx="34" cy="34" r="4" fill="#DC2626"/></svg>
+                </div>
+                <div class="dice dice-yellow">
+                  <svg width="48" height="48" viewBox="0 0 48 48"><circle cx="14" cy="13" r="4" fill="#DC2626"/><circle cx="34" cy="13" r="4" fill="#DC2626"/><circle cx="14" cy="24" r="4" fill="#DC2626"/><circle cx="34" cy="24" r="4" fill="#DC2626"/><circle cx="14" cy="35" r="4" fill="#DC2626"/><circle cx="34" cy="35" r="4" fill="#DC2626"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event dice row (C&K) -->
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">Event Dice</div>
+              <div style="display:flex;gap:var(--space-2);">
+                <div class="dice dice-event" style="font-size:22px;">⚔️</div>
+                <div class="dice dice-event selected" style="font-size:22px;">🔬</div>
+                <div class="dice dice-event" style="font-size:22px;">💰</div>
+                <div class="dice dice-event" style="font-size:22px;">🚢</div>
+              </div>
+            </div>
+
+            <!-- Roll sum display -->
+            <div style="display:flex;align-items:center;justify-content:center;gap:var(--space-3);padding:var(--space-4);background:var(--color-surface-accent);border-radius:var(--radius-lg);border:1px solid var(--color-border-accent);">
+              <span style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Sum</span>
+              <span style="font-size:var(--font-size-3xl);font-weight:var(--font-weight-bold);color:var(--color-accent-secondary);">7</span>
+              <span style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">= 3 + 4</span>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-full" style="margin-top:auto;">Continue</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="turn-nav">
+            <button class="turn-nav-btn disabled">←</button>
+            <div class="turn-nav-info">
+              <div class="turn-nav-label">Turn 5</div>
+              <div class="turn-nav-sub">Alice's Turn</div>
+            </div>
+            <button class="turn-nav-btn">→</button>
+          </div>
+          <div class="screen-body" style="gap:var(--space-6);">
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">Red Dice</div>
+              <div style="display:flex;gap:var(--space-2);">
+                <div class="dice dice-red"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="5" fill="#FDE047"/></svg></div>
+                <div class="dice dice-red"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4.5" fill="#FDE047"/><circle cx="33" cy="33" r="4.5" fill="#FDE047"/></svg></div>
+                <div class="dice dice-red selected"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4" fill="#FDE047"/><circle cx="24" cy="24" r="4" fill="#FDE047"/><circle cx="33" cy="33" r="4" fill="#FDE047"/></svg></div>
+                <div class="dice dice-red"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4" fill="#FDE047"/><circle cx="33" cy="15" r="4" fill="#FDE047"/><circle cx="15" cy="33" r="4" fill="#FDE047"/><circle cx="33" cy="33" r="4" fill="#FDE047"/></svg></div>
+                <div class="dice dice-red"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="14" cy="14" r="4" fill="#FDE047"/><circle cx="34" cy="14" r="4" fill="#FDE047"/><circle cx="24" cy="24" r="4" fill="#FDE047"/><circle cx="14" cy="34" r="4" fill="#FDE047"/><circle cx="34" cy="34" r="4" fill="#FDE047"/></svg></div>
+                <div class="dice dice-red"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="14" cy="13" r="4" fill="#FDE047"/><circle cx="34" cy="13" r="4" fill="#FDE047"/><circle cx="14" cy="24" r="4" fill="#FDE047"/><circle cx="34" cy="24" r="4" fill="#FDE047"/><circle cx="14" cy="35" r="4" fill="#FDE047"/><circle cx="34" cy="35" r="4" fill="#FDE047"/></svg></div>
+              </div>
+            </div>
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">Yellow Dice</div>
+              <div style="display:flex;gap:var(--space-2);">
+                <div class="dice dice-yellow"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="24" cy="24" r="5" fill="#DC2626"/></svg></div>
+                <div class="dice dice-yellow"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4.5" fill="#DC2626"/><circle cx="33" cy="33" r="4.5" fill="#DC2626"/></svg></div>
+                <div class="dice dice-yellow"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4" fill="#DC2626"/><circle cx="24" cy="24" r="4" fill="#DC2626"/><circle cx="33" cy="33" r="4" fill="#DC2626"/></svg></div>
+                <div class="dice dice-yellow selected"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="15" cy="15" r="4" fill="#DC2626"/><circle cx="33" cy="15" r="4" fill="#DC2626"/><circle cx="15" cy="33" r="4" fill="#DC2626"/><circle cx="33" cy="33" r="4" fill="#DC2626"/></svg></div>
+                <div class="dice dice-yellow"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="14" cy="14" r="4" fill="#DC2626"/><circle cx="34" cy="14" r="4" fill="#DC2626"/><circle cx="24" cy="24" r="4" fill="#DC2626"/><circle cx="14" cy="34" r="4" fill="#DC2626"/><circle cx="34" cy="34" r="4" fill="#DC2626"/></svg></div>
+                <div class="dice dice-yellow"><svg width="48" height="48" viewBox="0 0 48 48"><circle cx="14" cy="13" r="4" fill="#DC2626"/><circle cx="34" cy="13" r="4" fill="#DC2626"/><circle cx="14" cy="24" r="4" fill="#DC2626"/><circle cx="34" cy="24" r="4" fill="#DC2626"/><circle cx="14" cy="35" r="4" fill="#DC2626"/><circle cx="34" cy="35" r="4" fill="#DC2626"/></svg></div>
+              </div>
+            </div>
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">Event Dice</div>
+              <div style="display:flex;gap:var(--space-2);">
+                <div class="dice dice-event" style="font-size:22px;">⚔️</div>
+                <div class="dice dice-event selected" style="font-size:22px;">🔬</div>
+                <div class="dice dice-event" style="font-size:22px;">💰</div>
+                <div class="dice dice-event" style="font-size:22px;">🚢</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:var(--space-3);padding:var(--space-4);background:var(--color-surface-accent);border-radius:var(--radius-lg);border:1px solid var(--color-border-accent);">
+              <span style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Sum</span>
+              <span style="font-size:var(--font-size-3xl);font-weight:var(--font-weight-bold);color:var(--color-accent-secondary);">7</span>
+              <span style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">= 3 + 4</span>
+            </div>
+            <button class="btn btn-primary btn-lg btn-full" style="margin-top:auto;">Continue</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       4. EVENT PHASE — THIEF
+  ================================================================ -->
+  <div class="section-label">04 — Event Phase (Thief / 7)</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="turn-nav">
+            <button class="turn-nav-btn">←</button>
+            <div class="turn-nav-info"><div class="turn-nav-label">Turn 5</div><div class="turn-nav-sub">Alice's Turn</div></div>
+            <button class="turn-nav-btn disabled">→</button>
+          </div>
+          <div class="event-screen-center">
+            <div class="event-illustration">🦹</div>
+            <div>
+              <div class="event-title">The Thief!</div>
+              <div style="margin-top:var(--space-2);display:flex;align-items:center;justify-content:center;gap:var(--space-2);">
+                <div class="dice dice-red" style="width:36px;height:36px;"><svg width="36" height="36" viewBox="0 0 36 36"><circle cx="12" cy="12" r="3.5" fill="#FDE047"/><circle cx="18" cy="18" r="3.5" fill="#FDE047"/><circle cx="24" cy="24" r="3.5" fill="#FDE047"/></svg></div>
+                <span style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-text-primary);">+</span>
+                <div class="dice dice-yellow" style="width:36px;height:36px;"><svg width="36" height="36" viewBox="0 0 36 36"><circle cx="12" cy="12" r="3" fill="#DC2626"/><circle cx="24" cy="12" r="3" fill="#DC2626"/><circle cx="12" cy="24" r="3" fill="#DC2626"/><circle cx="24" cy="24" r="3" fill="#DC2626"/></svg></div>
+                <span style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-text-primary);">=</span>
+                <span style="font-size:var(--font-size-2xl);font-weight:700;color:var(--color-warning);">7</span>
+              </div>
+            </div>
+            <div class="event-description">
+              All players count their resource cards.<br>
+              If you have <strong>more than 7</strong>, discard half.<br><br>
+              Move the <strong>thief</strong> to a different tile and steal one resource from a player there.
+            </div>
+            <div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);font-style:italic;">Seafarers: you may move the pirate instead</div>
+            <button class="btn btn-primary btn-lg btn-full">Continue to Turn Timer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark — Barbarian Attack</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="turn-nav">
+            <button class="turn-nav-btn">←</button>
+            <div class="turn-nav-info"><div class="turn-nav-label">Turn 12</div><div class="turn-nav-sub">Bob's Turn</div></div>
+            <button class="turn-nav-btn disabled">→</button>
+          </div>
+          <div class="event-screen-center">
+            <div class="event-illustration" style="font-size:56px;">⚔️</div>
+            <div>
+              <div class="event-title">The Barbarians!</div>
+              <div style="margin-top:var(--space-2);text-align:center;">
+                <div class="dice dice-event" style="display:inline-flex;font-size:28px;width:52px;height:52px;margin:0 auto;border-color:var(--color-error);">🚢</div>
+              </div>
+            </div>
+            <div style="background:var(--color-error-subtle);border:1px solid var(--color-error);border-radius:var(--radius-lg);padding:var(--space-4);text-align:center;">
+              <div style="font-size:var(--font-size-lg);font-weight:700;color:var(--color-error-text);margin-bottom:var(--space-2);">The Barbarians have arrived!</div>
+              <div style="font-size:var(--font-size-sm);color:var(--color-error-text);">Resolve the barbarian attack now. Compare knights to cities.</div>
+            </div>
+            <div class="barbarian-tracker">
+              <span>🚢</span>
+              <span>Position: Island (8/8)</span>
+            </div>
+            <button class="btn btn-primary btn-lg btn-full">Continue to Turn Timer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       5. TIMER PHASE
+  ================================================================ -->
+  <div class="section-label">05 — Timer Phase</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light — Running</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="turn-nav">
+            <button class="turn-nav-btn disabled">←</button>
+            <div class="turn-nav-info"><div class="turn-nav-label">Turn 5</div><div class="turn-nav-sub">Alice's Turn</div></div>
+            <button class="turn-nav-btn disabled">→</button>
+          </div>
+
+          <!-- Player indicator -->
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--space-5);background:var(--color-bg-secondary);border-bottom:1px solid var(--color-border-accent);">
+            <div class="avatar" style="background:var(--color-category-players-subtle);color:var(--color-category-players);">AL</div>
+            <div>
+              <div style="font-size:var(--font-size-lg);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">Alice</div>
+              <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Active player</div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:var(--space-2);align-items:center;">
+              <div class="dice dice-red" style="width:32px;height:32px;border-width:1px;"><svg width="32" height="32" viewBox="0 0 32 32"><circle cx="10" cy="10" r="2.5" fill="#FDE047"/><circle cx="16" cy="16" r="2.5" fill="#FDE047"/><circle cx="22" cy="22" r="2.5" fill="#FDE047"/></svg></div>
+              <div class="dice dice-yellow" style="width:32px;height:32px;border-width:1px;"><svg width="32" height="32" viewBox="0 0 32 32"><circle cx="10" cy="10" r="2.5" fill="#DC2626"/><circle cx="22" cy="10" r="2.5" fill="#DC2626"/><circle cx="10" cy="22" r="2.5" fill="#DC2626"/><circle cx="22" cy="22" r="2.5" fill="#DC2626"/></svg></div>
+              <span style="font-size:var(--font-size-sm);font-weight:700;color:var(--color-accent-secondary);">=7</span>
+            </div>
+          </div>
+
+          <!-- Timer -->
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--space-8) var(--space-6);gap:var(--space-8);">
+            <div style="text-align:center;">
+              <div class="timer-display" style="font-size:72px;">01:47</div>
+              <div style="margin-top:var(--space-2);">
+                <div style="height:4px;background:var(--color-border-secondary);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="height:100%;width:88%;background:var(--color-success);border-radius:var(--radius-full);transition:width 1s linear;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Controls -->
+            <div style="display:flex;align-items:center;gap:var(--space-6);">
+              <button class="timer-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2C10 2 3 5.5 3 10s7 8 7 8"/><path d="M10 2L14 6M10 2L6 6"/></svg>
+                Reset
+              </button>
+              <button class="timer-btn primary">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+              </button>
+              <button class="timer-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M10 6V10L13 12"/></svg>
+                +10s
+              </button>
+            </div>
+          </div>
+
+          <!-- Bottom actions -->
+          <div style="padding:var(--space-4) var(--space-5) var(--space-8);display:flex;flex-direction:column;gap:var(--space-3);">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="barbarian-tracker">🚢 3 / 8</div>
+              <button class="btn btn-ghost btn-sm">☰ Menu</button>
+            </div>
+            <button class="btn btn-secondary btn-full">In-Between Turn (Charlie)</button>
+            <button class="btn btn-primary btn-lg btn-full">Next Turn →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark — Warning State</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="turn-nav">
+            <button class="turn-nav-btn">←</button>
+            <div class="turn-nav-info"><div class="turn-nav-label">Turn 8</div><div class="turn-nav-sub">Bob's Turn</div></div>
+            <button class="turn-nav-btn disabled">→</button>
+          </div>
+
+          <div style="display:flex;align-items:center;gap:var(--space-3);padding:var(--space-4) var(--space-5);background:var(--color-bg-secondary);border-bottom:1px solid var(--color-border-accent);">
+            <div class="avatar" style="background:var(--color-surface-accent);color:var(--color-accent-secondary);">BO</div>
+            <div>
+              <div style="font-size:var(--font-size-lg);font-weight:var(--font-weight-semibold);color:var(--color-text-primary);">Bob</div>
+              <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Active player</div>
+            </div>
+            <div style="margin-left:auto;display:flex;gap:var(--space-2);align-items:center;">
+              <div class="dice dice-red" style="width:32px;height:32px;border-width:1px;"><svg width="32" height="32" viewBox="0 0 32 32"><circle cx="10" cy="10" r="2.5" fill="#FDE047"/><circle cx="22" cy="10" r="2.5" fill="#FDE047"/><circle cx="10" cy="22" r="2.5" fill="#FDE047"/><circle cx="22" cy="22" r="2.5" fill="#FDE047"/></svg></div>
+              <div class="dice dice-yellow" style="width:32px;height:32px;border-width:1px;"><svg width="32" height="32" viewBox="0 0 32 32"><circle cx="10" cy="10" r="2.5" fill="#DC2626"/><circle cx="16" cy="16" r="2.5" fill="#DC2626"/><circle cx="22" cy="22" r="2.5" fill="#DC2626"/></svg></div>
+              <span style="font-size:var(--font-size-sm);font-weight:700;color:var(--color-accent-secondary);">=7</span>
+            </div>
+          </div>
+
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:var(--space-8) var(--space-6);gap:var(--space-8);">
+            <div style="text-align:center;">
+              <div class="timer-display warning" style="font-size:72px;">00:23</div>
+              <div style="margin-top:var(--space-2);">
+                <div style="height:4px;background:var(--color-border-secondary);border-radius:var(--radius-full);overflow:hidden;">
+                  <div style="height:100%;width:19%;background:var(--color-warning);border-radius:var(--radius-full);"></div>
+                </div>
+              </div>
+              <div style="margin-top:var(--space-2);font-size:var(--font-size-sm);color:var(--color-warning);">⚠ Time running low</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--space-6);">
+              <button class="timer-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2C10 2 3 5.5 3 10s7 8 7 8"/><path d="M10 2L14 6M10 2L6 6"/></svg>
+                Reset
+              </button>
+              <button class="timer-btn primary" style="background:var(--color-warning);border-color:var(--color-warning);">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><polygon points="8,5 19,12 8,19"/></svg>
+              </button>
+              <button class="timer-btn">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="10" r="8"/><path d="M10 6V10L13 12"/></svg>
+                +10s
+              </button>
+            </div>
+          </div>
+
+          <div style="padding:var(--space-4) var(--space-5) var(--space-8);display:flex;flex-direction:column;gap:var(--space-3);">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div class="barbarian-tracker">🚢 5 / 8</div>
+              <button class="btn btn-ghost btn-sm">☰ Menu</button>
+            </div>
+            <button class="btn btn-primary btn-lg btn-full">Next Turn →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       6. IN-GAME MENU (BOTTOM SHEET)
+  ================================================================ -->
+  <div class="section-label">06 — In-Game Menu (Bottom Sheet)</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light" style="position:relative;">
+          <!-- Blurred background (timer screen) -->
+          <div style="position:absolute;inset:0;background:var(--color-bg-primary);filter:blur(2px);transform:scale(1.02);overflow:hidden;">
+            <div style="padding:52px var(--space-5) var(--space-4);border-bottom:1px solid var(--color-border-secondary);">
+              <div style="font-size:var(--font-size-lg);font-weight:600;">Turn 5 — Alice's Turn</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;padding:80px 0;gap:32px;">
+              <div style="font-size:72px;font-weight:700;letter-spacing:-2px;color:#1C1917;font-variant-numeric:tabular-nums;">01:47</div>
+            </div>
+          </div>
+          <!-- Overlay -->
+          <div class="overlay-bg">
+            <div class="bottom-sheet">
+              <div class="bottom-sheet-handle"></div>
+              <div style="margin-bottom:var(--space-4);">
+                <div style="font-size:var(--font-size-xs);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-text-tertiary);padding-bottom:var(--space-3);">Game Options</div>
+              </div>
+              <div class="bottom-sheet-item">
+                <span style="font-size:20px;">📊</span>
+                <span>View Statistics</span>
+                <svg style="margin-left:auto;" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <div class="bottom-sheet-item">
+                <span style="font-size:20px;">⚙️</span>
+                <span>Change Game Settings</span>
+                <svg style="margin-left:auto;" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <div class="bottom-sheet-item" style="color:var(--color-error);">
+                <span style="font-size:20px;">🏁</span>
+                <span>End Game</span>
+                <svg style="margin-left:auto;" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-error)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <button class="btn btn-secondary btn-full" style="margin-top:var(--space-4);">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark" style="position:relative;">
+          <div style="position:absolute;inset:0;background:var(--color-bg-primary);filter:blur(2px);overflow:hidden;">
+            <div style="padding:52px var(--space-5) var(--space-4);border-bottom:1px solid var(--color-border-secondary);">
+              <div style="font-size:var(--font-size-lg);font-weight:600;color:#FAFAF9;">Turn 5 — Alice's Turn</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;padding:80px 0;">
+              <div style="font-size:72px;font-weight:700;letter-spacing:-2px;color:#FAFAF9;font-variant-numeric:tabular-nums;">01:47</div>
+            </div>
+          </div>
+          <div class="overlay-bg">
+            <div class="bottom-sheet">
+              <div class="bottom-sheet-handle"></div>
+              <div style="margin-bottom:var(--space-4);">
+                <div style="font-size:var(--font-size-xs);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-text-tertiary);padding-bottom:var(--space-3);">Game Options</div>
+              </div>
+              <div class="bottom-sheet-item">
+                <span style="font-size:20px;">📊</span>
+                <span>View Statistics</span>
+                <svg style="margin-left:auto;" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <div class="bottom-sheet-item">
+                <span style="font-size:20px;">⚙️</span>
+                <span>Change Game Settings</span>
+                <svg style="margin-left:auto;" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <div class="bottom-sheet-item" style="color:var(--color-error);">
+                <span style="font-size:20px;">🏁</span>
+                <span>End Game</span>
+                <svg style="margin-left:auto;" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-error)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <button class="btn btn-secondary btn-full" style="margin-top:var(--space-4);">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       7. STATISTICS POPUP
+  ================================================================ -->
+  <div class="section-label">07 — Dice Statistics</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">Dice Statistics</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <!-- Standard dice chart -->
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-4);">Standard Dice (2–12)</div>
+              <div class="card-elevated" style="padding:var(--space-4);">
+                <div class="bar-chart">
+                  <div class="bar-col"><div class="bar" style="height:8px;"></div><div class="bar-label">2</div><div class="bar-count">1</div></div>
+                  <div class="bar-col"><div class="bar" style="height:16px;"></div><div class="bar-label">3</div><div class="bar-count">3</div></div>
+                  <div class="bar-col"><div class="bar" style="height:24px;"></div><div class="bar-label">4</div><div class="bar-count">5</div></div>
+                  <div class="bar-col"><div class="bar" style="height:40px;"></div><div class="bar-label">5</div><div class="bar-count">7</div></div>
+                  <div class="bar-col"><div class="bar" style="height:20px;background:var(--color-accent-secondary);"></div><div class="bar-label">6</div><div class="bar-count">4</div></div>
+                  <div class="bar-col"><div class="bar" style="height:48px;background:var(--color-warning);"></div><div class="bar-label" style="color:var(--color-warning);font-weight:700;">7</div><div class="bar-count" style="color:var(--color-warning);font-weight:700;">8</div></div>
+                  <div class="bar-col"><div class="bar" style="height:32px;background:var(--color-accent-secondary);"></div><div class="bar-label">8</div><div class="bar-count">6</div></div>
+                  <div class="bar-col"><div class="bar" style="height:12px;"></div><div class="bar-label">9</div><div class="bar-count">2</div></div>
+                  <div class="bar-col"><div class="bar" style="height:20px;"></div><div class="bar-label">10</div><div class="bar-count">3</div></div>
+                  <div class="bar-col"><div class="bar" style="height:8px;"></div><div class="bar-label">11</div><div class="bar-count">1</div></div>
+                  <div class="bar-col"><div class="bar" style="height:4px;opacity:0.3;"></div><div class="bar-label">12</div><div class="bar-count">0</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event dice -->
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-4);">Event Dice (Cities &amp; Knights)</div>
+              <div class="card-elevated" style="padding:var(--space-4);">
+                <div style="display:flex;gap:var(--space-3);align-items:flex-end;height:100px;">
+                  <div class="bar-col">
+                    <div class="bar" style="height:48px;background:var(--color-error);"></div>
+                    <div style="font-size:20px;">⚔️</div>
+                    <div class="bar-count">8</div>
+                  </div>
+                  <div class="bar-col">
+                    <div class="bar" style="height:36px;background:var(--color-info);"></div>
+                    <div style="font-size:20px;">🔬</div>
+                    <div class="bar-count">5</div>
+                  </div>
+                  <div class="bar-col">
+                    <div class="bar" style="height:24px;background:var(--color-success);"></div>
+                    <div style="font-size:20px;">💰</div>
+                    <div class="bar-count">4</div>
+                  </div>
+                  <div class="bar-col">
+                    <div class="bar" style="height:16px;background:var(--color-category-games);"></div>
+                    <div style="font-size:20px;">🚢</div>
+                    <div class="bar-count">3</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summary stats -->
+            <div class="card">
+              <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:var(--space-3);text-align:center;">
+                <div><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-accent-secondary);">35</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Rolls</div></div>
+                <div style="background:var(--color-border-secondary);"></div>
+                <div><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-accent-secondary);">6.8</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Avg. Sum</div></div>
+                <div style="background:var(--color-border-secondary);"></div>
+                <div><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-warning);">8×</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Most: 7</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">Dice Statistics</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-4);">Standard Dice (2–12)</div>
+              <div class="card-elevated" style="padding:var(--space-4);">
+                <div class="bar-chart">
+                  <div class="bar-col"><div class="bar" style="height:8px;"></div><div class="bar-label">2</div><div class="bar-count">1</div></div>
+                  <div class="bar-col"><div class="bar" style="height:16px;"></div><div class="bar-label">3</div><div class="bar-count">3</div></div>
+                  <div class="bar-col"><div class="bar" style="height:24px;"></div><div class="bar-label">4</div><div class="bar-count">5</div></div>
+                  <div class="bar-col"><div class="bar" style="height:40px;"></div><div class="bar-label">5</div><div class="bar-count">7</div></div>
+                  <div class="bar-col"><div class="bar" style="height:20px;background:var(--color-accent-secondary);"></div><div class="bar-label">6</div><div class="bar-count">4</div></div>
+                  <div class="bar-col"><div class="bar" style="height:48px;background:var(--color-warning);"></div><div class="bar-label" style="color:var(--color-warning);font-weight:700;">7</div><div class="bar-count" style="color:var(--color-warning);font-weight:700;">8</div></div>
+                  <div class="bar-col"><div class="bar" style="height:32px;background:var(--color-accent-secondary);"></div><div class="bar-label">8</div><div class="bar-count">6</div></div>
+                  <div class="bar-col"><div class="bar" style="height:12px;"></div><div class="bar-label">9</div><div class="bar-count">2</div></div>
+                  <div class="bar-col"><div class="bar" style="height:20px;"></div><div class="bar-label">10</div><div class="bar-count">3</div></div>
+                  <div class="bar-col"><div class="bar" style="height:8px;"></div><div class="bar-label">11</div><div class="bar-count">1</div></div>
+                  <div class="bar-col"><div class="bar" style="height:4px;opacity:0.3;"></div><div class="bar-label">12</div><div class="bar-count">0</div></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-4);">Event Dice (Cities &amp; Knights)</div>
+              <div class="card-elevated" style="padding:var(--space-4);">
+                <div style="display:flex;gap:var(--space-3);align-items:flex-end;height:100px;">
+                  <div class="bar-col"><div class="bar" style="height:48px;background:var(--color-error);"></div><div style="font-size:20px;">⚔️</div><div class="bar-count">8</div></div>
+                  <div class="bar-col"><div class="bar" style="height:36px;background:var(--color-info);"></div><div style="font-size:20px;">🔬</div><div class="bar-count">5</div></div>
+                  <div class="bar-col"><div class="bar" style="height:24px;background:var(--color-success);"></div><div style="font-size:20px;">💰</div><div class="bar-count">4</div></div>
+                  <div class="bar-col"><div class="bar" style="height:16px;background:var(--color-category-games);"></div><div style="font-size:20px;">🚢</div><div class="bar-count">3</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div style="display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;gap:var(--space-3);text-align:center;">
+                <div><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-accent-secondary);">35</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Rolls</div></div>
+                <div style="background:var(--color-border-secondary);"></div>
+                <div><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-accent-secondary);">6.8</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Avg. Sum</div></div>
+                <div style="background:var(--color-border-secondary);"></div>
+                <div><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-warning);">8×</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Most: 7</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       8. CHANGE GAME SETTINGS
+  ================================================================ -->
+  <div class="section-label">08 — Change Game Settings</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">Game Settings</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div class="warning-banner">
+              <span style="font-size:18px;flex-shrink:0;">⚠️</span>
+              <div>
+                <div style="font-weight:var(--font-weight-semibold);margin-bottom:4px;">Caution</div>
+                Changing settings mid-game may cause data inconsistencies. Consider starting a new game instead.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Game Options</label>
+              <div class="card-elevated" style="display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-4);">
+                <label class="checkbox-wrapper"><span class="checkbox checked"></span><span class="checkbox-label">In-Between Turns (5–6 players)</span></label>
+                <label class="checkbox-wrapper"><span class="checkbox"></span><span class="checkbox-label">Seafarers</span></label>
+                <label class="checkbox-wrapper"><span class="checkbox checked"></span><span class="checkbox-label">Cities &amp; Knights</span></label>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+              <button class="btn btn-secondary">Cancel</button>
+              <button class="btn btn-primary">Save Changes</button>
+            </div>
+            <div class="divider"></div>
+            <button class="btn btn-full" style="background:var(--color-accent-primary-subtle);color:var(--color-accent-secondary);border:1px solid var(--color-border-accent);">
+              ↗ Start New Game with These Settings
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">Game Settings</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div class="warning-banner">
+              <span style="font-size:18px;flex-shrink:0;">⚠️</span>
+              <div>
+                <div style="font-weight:var(--font-weight-semibold);margin-bottom:4px;">Caution</div>
+                Changing settings mid-game may cause data inconsistencies. Consider starting a new game instead.
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Game Options</label>
+              <div class="card-elevated" style="display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-4);">
+                <label class="checkbox-wrapper"><span class="checkbox checked"></span><span class="checkbox-label">In-Between Turns (5–6 players)</span></label>
+                <label class="checkbox-wrapper"><span class="checkbox"></span><span class="checkbox-label">Seafarers</span></label>
+                <label class="checkbox-wrapper"><span class="checkbox checked"></span><span class="checkbox-label">Cities &amp; Knights</span></label>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);">
+              <button class="btn btn-secondary">Cancel</button>
+              <button class="btn btn-primary">Save Changes</button>
+            </div>
+            <div class="divider"></div>
+            <button class="btn btn-full" style="background:var(--color-accent-primary-subtle);color:var(--color-accent-secondary);border:1px solid var(--color-border-accent);">
+              ↗ Start New Game with These Settings
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       9. WINNER SELECTION
+  ================================================================ -->
+  <div class="section-label">09 — End Game / Winner Selection</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-bar">
+            <div style="width:60px;"></div>
+            <span class="app-bar-title">Select Winner</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);text-align:center;margin-bottom:var(--space-2);">
+              Who won this game of Catan?
+            </div>
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+              <div class="radio-item">
+                <div class="radio"><div style="width:10px;height:10px;border-radius:50%;background:var(--color-border-primary);"></div></div>
+                <div class="radio-label">Alice</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">42% win rate</div>
+              </div>
+              <div class="radio-item" style="background:var(--color-accent-primary-subtle);border:1.5px solid var(--color-border-accent);">
+                <div class="radio selected"></div>
+                <div class="radio-label" style="font-weight:var(--font-weight-semibold);">Bob</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">37% win rate</div>
+              </div>
+              <div class="radio-item">
+                <div class="radio"></div>
+                <div class="radio-label">Charlie</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">28% win rate</div>
+              </div>
+              <div class="radio-item">
+                <div class="radio"></div>
+                <div class="radio-label">Dave</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">15% win rate</div>
+              </div>
+              <div class="divider"></div>
+              <div class="radio-item">
+                <div class="radio"></div>
+                <div class="radio-label" style="color:var(--color-text-secondary);">No winner (game abandoned)</div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-full" style="margin-top:auto;">🏆 Confirm Winner</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-bar">
+            <div style="width:60px;"></div>
+            <span class="app-bar-title">Select Winner</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);text-align:center;margin-bottom:var(--space-2);">
+              Who won this game of Catan?
+            </div>
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+              <div class="radio-item"><div class="radio"></div><div class="radio-label">Alice</div><div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">42%</div></div>
+              <div class="radio-item" style="background:var(--color-accent-primary-subtle);border:1.5px solid var(--color-border-accent);">
+                <div class="radio selected"></div>
+                <div class="radio-label" style="font-weight:var(--font-weight-semibold);">Bob</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">37%</div>
+              </div>
+              <div class="radio-item"><div class="radio"></div><div class="radio-label">Charlie</div><div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">28%</div></div>
+              <div class="radio-item"><div class="radio"></div><div class="radio-label">Dave</div><div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);">15%</div></div>
+              <div class="divider"></div>
+              <div class="radio-item"><div class="radio"></div><div class="radio-label" style="color:var(--color-text-secondary);">No winner (game abandoned)</div></div>
+            </div>
+            <button class="btn btn-primary btn-lg btn-full" style="margin-top:auto;">🏆 Confirm Winner</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       10. GAME SUMMARY
+  ================================================================ -->
+  <div class="section-label">10 — Game Summary</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-bar">
+            <div style="width:60px;"></div>
+            <span class="app-bar-title">Game Summary</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div class="trophy-banner">
+              <span class="trophy-emoji">🏆</span>
+              <div class="trophy-title">Winner</div>
+              <div class="trophy-name">Bob</div>
+            </div>
+
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">⏱ Duration</div>
+              <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Started: 14:30 · Ended: 16:45</div>
+              <div style="font-size:var(--font-size-xl);font-weight:var(--font-weight-bold);color:var(--color-text-primary);margin-top:var(--space-2);">2h 15m</div>
+            </div>
+
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">📊 Game Stats</div>
+              <div class="stat-row"><span class="stat-row-label">Total turns</span><span class="stat-row-value">47</span></div>
+              <div class="stat-row"><span class="stat-row-label">Average turn time</span><span class="stat-row-value">1m 42s</span></div>
+              <div class="stat-row"><span class="stat-row-label">Thief rolled</span><span class="stat-row-value">8×</span></div>
+              <div class="stat-row"><span class="stat-row-label">Barbarian attacks</span><span class="stat-row-value">3×</span></div>
+            </div>
+
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">👥 Player Stats</div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+                <div style="display:flex;align-items:center;gap:var(--space-3);">
+                  <div class="avatar avatar-sm" style="background:var(--color-category-players-subtle);color:var(--color-category-players);">AL</div>
+                  <div style="flex:1;"><div style="font-size:var(--font-size-sm);font-weight:600;">Alice</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">avg 1m 38s · 12 turns</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);background:var(--color-accent-primary-subtle);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);margin:-var(--space-1);">
+                  <div class="avatar avatar-sm" style="background:var(--color-category-new-subtle);color:var(--color-category-new);">BO</div>
+                  <div style="flex:1;"><div style="font-size:var(--font-size-sm);font-weight:600;">Bob 🏆</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">avg 1m 52s · 12 turns</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);">
+                  <div class="avatar avatar-sm" style="background:var(--color-category-games-subtle);color:var(--color-category-games);">CH</div>
+                  <div style="flex:1;"><div style="font-size:var(--font-size-sm);font-weight:600;">Charlie</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">avg 1m 35s · 12 turns</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);">
+                  <div class="avatar avatar-sm" style="background:var(--color-info-subtle);color:var(--color-info);">DA</div>
+                  <div style="flex:1;"><div style="font-size:var(--font-size-sm);font-weight:600;">Dave</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">avg 1m 44s · 11 turns</div></div>
+                </div>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-full">Back to Home</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-bar">
+            <div style="width:60px;"></div>
+            <span class="app-bar-title">Game Summary</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div class="trophy-banner">
+              <span class="trophy-emoji">🏆</span>
+              <div class="trophy-title">Winner</div>
+              <div class="trophy-name">Bob</div>
+            </div>
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">⏱ Duration</div>
+              <div style="font-size:var(--font-size-sm);color:var(--color-text-secondary);">Started: 14:30 · Ended: 16:45</div>
+              <div style="font-size:var(--font-size-xl);font-weight:var(--font-weight-bold);color:var(--color-text-primary);margin-top:var(--space-2);">2h 15m</div>
+            </div>
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">📊 Game Stats</div>
+              <div class="stat-row"><span class="stat-row-label">Total turns</span><span class="stat-row-value">47</span></div>
+              <div class="stat-row"><span class="stat-row-label">Average turn time</span><span class="stat-row-value">1m 42s</span></div>
+              <div class="stat-row"><span class="stat-row-label">Thief rolled</span><span class="stat-row-value">8×</span></div>
+              <div class="stat-row"><span class="stat-row-label">Barbarian attacks</span><span class="stat-row-value">3×</span></div>
+            </div>
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">👥 Player Stats</div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-3);">
+                <div style="display:flex;align-items:center;gap:var(--space-3);"><div class="avatar avatar-sm" style="background:var(--color-category-players-subtle);color:var(--color-category-players);">AL</div><div style="flex:1;"><div style="font-size:var(--font-size-sm);font-weight:600;">Alice</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">avg 1m 38s</div></div></div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);background:var(--color-accent-primary-subtle);border-radius:var(--radius-md);padding:var(--space-2) var(--space-3);"><div class="avatar avatar-sm" style="background:var(--color-surface-accent);color:var(--color-accent-secondary);">BO</div><div style="flex:1;"><div style="font-size:var(--font-size-sm);font-weight:600;">Bob 🏆</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">avg 1m 52s</div></div></div>
+                <div style="display:flex;align-items:center;gap:var(--space-3);"><div class="avatar avatar-sm" style="background:var(--color-category-games-subtle);color:var(--color-category-games);">CH</div><div style="flex:1;"><div style="font-size:var(--font-size-sm);font-weight:600;">Charlie</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">avg 1m 35s</div></div></div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-lg btn-full">Back to Home</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       11. GAMES LIST
+  ================================================================ -->
+  <div class="section-label">11 — Games List</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">Games</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <!-- In progress -->
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">In Progress</div>
+              <div class="list-item" style="border-left:3px solid var(--color-info);">
+                <div style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-info-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                  <span style="font-size:18px;">🎲</span>
+                </div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Alice, Bob, Charlie</div>
+                  <div class="list-item-subtitle">Turn 23 · Apr 12, 14:30 · Cities &amp; Knights</div>
+                </div>
+                <span class="badge badge-info">Active</span>
+              </div>
+            </div>
+
+            <!-- Completed -->
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">Completed</div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+                <div class="list-item">
+                  <div style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-success-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--color-success)" stroke-width="2.5"><path d="M4 10L8 14L16 6"/></svg>
+                  </div>
+                  <div class="list-item-content">
+                    <div class="list-item-title">Alice, Bob, Charlie, Dave</div>
+                    <div class="list-item-subtitle">🏆 Bob · 2h 15m · Apr 10, 19:00</div>
+                  </div>
+                  <span class="badge badge-success">Done</span>
+                </div>
+                <div class="list-item">
+                  <div style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-success-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--color-success)" stroke-width="2.5"><path d="M4 10L8 14L16 6"/></svg>
+                  </div>
+                  <div class="list-item-content">
+                    <div class="list-item-title">Alice, Charlie</div>
+                    <div class="list-item-subtitle">🏆 Alice · 1h 45m · Apr 8, 20:30</div>
+                  </div>
+                  <span class="badge badge-success">Done</span>
+                </div>
+                <div class="list-item">
+                  <div style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-surface-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--color-text-tertiary)" stroke-width="2.5"><path d="M4 10L8 14L16 6"/></svg>
+                  </div>
+                  <div class="list-item-content">
+                    <div class="list-item-title">Bob, Charlie, Dave</div>
+                    <div class="list-item-subtitle">Abandoned · Apr 5, 18:00</div>
+                  </div>
+                  <span class="badge">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">Games</span>
+            <div style="width:60px;"></div>
+          </div>
+          <div class="screen-body">
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">In Progress</div>
+              <div class="list-item" style="border-left:3px solid var(--color-info);">
+                <div style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-info-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-size:18px;">🎲</span></div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Alice, Bob, Charlie</div>
+                  <div class="list-item-subtitle">Turn 23 · Apr 12, 14:30 · Cities &amp; Knights</div>
+                </div>
+                <span class="badge badge-info">Active</span>
+              </div>
+            </div>
+            <div>
+              <div class="section-header" style="margin-bottom:var(--space-3);">Completed</div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+                <div class="list-item">
+                  <div style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-success-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--color-success)" stroke-width="2.5"><path d="M4 10L8 14L16 6"/></svg></div>
+                  <div class="list-item-content">
+                    <div class="list-item-title">Alice, Bob, Charlie, Dave</div>
+                    <div class="list-item-subtitle">🏆 Bob · 2h 15m · Apr 10</div>
+                  </div>
+                  <span class="badge badge-success">Done</span>
+                </div>
+                <div class="list-item">
+                  <div style="width:40px;height:40px;border-radius:var(--radius-full);background:var(--color-success-subtle);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--color-success)" stroke-width="2.5"><path d="M4 10L8 14L16 6"/></svg></div>
+                  <div class="list-item-content">
+                    <div class="list-item-title">Alice, Charlie</div>
+                    <div class="list-item-subtitle">🏆 Alice · 1h 45m · Apr 8</div>
+                  </div>
+                  <span class="badge badge-success">Done</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       12. PLAYERS LIST
+  ================================================================ -->
+  <div class="section-label">12 — Players List</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light — Normal Mode</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Back
+            </button>
+            <span class="app-bar-title">Players</span>
+            <button class="app-bar-action" style="background:var(--color-accent-primary);color:white;width:32px;height:32px;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2V14M2 8H14"/></svg>
+            </button>
+          </div>
+          <div class="screen-body">
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+              <div class="list-item">
+                <div class="avatar" style="background:var(--color-category-players-subtle);color:var(--color-category-players);">AL</div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Alice</div>
+                  <div class="list-item-subtitle">12 games · 5 wins · 42%</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <div class="list-item">
+                <div class="avatar" style="background:var(--color-category-new-subtle);color:var(--color-category-new);">BO</div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Bob</div>
+                  <div class="list-item-subtitle">8 games · 3 wins · 37%</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <div class="list-item">
+                <div class="avatar" style="background:var(--color-category-games-subtle);color:var(--color-category-games);">CH</div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Charlie</div>
+                  <div class="list-item-subtitle">15 games · 4 wins · 27%</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+              <div class="list-item">
+                <div class="avatar" style="background:var(--color-info-subtle);color:var(--color-info);">DA</div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Dave</div>
+                  <div class="list-item-subtitle">4 games · 1 win · 25%</div>
+                </div>
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M6 3L12 9L6 15"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark — Selection Mode</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Cancel
+            </button>
+            <span class="app-bar-title">Add Players</span>
+            <button class="btn btn-sm btn-primary">Done (2)</button>
+          </div>
+          <div style="padding:var(--space-3) var(--space-5);background:var(--color-surface-accent);border-bottom:1px solid var(--color-border-accent);">
+            <div style="font-size:var(--font-size-sm);color:var(--color-accent-secondary);">Select players to add to the game</div>
+          </div>
+          <div class="screen-body">
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+              <!-- Alice - checked, already in game (disabled) -->
+              <div class="list-item" style="opacity:0.5;cursor:not-allowed;">
+                <div class="checkbox checked"></div>
+                <div class="avatar avatar-sm" style="background:var(--color-category-players-subtle);color:var(--color-category-players);">AL</div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Alice</div>
+                  <div class="list-item-subtitle">Already in game</div>
+                </div>
+              </div>
+              <!-- Bob - selected -->
+              <div class="list-item" style="background:var(--color-accent-primary-subtle);border:1.5px solid var(--color-border-accent);">
+                <div class="checkbox checked"></div>
+                <div class="avatar avatar-sm" style="background:var(--color-surface-accent);color:var(--color-accent-secondary);">BO</div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Bob</div>
+                  <div class="list-item-subtitle">8 games</div>
+                </div>
+              </div>
+              <!-- Charlie - not selected -->
+              <div class="list-item">
+                <div class="checkbox"></div>
+                <div class="avatar avatar-sm" style="background:var(--color-category-games-subtle);color:var(--color-category-games);">CH</div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Charlie</div>
+                  <div class="list-item-subtitle">15 games</div>
+                </div>
+              </div>
+              <!-- Dave -->
+              <div class="list-item">
+                <div class="checkbox"></div>
+                <div class="avatar avatar-sm" style="background:var(--color-info-subtle);color:var(--color-info);">DA</div>
+                <div class="list-item-content">
+                  <div class="list-item-title">Dave</div>
+                  <div class="list-item-subtitle">4 games</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       13. PLAYER DETAILS
+  ================================================================ -->
+  <div class="section-label">13 — Player Details</div>
+  <div class="screen-pair">
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Light</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="light">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Players
+            </button>
+            <span class="app-bar-title">Player Details</span>
+            <div style="display:flex;gap:var(--space-2);">
+              <button class="app-bar-action" style="font-size:12px;font-weight:600;">Edit</button>
+              <button class="app-bar-action">⋮</button>
+            </div>
+          </div>
+          <div class="screen-body">
+            <!-- Hero -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-4);padding:var(--space-6) 0 var(--space-4);">
+              <div class="avatar" style="width:80px;height:80px;font-size:28px;background:var(--color-category-players-subtle);color:var(--color-category-players);">AL</div>
+              <div style="text-align:center;">
+                <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-text-primary);">Alice</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);margin-top:var(--space-1);">Player since April 2024</div>
+              </div>
+              <!-- mini stats row -->
+              <div style="display:flex;gap:var(--space-8);">
+                <div style="text-align:center;"><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-accent-secondary);">12</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Games</div></div>
+                <div style="width:1px;background:var(--color-border-secondary);"></div>
+                <div style="text-align:center;"><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-accent-secondary);">5</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Wins</div></div>
+                <div style="width:1px;background:var(--color-border-secondary);"></div>
+                <div style="text-align:center;"><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-success);">42%</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Win Rate</div></div>
+              </div>
+            </div>
+
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">📊 Statistics</div>
+              <div class="stat-row"><span class="stat-row-label">Games played</span><span class="stat-row-value">12</span></div>
+              <div class="stat-row"><span class="stat-row-label">Games won</span><span class="stat-row-value">5</span></div>
+              <div class="stat-row"><span class="stat-row-label">Win rate</span><span class="stat-row-value" style="color:var(--color-success);">42%</span></div>
+              <div class="stat-row"><span class="stat-row-label">Avg. turn time</span><span class="stat-row-value">1m 38s</span></div>
+              <div class="stat-row"><span class="stat-row-label">Total play time</span><span class="stat-row-value">18h 24m</span></div>
+            </div>
+
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">🎲 Recent Games</div>
+              <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+                <div style="display:flex;justify-content:space-between;font-size:var(--font-size-sm);padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-secondary);">
+                  <span style="color:var(--color-text-secondary);">Apr 12 · Alice, Bob, Charlie</span>
+                  <span class="badge badge-info" style="font-size:9px;">Playing</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--font-size-sm);padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-secondary);">
+                  <span style="color:var(--color-text-secondary);">Apr 10 · 4 players</span>
+                  <span style="color:var(--color-text-tertiary);">Lost</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--font-size-sm);padding:var(--space-2) 0;">
+                  <span style="color:var(--color-text-secondary);">Apr 8 · Alice, Charlie</span>
+                  <span style="color:var(--color-success);font-weight:600;">Won 🏆</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-wrapper">
+      <span class="screen-mode-label">Dark</span>
+      <div class="phone-frame">
+        <div class="screen" data-theme="dark">
+          <div class="app-bar">
+            <button class="app-bar-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 3L5 8L10 13"/></svg>
+              Players
+            </button>
+            <span class="app-bar-title">Player Details</span>
+            <div style="display:flex;gap:var(--space-2);">
+              <button class="app-bar-action" style="font-size:12px;font-weight:600;">Edit</button>
+              <button class="app-bar-action">⋮</button>
+            </div>
+          </div>
+          <div class="screen-body">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:var(--space-4);padding:var(--space-6) 0 var(--space-4);">
+              <div class="avatar" style="width:80px;height:80px;font-size:28px;background:var(--color-category-players-subtle);color:var(--color-category-players);">AL</div>
+              <div style="text-align:center;">
+                <div style="font-size:var(--font-size-2xl);font-weight:var(--font-weight-bold);color:var(--color-text-primary);">Alice</div>
+                <div style="font-size:var(--font-size-sm);color:var(--color-text-tertiary);margin-top:var(--space-1);">Player since April 2024</div>
+              </div>
+              <div style="display:flex;gap:var(--space-8);">
+                <div style="text-align:center;"><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-accent-secondary);">12</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Games</div></div>
+                <div style="width:1px;background:var(--color-border-secondary);"></div>
+                <div style="text-align:center;"><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-accent-secondary);">5</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Wins</div></div>
+                <div style="width:1px;background:var(--color-border-secondary);"></div>
+                <div style="text-align:center;"><div style="font-size:var(--font-size-xl);font-weight:700;color:var(--color-success);">42%</div><div style="font-size:var(--font-size-xs);color:var(--color-text-tertiary);">Win Rate</div></div>
+              </div>
+            </div>
+            <div class="card-elevated">
+              <div class="section-header" style="margin-bottom:var(--space-3);">📊 Statistics</div>
+              <div class="stat-row"><span class="stat-row-label">Games played</span><span class="stat-row-value">12</span></div>
+              <div class="stat-row"><span class="stat-row-label">Games won</span><span class="stat-row-value">5</span></div>
+              <div class="stat-row"><span class="stat-row-label">Win rate</span><span class="stat-row-value" style="color:var(--color-success);">42%</span></div>
+              <div class="stat-row"><span class="stat-row-label">Avg. turn time</span><span class="stat-row-value">1m 38s</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center;margin-top:64px;font-family:var(--font-family,sans-serif);font-size:11px;color:#444;letter-spacing:1px;">
+    CatanCompanion UI Mockups · 13 screens · Light &amp; Dark · 375px mobile-first
+  </div>
+</body>
+</html>
