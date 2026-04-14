@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 
 @Entity(
-    tableName = "game_player_cross_ref",
+    tableName = "game_players",
     primaryKeys = ["gameId", "playerId"],
     foreignKeys = [
         ForeignKey(
@@ -18,18 +18,13 @@ import androidx.room.Index
             entity = PlayerEntity::class,
             parentColumns = ["id"],
             childColumns = ["playerId"],
-            // prevents deletion of a player who participated in a game
             onDelete = ForeignKey.RESTRICT
         )
     ],
-    indices = [
-        Index("gameId"),
-        Index("playerId")
-    ]
+    indices = [Index("gameId"), Index("playerId")]
 )
-data class GamePlayerCrossRefEntity(
+data class GamePlayerEntity(
     val gameId: Long,
     val playerId: Long,
-    // player's position within this specific game; ORDER BY playerIndex restores Game.players order
-    val playerIndex: Int
+    val orderIndex: Int
 )
