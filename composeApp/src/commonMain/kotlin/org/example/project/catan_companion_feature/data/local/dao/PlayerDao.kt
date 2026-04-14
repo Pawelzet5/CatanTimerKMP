@@ -1,42 +1,36 @@
 package org.example.project.catan_companion_feature.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
 
 @Dao
 interface PlayerDao {
-
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertPlayer(player: PlayerEntity): Long
-
-    @Query("SELECT * FROM players WHERE id = :playerId")
-    suspend fun getPlayer(playerId: Long): PlayerEntity?
-
     @Query("SELECT * FROM players ORDER BY name ASC")
-    suspend fun getAllPlayers(): List<PlayerEntity>
+    fun getAll(): Flow<List<PlayerEntity>>
 
-    // Search by name (case-insensitive, LIKE)
-    @Query("SELECT * FROM players WHERE name LIKE '%' || :query || '%' ORDER BY name ASC")
-    fun searchPlayers(query: String): Flow<List<PlayerEntity>>
+    @Query("SELECT * FROM players WHERE isHidden = 0 ORDER BY name ASC")
+    fun getVisible(): Flow<List<PlayerEntity>>
 
-    // Players assigned to the given game; ORDER BY playerIndex guarantees Game.players order
-    @Query("""
-        SELECT p.* FROM players p
-        INNER JOIN game_player_cross_ref ref ON p.id = ref.playerId
-        WHERE ref.gameId = :gameId
-        ORDER BY ref.playerIndex ASC
-    """)
-    suspend fun getPlayersForGame(gameId: Long): List<PlayerEntity>
+    @Query("SELECT * FROM players WHERE id = :id")
+    fun getById(id: Long): Flow<PlayerEntity?>
 
-    // Number of games the player has participated in
-    @Query("SELECT COUNT(*) FROM game_player_cross_ref WHERE playerId = :playerId")
-    suspend fun getGameCountForPlayer(playerId: Long): Int
+    @Insert
+    suspend fun insert(player: PlayerEntity): Long
 
-    // Deletes the player – Room will throw an exception if the player has a RESTRICT FK in turns or cross_ref
-    @Query("DELETE FROM players WHERE id = :playerId")
-    suspend fun deletePlayer(playerId: Long)
+    @Update
+    suspend fun update(player: PlayerEntity)
+
+    @Query("UPDATE players SET isHidden = 1 WHERE id = :id")
+    suspend fun hide(id: Long)
+
+    @Delete
+    suspend fun delete(player: PlayerEntity)
+
+    @Query("SELECT COUNT(*) FROM game_players WHERE playerId = :playerId")
+    suspend fun getGameCount(playerId: Long): Int
 }

@@ -45,16 +45,20 @@ fun makeTestGame(
 
 fun makeTestTurn(
     id: Long = 1L,
+    gameId: Long = 1L,
     number: Int = 0,
     playerId: Long = 1L,
+    playerName: String = "Player 1",
     redDice: Int? = null,
     yellowDice: Int? = null,
     eventDice: EventDiceType? = null,
     durationMillis: Long = 0L
 ): Turn = Turn(
     id = id,
+    gameId = gameId,
     number = number,
     playerId = playerId,
+    playerName = playerName,
     redDice = redDice,
     yellowDice = yellowDice,
     eventDice = eventDice,
@@ -66,9 +70,12 @@ fun makeTestTurns(
     players: List<GamePlayer> = makeTestGamePlayers()
 ): List<Turn> =
     (0 until count).map { index ->
+        val player = players[index % players.size]
         makeTestTurn(
             id = (index + 1).toLong(),
+            gameId = players.first().gameId,
             number = index,
-            playerId = players[index % players.size].playerId
+            playerId = player.playerId,
+            playerName = player.playerName
         )
     }

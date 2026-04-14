@@ -2,11 +2,10 @@ package org.example.project.catan_companion_feature.data.fakes.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.GamePlayer
-import org.example.project.catan_companion_feature.domain.dataclass.GameSummary
-import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
@@ -17,90 +16,98 @@ import org.example.project.core.domain.Result
 class FakeGameRepository : GameRepository {
 
     private val _games = mutableMapOf<Long, Game>()
-    val games: List<Game> get() = _games.values.toList()
+    private val _gamesState = MutableStateFlow<List<Game>>(emptyList())
 
-    // Backing flow for getGameSummaries — updated on every mutation
-    private val _summariesFlow = MutableStateFlow<List<GameSummary>>(emptyList())
+    val games: List<Game> get() = _gamesState.value
 
-    var shouldFailOnAddGame = false
     var shouldFailOnGetGame = false
-    var shouldFailOnGetActiveGame = false
     var shouldFailOnFinishGame = false
 
     private var nextId = 1L
 
     /**
-     * Prepopulates the repository with an existing [Game] (e.g. for use-case tests
-     * that need a game to already exist without going through [addGame]).
-     * Bypasses id-generation intentionally — id is set by the caller.
+     * Prepopulates the repository with an existing [Game] for test setup.
+     * Bypasses id-generation — id is set by the caller.
      */
     fun seedGame(game: Game) {
         _games[game.id] = game
-        rebuildSummariesFlow()
+        _gamesState.value = _games.values.toList()
     }
 
-    override suspend fun addGame(
+    override fun getAllGames(): Flow<List<Game>> =
+        _gamesState.map { it.sortedByDescending(Game::startedAt) }
+
+    override fun getInProgressGames(): Flow<List<Game>> =
+        _gamesState.map { games ->
+            games.filter { it.status == GameStatus.IN_PROGRESS }
+                .sortedByDescending(Game::startedAt)
+        }
+
+    override fun getCompletedGames(): Flow<List<Game>> =
+        _gamesState.map { games ->
+            games.filter { it.status == GameStatus.COMPLETED }
+                .sortedByDescending(Game::startedAt)
+        }
+
+    override fun getGameById(id: Long): Flow<Game?> = flow {
+        if (shouldFailOnGetGame) throw Exception("Fake: get game failure")
+        emit(_games[id])
+    }
+
+    override fun getMostRecentInProgressGame(): Flow<Game?> =
+        _gamesState.map { games ->
+            games.filter { it.status == GameStatus.IN_PROGRESS }
+                .maxByOrNull(Game::startedAt)
+        }
+
+    override suspend fun createGame(
         turnDurationMillis: Long,
         expansions: Set<GameExpansion>,
         specialTurnRuleEnabled: Boolean,
-        players: List<Player>,
-        startedAt: Long
+        playerIds: List<Long>
     ): Result<Long, DataError.Local> {
-        if (shouldFailOnAddGame) return Result.Failure(DataError.Local.UNKNOWN)
         val id = nextId++
-        val gamePlayers = players.mapIndexed { index, player ->
-            GamePlayer(gameId = id, playerId = player.id, playerName = player.name, orderIndex = index)
-        }
         val game = Game(
             id = id,
             turnDurationMillis = turnDurationMillis,
             expansions = expansions,
             specialTurnRuleEnabled = specialTurnRuleEnabled,
             status = GameStatus.IN_PROGRESS,
-            startedAt = startedAt,
-            players = gamePlayers
+            startedAt = 0L,
+            players = playerIds.mapIndexed { index, playerId ->
+                GamePlayer(gameId = id, playerId = playerId, playerName = "", orderIndex = index)
+            }
         )
         _games[id] = game
-        rebuildSummariesFlow()
+        _gamesState.value = _games.values.toList()
         return Result.Success(id)
     }
 
-    override suspend fun getGame(gameId: Long): Result<Game, DataError.Local> {
-        if (shouldFailOnGetGame) return Result.Failure(DataError.Local.UNKNOWN)
-        return _games[gameId]
-            ?.let { Result.Success(it) }
-            ?: Result.Failure(DataError.Local.NOT_FOUND)
-    }
-
-    override fun getGameSummaries(): Flow<List<GameSummary>> = _summariesFlow.asStateFlow()
-
-    override suspend fun getActiveGame(): Result<Game, DataError.Local> {
-        if (shouldFailOnGetActiveGame) return Result.Failure(DataError.Local.UNKNOWN)
-        return _games.values.firstOrNull { it.status == GameStatus.IN_PROGRESS }
-            ?.let { Result.Success(it) }
-            ?: Result.Failure(DataError.Local.NOT_FOUND)
-    }
-
-    override suspend fun saveGameAsFinished(gameId: Long, finishedAt: Long): EmptyResult<DataError.Local> {
-        if (shouldFailOnFinishGame) return Result.Failure(DataError.Local.UNKNOWN)
+    override suspend fun updateGameSettings(
+        gameId: Long,
+        expansions: Set<GameExpansion>,
+        specialTurnRuleEnabled: Boolean
+    ): EmptyResult<DataError.Local> {
         val game = _games[gameId] ?: return Result.Failure(DataError.Local.NOT_FOUND)
-        _games[gameId] = game.copy(status = GameStatus.COMPLETED, finishedAt = finishedAt)
-        rebuildSummariesFlow()
+        _games[gameId] = game.copy(
+            expansions = expansions,
+            specialTurnRuleEnabled = specialTurnRuleEnabled
+        )
+        _gamesState.value = _games.values.toList()
         return Result.Success(Unit)
     }
 
-    private fun rebuildSummariesFlow() {
-        _summariesFlow.value = _games.values
-            .sortedByDescending { it.id }
-            .map { game ->
-                GameSummary(
-                    id = game.id,
-                    status = game.status,
-                    playerCount = game.players.size,
-                    turnCount = 0,
-                    startedAt = game.startedAt,
-                    finishedAt = game.finishedAt
-                )
-            }
+    override suspend fun endGame(gameId: Long, winnerId: Long?): EmptyResult<DataError.Local> {
+        if (shouldFailOnFinishGame) return Result.Failure(DataError.Local.UNKNOWN)
+        val game = _games[gameId] ?: return Result.Failure(DataError.Local.NOT_FOUND)
+        _games[gameId] = game.copy(status = GameStatus.COMPLETED, winnerId = winnerId)
+        _gamesState.value = _games.values.toList()
+        return Result.Success(Unit)
+    }
+
+    override suspend fun deleteGame(id: Long): EmptyResult<DataError.Local> {
+        _games.remove(id) ?: return Result.Failure(DataError.Local.NOT_FOUND)
+        _gamesState.value = _games.values.toList()
+        return Result.Success(Unit)
     }
 }

@@ -11,7 +11,7 @@ import org.example.project.catan_companion_feature.data.local.dao.GameDao
 import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
 import org.example.project.catan_companion_feature.data.local.dao.TurnDao
 import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerCrossRefEntity
+import org.example.project.catan_companion_feature.data.local.entity.GamePlayerEntity
 import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
 import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
 
@@ -19,7 +19,7 @@ import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
     entities = [
         PlayerEntity::class,
         GameEntity::class,
-        GamePlayerCrossRefEntity::class,
+        GamePlayerEntity::class,
         TurnEntity::class
     ],
     version = 1,

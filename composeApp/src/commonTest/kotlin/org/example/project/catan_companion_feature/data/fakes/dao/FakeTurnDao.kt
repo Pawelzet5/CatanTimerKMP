@@ -1,16 +1,17 @@
 package org.example.project.catan_companion_feature.data.fakes.dao
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import org.example.project.catan_companion_feature.data.local.dao.TurnDao
 import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
 
 class FakeTurnDao : TurnDao {
 
-    private val _turns = mutableListOf<TurnEntity>()
+    private val _turns = mutableMapOf<Long, TurnEntity>()
+    private val _turnsState = MutableStateFlow<List<TurnEntity>>(emptyList())
 
     // region state controls
-
-    /** Overrides the number of rows reported as updated. -1 means "use real count". */
-    var updatedRowCount: Int = -1
 
     var lastInsertedId: Long = 0L
         private set
@@ -21,31 +22,34 @@ class FakeTurnDao : TurnDao {
 
     // region TurnDao impl
 
-    override suspend fun insertTurn(turn: TurnEntity): Long {
+    override fun getForGame(gameId: Long): Flow<List<TurnEntity>> =
+        _turnsState.map { turns ->
+            turns.filter { it.gameId == gameId }.sortedBy(TurnEntity::number)
+        }
+
+    override fun getById(id: Long): Flow<TurnEntity?> =
+        _turnsState.map { turns -> turns.find { it.id == id } }
+
+    override fun getCurrentForGame(gameId: Long): Flow<TurnEntity?> =
+        _turnsState.map { turns ->
+            turns.filter { it.gameId == gameId }.maxByOrNull(TurnEntity::number)
+        }
+
+    override suspend fun insert(turn: TurnEntity): Long {
         val id = nextId++
-        _turns.add(turn.copy(id = id))
+        val stored = turn.copy(id = id)
+        _turns[id] = stored
         lastInsertedId = id
+        _turnsState.value = _turns.values.toList()
         return id
     }
 
-    override suspend fun updateTurn(turn: TurnEntity): Int {
-        if (updatedRowCount != -1) return updatedRowCount
-
-        val index = _turns.indexOfFirst { it.id == turn.id }
-        if (index == -1) return 0
-        _turns[index] = turn
-        return 1
+    override suspend fun update(turn: TurnEntity) {
+        if (_turns.containsKey(turn.id)) {
+            _turns[turn.id] = turn
+            _turnsState.value = _turns.values.toList()
+        }
     }
-
-    override suspend fun getLastTurn(gameId: Long): TurnEntity? =
-        _turns
-            .filter { it.gameId == gameId }
-            .maxByOrNull { it.number }
-
-    override suspend fun getTurnsForGame(gameId: Long): List<TurnEntity> =
-        _turns
-            .filter { it.gameId == gameId }
-            .sortedBy { it.number }
 
     // endregion
 }
