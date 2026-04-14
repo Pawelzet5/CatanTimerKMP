@@ -56,7 +56,7 @@ class FakeGameDao : GameDao {
         if (updateStatusRowCount != -1) return updateStatusRowCount
 
         val game = _games[gameId] ?: return 0
-        _games[gameId] = game.copy(status = GameStatus.FINISHED, finishedAt = finishedAt)
+        _games[gameId] = game.copy(status = GameStatus.COMPLETED, finishedAt = finishedAt)
         rebuildSummariesFlow()
         return 1
     }

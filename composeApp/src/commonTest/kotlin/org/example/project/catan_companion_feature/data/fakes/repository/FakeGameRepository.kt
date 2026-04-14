@@ -4,8 +4,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.GameConfig
+import org.example.project.catan_companion_feature.domain.dataclass.GamePlayer
 import org.example.project.catan_companion_feature.domain.dataclass.GameSummary
+import org.example.project.catan_companion_feature.domain.dataclass.Player
+import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.core.domain.DataError
@@ -37,14 +39,26 @@ class FakeGameRepository : GameRepository {
         rebuildSummariesFlow()
     }
 
-    override suspend fun addGame(config: GameConfig, startedAt: Long): Result<Long, DataError.Local> {
+    override suspend fun addGame(
+        turnDurationMillis: Long,
+        expansions: Set<GameExpansion>,
+        specialTurnRuleEnabled: Boolean,
+        players: List<Player>,
+        startedAt: Long
+    ): Result<Long, DataError.Local> {
         if (shouldFailOnAddGame) return Result.Failure(DataError.Local.UNKNOWN)
         val id = nextId++
+        val gamePlayers = players.mapIndexed { index, player ->
+            GamePlayer(gameId = id, playerId = player.id, playerName = player.name, orderIndex = index)
+        }
         val game = Game(
             id = id,
-            config = config,
-            status = GameStatus.ACTIVE,
-            startedAt = startedAt
+            turnDurationMillis = turnDurationMillis,
+            expansions = expansions,
+            specialTurnRuleEnabled = specialTurnRuleEnabled,
+            status = GameStatus.IN_PROGRESS,
+            startedAt = startedAt,
+            players = gamePlayers
         )
         _games[id] = game
         rebuildSummariesFlow()
@@ -62,7 +76,7 @@ class FakeGameRepository : GameRepository {
 
     override suspend fun getActiveGame(): Result<Game, DataError.Local> {
         if (shouldFailOnGetActiveGame) return Result.Failure(DataError.Local.UNKNOWN)
-        return _games.values.firstOrNull { it.status == GameStatus.ACTIVE }
+        return _games.values.firstOrNull { it.status == GameStatus.IN_PROGRESS }
             ?.let { Result.Success(it) }
             ?: Result.Failure(DataError.Local.NOT_FOUND)
     }
@@ -70,7 +84,7 @@ class FakeGameRepository : GameRepository {
     override suspend fun saveGameAsFinished(gameId: Long, finishedAt: Long): EmptyResult<DataError.Local> {
         if (shouldFailOnFinishGame) return Result.Failure(DataError.Local.UNKNOWN)
         val game = _games[gameId] ?: return Result.Failure(DataError.Local.NOT_FOUND)
-        _games[gameId] = game.copy(status = GameStatus.FINISHED, finishedAt = finishedAt)
+        _games[gameId] = game.copy(status = GameStatus.COMPLETED, finishedAt = finishedAt)
         rebuildSummariesFlow()
         return Result.Success(Unit)
     }
@@ -82,7 +96,7 @@ class FakeGameRepository : GameRepository {
                 GameSummary(
                     id = game.id,
                     status = game.status,
-                    playerCount = game.config.players.size,
+                    playerCount = game.players.size,
                     turnCount = 0,
                     startedAt = game.startedAt,
                     finishedAt = game.finishedAt

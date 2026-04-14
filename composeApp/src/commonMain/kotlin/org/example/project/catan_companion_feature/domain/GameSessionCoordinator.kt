@@ -42,7 +42,7 @@ class GameSessionCoordinator(
             .let { (it as Result.Success).data }
 
         val currentTurn = if (turns.isEmpty()) {
-            val initialTurn = TurnFactory.createFirst(game.config)
+            val initialTurn = TurnFactory.createFirst(game.players, game.specialTurnRuleEnabled)
             val initialTurnId = turnRepository.addTurn(gameId, initialTurn)
                 .onFailure { return Result.Failure(it) }
                 .let { (it as Result.Success).data }
@@ -99,7 +99,7 @@ class GameSessionCoordinator(
         turnRepository.updateTurn(gameId, completedTurn)
             .onFailure { return Result.Failure(it) }
 
-        val nextTurn = TurnFactory.createNext(completedTurn, session.game.config)
+        val nextTurn = TurnFactory.createNext(completedTurn, session.game.players, session.game.specialTurnRuleEnabled)
         val nextTurnId = turnRepository.addTurn(gameId, nextTurn)
             .onFailure { return Result.Failure(it) }
             .let { (it as Result.Success).data }

@@ -4,9 +4,8 @@ import app.cash.turbine.test
 import kotlinx.coroutines.test.runTest
 import org.example.project.catan_companion_feature.data.fakes.dao.FakeGameDao
 import org.example.project.catan_companion_feature.data.fakes.dao.FakePlayerDao
-import org.example.project.catan_companion_feature.data.local.mapper.toEntity
+import org.example.project.catan_companion_feature.data.local.mapper.toDomain
 import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.makeTestGameConfig
 import org.example.project.catan_companion_feature.makeTestPlayers
 import org.example.project.core.domain.DataError
 import org.example.project.core.domain.Result
@@ -30,7 +29,13 @@ class GameRepositoryImplTest {
     @Test
     fun `addGame returns success with generated gameId`() = runTest {
         // WHEN
-        val result = repository.addGame(config = makeTestGameConfig(), startedAt = 1000L)
+        val result = repository.addGame(
+            turnDurationMillis = 180_000L,
+            expansions = emptySet(),
+            specialTurnRuleEnabled = false,
+            players = makeTestPlayers(),
+            startedAt = 1000L
+        )
 
         // THEN
         assertIs<Result.Success<Long>>(result)
@@ -43,7 +48,13 @@ class GameRepositoryImplTest {
         val startedAt = 9999L
 
         // WHEN
-        val result = repository.addGame(config = makeTestGameConfig(), startedAt = startedAt)
+        val result = repository.addGame(
+            turnDurationMillis = 180_000L,
+            expansions = emptySet(),
+            specialTurnRuleEnabled = false,
+            players = makeTestPlayers(),
+            startedAt = startedAt
+        )
         assertIs<Result.Success<Long>>(result)
 
         // THEN
@@ -55,10 +66,15 @@ class GameRepositoryImplTest {
     fun `addGame persists cross refs for all players in config`() = runTest {
         // GIVEN
         val players = makeTestPlayers(count = 3)
-        val config = makeTestGameConfig(players = players)
 
         // WHEN
-        val result = repository.addGame(config = config, startedAt = 1000L)
+        val result = repository.addGame(
+            turnDurationMillis = 180_000L,
+            expansions = emptySet(),
+            specialTurnRuleEnabled = false,
+            players = players,
+            startedAt = 1000L
+        )
         assertIs<Result.Success<Long>>(result)
 
         // THEN
@@ -70,10 +86,15 @@ class GameRepositoryImplTest {
     fun `addGame assigns playerIndex in config list order`() = runTest {
         // GIVEN
         val players = makeTestPlayers(count = 3)
-        val config = makeTestGameConfig(players = players)
 
         // WHEN
-        val result = repository.addGame(config = config, startedAt = 1000L)
+        val result = repository.addGame(
+            turnDurationMillis = 180_000L,
+            expansions = emptySet(),
+            specialTurnRuleEnabled = false,
+            players = players,
+            startedAt = 1000L
+        )
         assertIs<Result.Success<Long>>(result)
 
         // THEN
@@ -88,13 +109,19 @@ class GameRepositoryImplTest {
     @Test
     fun `getGame returns success with correct game when game exists`() = runTest {
         // GIVEN
-        val config = makeTestGameConfig()
-        val addResult = repository.addGame(config = config, startedAt = 5000L)
+        val players = makeTestPlayers()
+        val addResult = repository.addGame(
+            turnDurationMillis = 180_000L,
+            expansions = emptySet(),
+            specialTurnRuleEnabled = false,
+            players = players,
+            startedAt = 5000L
+        )
         assertIs<Result.Success<Long>>(addResult)
-        fakePlayerDao.addPlayers(*config.players.map { it.toEntity() }.toTypedArray())
+        fakePlayerDao.addPlayers(*players.map { it.toEntity() }.toTypedArray())
         fakePlayerDao.setPlayersForGame(
             gameId = addResult.data,
-            playerIds = config.players.map { it.id }
+            playerIds = players.map { it.id }
         )
 
         // WHEN
@@ -119,8 +146,13 @@ class GameRepositoryImplTest {
     fun `getGame returns players in order defined by playerDao`() = runTest {
         // GIVEN
         val players = makeTestPlayers(count = 3)
-        val config = makeTestGameConfig(players = players)
-        val addResult = repository.addGame(config = config, startedAt = 1000L)
+        val addResult = repository.addGame(
+            turnDurationMillis = 180_000L,
+            expansions = emptySet(),
+            specialTurnRuleEnabled = false,
+            players = players,
+            startedAt = 1000L
+        )
         assertIs<Result.Success<Long>>(addResult)
         fakePlayerDao.addPlayers(*players.map { it.toEntity() }.toTypedArray())
         // Reverse order to verify repository respects playerDao ordering, not insertion order
@@ -134,7 +166,7 @@ class GameRepositoryImplTest {
 
         // THEN
         assertIs<Result.Success<Game>>(result)
-        assertEquals(players.map { it.id }.reversed(), result.data.config.players.map { it.id })
+        assertEquals(players.map { it.id }.reversed(), result.data.players.map { it.playerId })
     }
 
     // endregion
@@ -153,8 +185,14 @@ class GameRepositoryImplTest {
     @Test
     fun `getGameSummaries emits one summary per persisted game`() = runTest {
         // GIVEN
-        repository.addGame(config = makeTestGameConfig(), startedAt = 1000L)
-        repository.addGame(config = makeTestGameConfig(), startedAt = 2000L)
+        repository.addGame(
+            turnDurationMillis = 180_000L, expansions = emptySet(),
+            specialTurnRuleEnabled = false, players = makeTestPlayers(), startedAt = 1000L
+        )
+        repository.addGame(
+            turnDurationMillis = 180_000L, expansions = emptySet(),
+            specialTurnRuleEnabled = false, players = makeTestPlayers(), startedAt = 2000L
+        )
 
         // WHEN / THEN
         repository.getGameSummaries().test {
@@ -169,7 +207,10 @@ class GameRepositoryImplTest {
         repository.getGameSummaries().test {
             assertEquals(0, awaitItem().size)
 
-            repository.addGame(config = makeTestGameConfig(), startedAt = 3000L)
+            repository.addGame(
+                turnDurationMillis = 180_000L, expansions = emptySet(),
+                specialTurnRuleEnabled = false, players = makeTestPlayers(), startedAt = 3000L
+            )
 
             assertEquals(1, awaitItem().size)
             cancelAndIgnoreRemainingEvents()
@@ -179,8 +220,14 @@ class GameRepositoryImplTest {
     @Test
     fun `getGameSummaries emits summaries ordered by id descending`() = runTest {
         // GIVEN
-        val r1 = repository.addGame(config = makeTestGameConfig(), startedAt = 1000L)
-        val r2 = repository.addGame(config = makeTestGameConfig(), startedAt = 2000L)
+        val r1 = repository.addGame(
+            turnDurationMillis = 180_000L, expansions = emptySet(),
+            specialTurnRuleEnabled = false, players = makeTestPlayers(), startedAt = 1000L
+        )
+        val r2 = repository.addGame(
+            turnDurationMillis = 180_000L, expansions = emptySet(),
+            specialTurnRuleEnabled = false, players = makeTestPlayers(), startedAt = 2000L
+        )
         assertIs<Result.Success<Long>>(r1)
         assertIs<Result.Success<Long>>(r2)
 
@@ -214,7 +261,10 @@ class GameRepositoryImplTest {
     @Test
     fun `saveGameAsFinished returns success when game exists`() = runTest {
         // GIVEN
-        val addResult = repository.addGame(config = makeTestGameConfig(), startedAt = 1000L)
+        val addResult = repository.addGame(
+            turnDurationMillis = 180_000L, expansions = emptySet(),
+            specialTurnRuleEnabled = false, players = makeTestPlayers(), startedAt = 1000L
+        )
         assertIs<Result.Success<Long>>(addResult)
 
         // WHEN
@@ -227,7 +277,10 @@ class GameRepositoryImplTest {
     @Test
     fun `saveGameAsFinished persists finishedAt timestamp`() = runTest {
         // GIVEN
-        val addResult = repository.addGame(config = makeTestGameConfig(), startedAt = 1000L)
+        val addResult = repository.addGame(
+            turnDurationMillis = 180_000L, expansions = emptySet(),
+            specialTurnRuleEnabled = false, players = makeTestPlayers(), startedAt = 1000L
+        )
         assertIs<Result.Success<Long>>(addResult)
         val finishedAt = 88_000L
 

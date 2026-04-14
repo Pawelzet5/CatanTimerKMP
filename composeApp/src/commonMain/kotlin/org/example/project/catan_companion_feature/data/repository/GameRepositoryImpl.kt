@@ -6,11 +6,11 @@ import org.example.project.catan_companion_feature.data.local.dao.GameDao
 import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
 import org.example.project.catan_companion_feature.data.local.entity.GamePlayerCrossRefEntity
 import org.example.project.catan_companion_feature.data.local.mapper.toDomain
-import org.example.project.catan_companion_feature.data.local.mapper.toEntity
+import org.example.project.catan_companion_feature.data.local.mapper.toGameEntity
 import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.GameConfig
 import org.example.project.catan_companion_feature.domain.dataclass.GameSummary
 import org.example.project.catan_companion_feature.domain.dataclass.Player
+import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.core.data.tryLocalRead
 import org.example.project.core.data.tryLocalWrite
@@ -23,13 +23,25 @@ class GameRepositoryImpl(
     private val playerDao: PlayerDao
 ) : GameRepository {
 
-    override suspend fun addGame(config: GameConfig, startedAt: Long): Result<Long, DataError.Local> =
-        tryLocalWrite {
-            val gameId = gameDao.insertGame(config.toEntity(startedAt = startedAt))
-            val crossRefs = buildGamePlayerCrossRefs(gameId, config.players)
-            gameDao.insertGamePlayerCrossRefs(crossRefs)
-            Result.Success(gameId)
-        }
+    override suspend fun addGame(
+        turnDurationMillis: Long,
+        expansions: Set<GameExpansion>,
+        specialTurnRuleEnabled: Boolean,
+        players: List<Player>,
+        startedAt: Long
+    ): Result<Long, DataError.Local> = tryLocalWrite {
+        val gameId = gameDao.insertGame(
+            toGameEntity(
+                turnDurationMillis = turnDurationMillis,
+                expansions = expansions,
+                specialTurnRuleEnabled = specialTurnRuleEnabled,
+                startedAt = startedAt
+            )
+        )
+        val crossRefs = buildGamePlayerCrossRefs(gameId, players)
+        gameDao.insertGamePlayerCrossRefs(crossRefs)
+        Result.Success(gameId)
+    }
 
     override suspend fun getGame(gameId: Long): Result<Game, DataError.Local> =
         tryLocalRead {

@@ -23,7 +23,7 @@ interface PlayerDao {
     @Query("SELECT * FROM players WHERE name LIKE '%' || :query || '%' ORDER BY name ASC")
     fun searchPlayers(query: String): Flow<List<PlayerEntity>>
 
-    // Players assigned to the given game; ORDER BY playerIndex guarantees GameConfig.players order
+    // Players assigned to the given game; ORDER BY playerIndex guarantees Game.players order
     @Query("""
         SELECT p.* FROM players p
         INNER JOIN game_player_cross_ref ref ON p.id = ref.playerId
