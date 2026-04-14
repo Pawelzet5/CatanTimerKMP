@@ -301,10 +301,10 @@ interface PlayerRepository {
     fun getAllPlayers(): Flow<List<Player>>
     fun getVisiblePlayers(): Flow<List<Player>>
     fun getPlayerById(id: Long): Flow<Player?>
-    suspend fun createPlayer(name: String): Long
-    suspend fun updatePlayer(player: Player)
-    suspend fun hidePlayer(id: Long)
-    suspend fun deletePlayer(id: Long)
+    suspend fun createPlayer(name: String): Result<Long, DataError.Local>
+    suspend fun updatePlayer(player: Player): EmptyResult<DataError.Local>
+    suspend fun hidePlayer(id: Long): EmptyResult<DataError.Local>
+    suspend fun deletePlayer(id: Long): EmptyResult<DataError.Local>
     suspend fun canDeletePlayer(id: Long): Boolean
 }
 
@@ -320,14 +320,14 @@ interface GameRepository {
         expansions: Set<GameExpansion>,
         specialTurnRuleEnabled: Boolean,
         playerIds: List<Long>
-    ): Long
+    ): Result<Long, DataError.Local>
     suspend fun updateGameSettings(
         gameId: Long,
         expansions: Set<GameExpansion>,
         specialTurnRuleEnabled: Boolean
-    )
-    suspend fun endGame(gameId: Long, winnerId: Long?)
-    suspend fun deleteGame(id: Long)
+    ): EmptyResult<DataError.Local>
+    suspend fun endGame(gameId: Long, winnerId: Long?): EmptyResult<DataError.Local>
+    suspend fun deleteGame(id: Long): EmptyResult<DataError.Local>
 }
 
 // domain/repository/TurnRepository.kt
@@ -339,16 +339,16 @@ interface TurnRepository {
         gameId: Long,
         playerId: Long,
         number: Int
-    ): Long
-    suspend fun updateTurn(turn: Turn)
+    ): Result<Long, DataError.Local>
+    suspend fun updateTurn(turn: Turn): EmptyResult<DataError.Local>
     suspend fun updateDiceRoll(
         turnId: Long,
         redDice: Int,
         yellowDice: Int,
         eventDice: EventDiceType?
-    )
-    suspend fun updateDuration(turnId: Long, durationMillis: Long)
-    suspend fun setSecondaryPlayer(turnId: Long, playerId: Long)
+    ): EmptyResult<DataError.Local>
+    suspend fun updateDuration(turnId: Long, durationMillis: Long): EmptyResult<DataError.Local>
+    suspend fun setSecondaryPlayer(turnId: Long, playerId: Long): EmptyResult<DataError.Local>
 }
 ```
 
