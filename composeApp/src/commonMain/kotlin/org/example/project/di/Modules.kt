@@ -1,7 +1,7 @@
 package org.example.project.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import org.example.project.catan_companion_feature.data.local.CatanTimerDatabase
+import org.example.project.catan_companion_feature.data.local.CatanCompanionDatabase
 import org.example.project.catan_companion_feature.data.local.DatabaseFactory
 import org.example.project.catan_companion_feature.data.repository.GameRepositoryImpl
 import org.example.project.catan_companion_feature.data.repository.PlayerRepositoryImpl
@@ -24,13 +24,13 @@ val coreModule = module {
     }
 }
 
-
 val catanCompanionModule = module {
-    single { get<CatanTimerDatabase>().turnDao() }
-    single { get<CatanTimerDatabase>().playerDao() }
-    single { get<CatanTimerDatabase>().gameDao() }
+    single { get<CatanCompanionDatabase>().playerDao() }
+    single { get<CatanCompanionDatabase>().gameDao() }
+    single { get<CatanCompanionDatabase>().gamePlayerDao() }
+    single { get<CatanCompanionDatabase>().turnDao() }
 
-    singleOf(::GameRepositoryImpl).bind<GameRepository>()
     singleOf(::PlayerRepositoryImpl).bind<PlayerRepository>()
+    singleOf(::GameRepositoryImpl).bind<GameRepository>()
     singleOf(::TurnRepositoryImpl).bind<TurnRepository>()
 }

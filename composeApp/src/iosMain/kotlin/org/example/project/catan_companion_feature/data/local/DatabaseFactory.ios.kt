@@ -3,18 +3,17 @@ package org.example.project.catan_companion_feature.data.local
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.cinterop.ExperimentalForeignApi
+import org.example.project.catan_companion_feature.data.local.migrations.MIGRATION_1_2
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 
-
 @OptIn(ExperimentalForeignApi::class)
 actual class DatabaseFactory {
-    actual fun create(): RoomDatabase.Builder<CatanTimerDatabase> {
+    actual fun create(): RoomDatabase.Builder<CatanCompanionDatabase> {
         val dbFile = documentDirectory() + "/${DatabaseConstants.DB_NAME}"
-        return Room.databaseBuilder<CatanTimerDatabase>(
-            name = dbFile
-        )
+        return Room.databaseBuilder<CatanCompanionDatabase>(name = dbFile)
+            .addMigrations(MIGRATION_1_2)
     }
 
     private fun documentDirectory(): String {
