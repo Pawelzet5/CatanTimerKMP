@@ -64,7 +64,13 @@ class FakePlayerDao : PlayerDao {
         _playersState.value = _players.values.toList()
     }
 
-    override suspend fun getGameCount(playerId: Long): Int = 0
+    private val gameCountByPlayerId = mutableMapOf<Long, Int>()
+
+    fun setGameCount(playerId: Long, count: Int) {
+        gameCountByPlayerId[playerId] = count
+    }
+
+    override suspend fun getGameCount(playerId: Long): Int = gameCountByPlayerId[playerId] ?: 0
 
     // endregion
 }
