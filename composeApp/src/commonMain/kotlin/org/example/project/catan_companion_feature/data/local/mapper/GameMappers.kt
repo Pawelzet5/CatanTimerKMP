@@ -36,7 +36,7 @@ fun GameSummaryProjection.toDomain(): GameSummary = GameSummary(
 
 fun GameConfig.toEntity(
     startedAt: Long,
-    status: GameStatus = GameStatus.ACTIVE
+    status: GameStatus = GameStatus.IN_PROGRESS
 ): GameEntity = GameEntity(
     turnDurationMillis = turnDurationMillis,
     expansions = expansions,

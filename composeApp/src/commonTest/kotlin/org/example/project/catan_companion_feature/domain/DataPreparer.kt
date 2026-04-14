@@ -26,7 +26,7 @@ fun makeTestGameConfig(
 fun makeTestGame(
     id: Long = 1L,
     config: GameConfig = makeTestGameConfig(),
-    status: GameStatus = GameStatus.ACTIVE
+    status: GameStatus = GameStatus.IN_PROGRESS
 ): Game = Game(
     id = id,
     config = config,

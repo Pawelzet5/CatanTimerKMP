@@ -283,7 +283,7 @@ class GameSessionCoordinatorTest {
         // THEN
         assertIs<Result.Success<Unit>>(result)
         assertNull(coordinator.currentSession.value)
-        assertTrue(fakeGameRepository.games.first().status == GameStatus.FINISHED)
+        assertTrue(fakeGameRepository.games.first().status == GameStatus.COMPLETED)
     }
 
     @Test

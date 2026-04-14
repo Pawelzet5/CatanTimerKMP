@@ -27,7 +27,7 @@ class FakeGameRepository : GameRepository {
     override suspend fun addGame(config: GameConfig): Result<Long, DataError.Local> {
         if (shouldFailOnAddGame) return Result.Failure(DataError.Local.UNKNOWN)
         val id = nextId++
-        _games[id] = Game(id = id, config = config, status = GameStatus.ACTIVE)
+        _games[id] = Game(id = id, config = config, status = GameStatus.IN_PROGRESS)
         return Result.Success(id)
     }
 
@@ -40,7 +40,7 @@ class FakeGameRepository : GameRepository {
 
     override suspend fun getActiveGame(): Result<Game, DataError.Local> {
         if (shouldFailOnGetActiveGame) return Result.Failure(DataError.Local.UNKNOWN)
-        return _games.values.firstOrNull { it.status == GameStatus.ACTIVE }
+        return _games.values.firstOrNull { it.status == GameStatus.IN_PROGRESS }
             ?.let { Result.Success(it) }
             ?: Result.Failure(DataError.Local.NOT_FOUND)
     }
@@ -53,7 +53,7 @@ class FakeGameRepository : GameRepository {
     override suspend fun saveGameAsFinished(gameId: Long): EmptyResult<DataError.Local> {
         if (shouldFailOnFinishGame) return Result.Failure(DataError.Local.UNKNOWN)
         val game = _games[gameId] ?: return Result.Failure(DataError.Local.NOT_FOUND)
-        _games[gameId] = game.copy(status = GameStatus.FINISHED)
+        _games[gameId] = game.copy(status = GameStatus.COMPLETED)
         return Result.Success(Unit)
     }
 }
