@@ -30,6 +30,6 @@ import androidx.room.Index
 data class GamePlayerCrossRefEntity(
     val gameId: Long,
     val playerId: Long,
-    // player's position within this specific game; ORDER BY playerIndex restores GameConfig.players order
+    // player's position within this specific game; ORDER BY playerIndex restores Game.players order
     val playerIndex: Int
 )

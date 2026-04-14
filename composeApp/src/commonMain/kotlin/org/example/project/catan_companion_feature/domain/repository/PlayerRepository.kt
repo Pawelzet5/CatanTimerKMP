@@ -10,7 +10,7 @@ interface PlayerRepository {
 
     suspend fun getPlayer(playerId: Long): Result<Player, DataError.Local>
 
-    suspend fun getPlayers(query: String): Flow<List<Player>>
+    fun getPlayers(query: String): Flow<List<Player>>
 
     suspend fun getPlayersForGame(gameId: Long): Result<List<Player>, DataError.Local>
 

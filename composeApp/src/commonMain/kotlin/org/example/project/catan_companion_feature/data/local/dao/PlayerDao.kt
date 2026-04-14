@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
 
 @Dao
@@ -20,9 +21,9 @@ interface PlayerDao {
 
     // Search by name (case-insensitive, LIKE)
     @Query("SELECT * FROM players WHERE name LIKE '%' || :query || '%' ORDER BY name ASC")
-    suspend fun searchPlayers(query: String): List<PlayerEntity>
+    fun searchPlayers(query: String): Flow<List<PlayerEntity>>
 
-    // Players assigned to the given game; ORDER BY playerIndex guarantees GameConfig.players order
+    // Players assigned to the given game; ORDER BY playerIndex guarantees Game.players order
     @Query("""
         SELECT p.* FROM players p
         INNER JOIN game_player_cross_ref ref ON p.id = ref.playerId
