@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import org.example.project.catan_companion_feature.domain.dataclass.GameSession
+import org.example.project.catan_companion_feature.domain.session.GameSession
 import org.example.project.catan_companion_feature.domain.dataclass.Turn
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.factory.TurnFactory
@@ -47,7 +47,7 @@ class GameSessionCoordinator(
         }
 
         val currentTurn = if (turns.isEmpty()) {
-            val template = TurnFactory.createFirst(gameId, game.players, game.specialTurnRuleEnabled)
+            val template = TurnFactory.createFirst(game)
             val turnId = turnRepository.createTurn(gameId, template.playerId, template.number)
                 .onFailure { return Result.Failure(it) }
                 .let { (it as Result.Success).data }
@@ -106,12 +106,7 @@ class GameSessionCoordinator(
         turnRepository.updateTurn(completedTurn)
             .onFailure { return Result.Failure(it) }
 
-        val nextTemplate = TurnFactory.createNext(
-            gameId,
-            completedTurn,
-            session.game.players,
-            session.game.specialTurnRuleEnabled
-        )
+        val nextTemplate = TurnFactory.createNext(completedTurn, session.game)
         val nextTurnId = turnRepository.createTurn(gameId, nextTemplate.playerId, nextTemplate.number)
             .onFailure { return Result.Failure(it) }
             .let { (it as Result.Success).data }
