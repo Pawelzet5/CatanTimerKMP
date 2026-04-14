@@ -97,3 +97,7 @@ Live in `commonTest/.../data/fakes/dao/`. They are in-memory `MutableMap` implem
 ### Logging
 
 Use `core/util/LogUtils` (wraps Kermit). Never use `println` or `android.util.Log` directly.
+
+### Git Workflow
+
+When doing git operations be compliant with GIT_WORKFLOW.md 
