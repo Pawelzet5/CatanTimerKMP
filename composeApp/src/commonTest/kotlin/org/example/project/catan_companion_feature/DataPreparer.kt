@@ -1,15 +1,15 @@
-package org.example.project.catan_companion_feature.domain
+package org.example.project.catan_companion_feature
 
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.GameConfig
-import org.example.project.catan_companion_feature.domain.dataclass.Player
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
+import org.example.project.catan_companion_feature.domain.dataclass.*
+import org.example.project.catan_companion_feature.domain.enums.*
 
 fun makeTestPlayers(count: Int = 3): List<Player> =
-    (1..count).map { Player(id = it.toLong(), name = "Player $it") }
+    (1..count).map { makeTestPlayer(id = it.toLong(), name = "Player $it") }
+
+fun makeTestPlayer(id: Long = -1L, name: String = "Andrzej") = Player(
+    id = id,
+    name = name
+)
 
 fun makeTestGameConfig(
     turnDurationMillis: Long = 180_000L,
@@ -26,11 +26,15 @@ fun makeTestGameConfig(
 fun makeTestGame(
     id: Long = 1L,
     config: GameConfig = makeTestGameConfig(),
-    status: GameStatus = GameStatus.ACTIVE
+    status: GameStatus = GameStatus.ACTIVE,
+    startedAt: Long = 1000000500100900,
+    finishedAt: Long? = null
 ): Game = Game(
     id = id,
     config = config,
-    status = status
+    status = status,
+    startedAt = startedAt,
+    finishedAt = finishedAt
 )
 
 fun makeTestTurn(

@@ -2,11 +2,10 @@ package org.example.project.core.util
 
 import co.touchlab.kermit.Logger
 
-
 object LogUtils {
-    private const val DEFAULT_TAG = "PantryWiseApp"
+    private const val DEFAULT_TAG = "CatanTimerApp"
 
-    fun debug( tag: String = DEFAULT_TAG,message: String) {
+    fun debug(message: String, tag: String = DEFAULT_TAG) {
         Logger.d(messageString = message, tag = tag)
     }
 
