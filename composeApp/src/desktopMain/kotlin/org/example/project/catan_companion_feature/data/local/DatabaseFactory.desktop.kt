@@ -3,10 +3,11 @@ package org.example.project.catan_companion_feature.data.local
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import org.example.project.catan_companion_feature.AppConstants
+import org.example.project.catan_companion_feature.data.local.migrations.MIGRATION_1_2
 import java.io.File
 
 actual class DatabaseFactory {
-    actual fun create(): RoomDatabase.Builder<CatanTimerDatabase> {
+    actual fun create(): RoomDatabase.Builder<CatanCompanionDatabase> {
         val os = System.getProperty("os.name").lowercase()
         val userHome = System.getProperty("user.home")
         val appDataDir = when {
@@ -15,10 +16,11 @@ actual class DatabaseFactory {
             else -> File(userHome, ".local/share/${AppConstants.APP_NAME}")
         }
 
-        if(!appDataDir.exists())
+        if (!appDataDir.exists())
             appDataDir.mkdirs()
 
         val dbFile = File(appDataDir, DatabaseConstants.DB_NAME)
-        return Room.databaseBuilder(dbFile.absolutePath)
+        return Room.databaseBuilder<CatanCompanionDatabase>(dbFile.absolutePath)
+            .addMigrations(MIGRATION_1_2)
     }
 }

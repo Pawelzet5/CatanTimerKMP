@@ -3,17 +3,18 @@ package org.example.project.catan_companion_feature.data.local
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import org.example.project.catan_companion_feature.data.local.migrations.MIGRATION_1_2
 
 actual class DatabaseFactory(
     private val context: Context
 ) {
-    actual fun create(): RoomDatabase.Builder<CatanTimerDatabase > {
+    actual fun create(): RoomDatabase.Builder<CatanCompanionDatabase> {
         val appContext = context.applicationContext
         val dbFile = appContext.getDatabasePath(DatabaseConstants.DB_NAME)
 
-        return Room.databaseBuilder(
+        return Room.databaseBuilder<CatanCompanionDatabase>(
             context = appContext,
             name = dbFile.absolutePath
-        )
+        ).addMigrations(MIGRATION_1_2)
     }
 }
