@@ -40,9 +40,9 @@ data class TurnEntity(
     val gameId: Long,
     val number: Int,
     val playerId: Long,
-    val secondaryPlayerId: Long?,   // null when specialTurnRuleEnabled = false
-    val redDice: Int?,
-    val yellowDice: Int?,
-    val eventDice: EventDiceType?,  // null when CITIES_AND_KNIGHTS disabled
-    val durationMillis: Long
+    val secondaryPlayerId: Long? = null,
+    val redDice: Int? = null,
+    val yellowDice: Int? = null,
+    val eventDice: EventDiceType? = null,
+    val durationMillis: Long = 0L
 )

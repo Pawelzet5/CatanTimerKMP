@@ -14,5 +14,6 @@ data class GameEntity(
     val specialTurnRuleEnabled: Boolean,
     val status: GameStatus,
     val startedAt: Long,
-    val finishedAt: Long? = null
+    val finishedAt: Long? = null,
+    val winnerId: Long? = null
 )
