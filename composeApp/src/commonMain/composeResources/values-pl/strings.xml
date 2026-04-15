@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dashboard -->
+    <string name="dashboard_title">Catan Companion</string>
+    <string name="dashboard_subtitle">Timer i tracker do gier planszowych</string>
+    <string name="dashboard_resume_game">Wznów ostatnią grę</string>
+    <string name="dashboard_new_game">Nowa gra</string>
+    <string name="dashboard_games_list">Gry</string>
+    <string name="dashboard_players_list">Gracze</string>
+    <string name="dashboard_recent_activity">Ostatnia aktywność</string>
+
+    <!-- Game Configuration -->
+    <string name="config_title">Nowa gra</string>
+    <string name="config_turn_duration">Czas tury</string>
+    <string name="config_player_count">Liczba graczy</string>
+    <string name="config_players">Gracze</string>
+    <string name="config_add_player">Dodaj gracza</string>
+    <string name="config_options">Opcje gry</string>
+    <string name="config_in_between_turns">Tury pośrednie (5–6 graczy)</string>
+    <string name="config_seafarers">Żeglarze</string>
+    <string name="config_cities_knights">Miasta i Rycerze</string>
+    <string name="config_start_game">Rozpocznij grę</string>
+
+    <!-- Gameplay -->
+    <string name="gameplay_turn">Tura %1$d</string>
+    <string name="gameplay_player_turn">Tura gracza %1$s</string>
+    <string name="gameplay_continue">Dalej</string>
+    <string name="gameplay_next_turn">Następna tura</string>
+    <string name="gameplay_in_between">Tura pośrednia (%1$s)</string>
+
+    <!-- Timer -->
+    <string name="timer_start">Start</string>
+    <string name="timer_stop">Stop</string>
+    <string name="timer_add_10">+10 sek</string>
+    <string name="timer_reset">Reset</string>
+
+    <!-- Events -->
+    <string name="event_robber_title">Policz karty!</string>
+    <string name="event_robber_message">Wszyscy gracze muszą policzyć karty.\nJeśli masz więcej niż 7, odrzuć połowę.</string>
+    <string name="event_move_robber">Przesuń złodzieja na inne pole.</string>
+    <string name="event_move_robber_or_pirate">Przesuń złodzieja lub pirata na inne pole.</string>
+    <string name="event_robber_not_active">Złodziej nie może być jeszcze przesunięty.\n(Pierwszy najazd barbarzyńców jeszcze nie nastąpił)</string>
+    <string name="event_barbarians_arrived">Barbarzyńcy przybyli!\nRozstrzygnij atak.</string>
+
+    <!-- Statistics -->
+    <string name="stats_title">Statystyki</string>
+    <string name="stats_dice_distribution">Rozkład wyników kości</string>
+    <string name="stats_event_dice">Kostka zdarzeń</string>
+    <string name="stats_total_turns">Łączna liczba tur</string>
+    <string name="stats_avg_turn_time">Średni czas tury</string>
+
+    <!-- End Game -->
+    <string name="end_game_select_winner">Wybierz zwycięzcę</string>
+    <string name="end_game_no_winner">Bez zwycięzcy (gra przerwana)</string>
+    <string name="end_game_confirm">Potwierdź</string>
+    <string name="end_game_summary">Podsumowanie gry</string>
+    <string name="end_game_winner">Zwycięzca: %1$s</string>
+    <string name="end_game_duration">Czas trwania</string>
+    <string name="end_game_back_home">Wróć do menu</string>
+
+    <!-- Players -->
+    <string name="players_title">Gracze</string>
+    <string name="players_add">Dodaj</string>
+    <string name="players_games_count">%1$d gier</string>
+    <string name="players_hide">Ukryj gracza</string>
+    <string name="players_delete">Usuń gracza</string>
+
+    <!-- Games -->
+    <string name="games_title">Gry</string>
+    <string name="games_in_progress">W toku</string>
+    <string name="games_completed">Zakończone</string>
+    <string name="games_turn_count">Tura %1$d</string>
+    <string name="games_winner">Zwycięzca: %1$s</string>
+
+    <!-- Menu -->
+    <string name="menu_statistics">Pokaż statystyki</string>
+    <string name="menu_settings">Zmień ustawienia gry</string>
+    <string name="menu_end_game">Zakończ grę</string>
+
+    <!-- Settings Warning -->
+    <string name="settings_warning_title">Uwaga</string>
+    <string name="settings_warning_message">Zmiana ustawień w trakcie gry może powodować niespójności danych. Rozważ rozpoczęcie nowej gry.</string>
+    <string name="settings_save">Zapisz zmiany</string>
+    <string name="settings_new_game">Rozpocznij nową grę z tymi ustawieniami</string>
+    <string name="settings_cancel">Anuluj</string>
+
+    <!-- Validation -->
+    <string name="validation_player_count">Liczba graczy musi wynosić 3-6</string>
+    <string name="validation_duplicate_players">Gracze nie mogą się powtarzać</string>
+    <string name="validation_in_between_requires_5">Tury pośrednie wymagają min. 5 graczy</string>
+
+    <!-- Common -->
+    <string name="common_confirm">Potwierdź</string>
+    <string name="common_cancel">Anuluj</string>
+    <string name="common_save">Zapisz</string>
+    <string name="common_delete">Usuń</string>
+    <string name="common_edit">Edytuj</string>
+    <string name="common_back">Wstecz</string>
+</resources>

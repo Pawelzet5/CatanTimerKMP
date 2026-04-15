@@ -2,8 +2,102 @@
 <resources>
     <string name="app_name">CatanTimer</string>
 
+    <!-- Dashboard -->
+    <string name="dashboard_title">Catan Companion</string>
+    <string name="dashboard_subtitle">Board game timer &amp; tracker</string>
+    <string name="dashboard_resume_game">Resume Last Game</string>
+    <string name="dashboard_new_game">New Game</string>
+    <string name="dashboard_games_list">Games</string>
+    <string name="dashboard_players_list">Players</string>
+    <string name="dashboard_recent_activity">Recent Activity</string>
 
+    <!-- Game Configuration -->
+    <string name="config_title">New Game</string>
+    <string name="config_turn_duration">Turn Duration</string>
+    <string name="config_player_count">Number of Players</string>
+    <string name="config_players">Players</string>
+    <string name="config_add_player">Add Player</string>
+    <string name="config_options">Game Options</string>
+    <string name="config_in_between_turns">In-Between Turns (5–6 players)</string>
+    <string name="config_seafarers">Seafarers</string>
+    <string name="config_cities_knights">Cities &amp; Knights</string>
+    <string name="config_start_game">Start Game</string>
 
+    <!-- Gameplay -->
+    <string name="gameplay_turn">Turn %1$d</string>
+    <string name="gameplay_player_turn">%1$s\'s Turn</string>
+    <string name="gameplay_continue">Continue</string>
+    <string name="gameplay_next_turn">Next Turn</string>
+    <string name="gameplay_in_between">In-Between Turn (%1$s)</string>
+
+    <!-- Timer -->
+    <string name="timer_start">Start</string>
+    <string name="timer_stop">Stop</string>
+    <string name="timer_add_10">+10 sec</string>
+    <string name="timer_reset">Reset</string>
+
+    <!-- Events -->
+    <string name="event_robber_title">Count Your Cards!</string>
+    <string name="event_robber_message">All players must count their cards.\nIf you have more than 7, discard half.</string>
+    <string name="event_move_robber">Move the thief to a different tile.</string>
+    <string name="event_move_robber_or_pirate">Move the thief or pirate to a different tile.</string>
+    <string name="event_robber_not_active">The thief cannot be moved yet.\n(First barbarian raid has not occurred)</string>
+    <string name="event_barbarians_arrived">The barbarians have arrived!\nResolve the attack now.</string>
+
+    <!-- Statistics -->
+    <string name="stats_title">Statistics</string>
+    <string name="stats_dice_distribution">Dice Distribution</string>
+    <string name="stats_event_dice">Event Dice</string>
+    <string name="stats_total_turns">Total Turns</string>
+    <string name="stats_avg_turn_time">Average Turn Time</string>
+
+    <!-- End Game -->
+    <string name="end_game_select_winner">Select Winner</string>
+    <string name="end_game_no_winner">No winner (game abandoned)</string>
+    <string name="end_game_confirm">Confirm</string>
+    <string name="end_game_summary">Game Summary</string>
+    <string name="end_game_winner">Winner: %1$s</string>
+    <string name="end_game_duration">Duration</string>
+    <string name="end_game_back_home">Back to Home</string>
+
+    <!-- Players -->
+    <string name="players_title">Players</string>
+    <string name="players_add">Add</string>
+    <string name="players_games_count">%1$d games</string>
+    <string name="players_hide">Hide Player</string>
+    <string name="players_delete">Delete Player</string>
+
+    <!-- Games -->
+    <string name="games_title">Games</string>
+    <string name="games_in_progress">In Progress</string>
+    <string name="games_completed">Completed</string>
+    <string name="games_turn_count">Turn %1$d</string>
+    <string name="games_winner">Winner: %1$s</string>
+
+    <!-- Menu -->
+    <string name="menu_statistics">View Statistics</string>
+    <string name="menu_settings">Change Game Settings</string>
+    <string name="menu_end_game">End Game</string>
+
+    <!-- Settings Warning -->
+    <string name="settings_warning_title">Warning</string>
+    <string name="settings_warning_message">Changing settings mid-game may cause data inconsistencies. Consider starting a new game instead.</string>
+    <string name="settings_save">Save Changes</string>
+    <string name="settings_new_game">Start New Game With These Settings</string>
+    <string name="settings_cancel">Cancel</string>
+
+    <!-- Validation -->
+    <string name="validation_player_count">Player count must be 3-6</string>
+    <string name="validation_duplicate_players">Duplicate players not allowed</string>
+    <string name="validation_in_between_requires_5">In-between turns requires 5+ players</string>
+
+    <!-- Common -->
+    <string name="common_confirm">Confirm</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_edit">Edit</string>
+    <string name="common_back">Back</string>
 
 
     <!-- Remote Errors -->
