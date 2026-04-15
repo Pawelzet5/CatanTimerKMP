@@ -55,6 +55,7 @@ kotlin {
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.sqlite.bundled)
+            implementation(libs.androidx.navigation.compose)
 
 
             api(libs.koin.core)
