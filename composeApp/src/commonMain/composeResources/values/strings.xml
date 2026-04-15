@@ -92,6 +92,7 @@
     <string name="validation_in_between_requires_5">In-between turns requires 5+ players</string>
 
     <!-- Common -->
+    <string name="coming_soon">Coming soon</string>
     <string name="common_confirm">Confirm</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_save">Save</string>

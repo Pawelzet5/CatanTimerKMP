@@ -10,9 +10,11 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
+import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
 
 class DashboardViewModel(
-    private val gameRepository: GameRepository
+    private val gameRepository: GameRepository,
+    private val playerRepository: PlayerRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DashboardUiState())
@@ -20,6 +22,8 @@ class DashboardViewModel(
 
     init {
         observeResumableGame()
+        observeTotalGames()
+        observeTotalPlayers()
     }
 
     private fun observeResumableGame() {
@@ -28,6 +32,20 @@ class DashboardViewModel(
                 _uiState.update { it.copy(resumableGame = game, isLoading = false) }
             }
             .catch { _uiState.update { it.copy(isLoading = false) } }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeTotalGames() {
+        gameRepository.getAllGames()
+            .onEach { games -> _uiState.update { it.copy(totalGames = games.size) } }
+            .catch { }
+            .launchIn(viewModelScope)
+    }
+
+    private fun observeTotalPlayers() {
+        playerRepository.getAllPlayers()
+            .onEach { players -> _uiState.update { it.copy(totalPlayers = players.size) } }
+            .catch { }
             .launchIn(viewModelScope)
     }
 }

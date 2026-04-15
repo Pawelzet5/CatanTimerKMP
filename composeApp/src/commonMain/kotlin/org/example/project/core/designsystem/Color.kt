@@ -54,6 +54,14 @@ val CatanInfo = Color(0xFF2563EB)
 val CatanInfoSubtle = Color(0xFFDBEAFE)
 val CatanInfoDark = Color(0xFF60A5FA)
 
+// Dashboard category colors
+val CatanCategoryGames = Color(0xFF7C3AED)
+val CatanCategoryGamesSubtle = Color(0xFFEDE9FE)
+val CatanCategoryGamesDark = Color(0xFFA78BFA)
+val CatanCategoryGamesSubtleDark = Color(0xFF2E1065)
+
+val CatanHeaderGradientEnd = Color(0xFF7B2010)
+
 // Dice-specific palette (used via extension functions in presentation layer)
 val CatanDiceRedBackground = Color(0xFFDC2626)
 val CatanDiceRedDot = Color(0xFFFDE047)

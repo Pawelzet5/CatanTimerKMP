@@ -90,6 +90,7 @@
     <string name="validation_in_between_requires_5">Tury pośrednie wymagają min. 5 graczy</string>
 
     <!-- Common -->
+    <string name="coming_soon">Wkrótce dostępne</string>
     <string name="common_confirm">Potwierdź</string>
     <string name="common_cancel">Anuluj</string>
     <string name="common_save">Zapisz</string>
