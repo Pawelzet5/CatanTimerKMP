@@ -94,6 +94,18 @@ When adding a new DAO method, add a contract test case to the abstract class **b
 
 Live in `commonTest/.../data/fakes/dao/`. They are in-memory `MutableMap` implementations that mirror Room's behaviour precisely. If a fake deviates from Room (e.g. wrong sort order, missing null handling), the contract tests will catch it.
 
+### Test Naming Convention
+
+Unit tests (ViewModels, UseCases, Repositories, helpers) use the `<Action>, <Prerequisites>, <Effect>` scheme:
+
+```kotlin
+fun `Timer start, game not started, timer begins from zero`()
+fun `Turn end, one player remaining, game over state emitted`()
+```
+
+Three comma-separated parts, noun or infinitive form — no questions, no `should`.
+See `docs/PROJECT_OVERRIDES.md` for the authoritative definition and examples.
+
 ### Logging
 
 Use `core/util/LogUtils` (wraps Kermit). Never use `println` or `android.util.Log` directly.

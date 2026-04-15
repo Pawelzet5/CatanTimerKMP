@@ -17,41 +17,41 @@ class TurnNavigatorTest {
     )
 
     @Test
-    fun `default construction selects last turn`() {
+    fun `TurnNavigator creation, turns provided, selects last turn`() {
         val nav = TurnNavigator(turns)
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
     }
 
     @Test
-    fun `selectPrevious moves to previous turn`() {
+    fun `selectPrevious, not at first turn, moves to previous turn`() {
         val nav = TurnNavigator(turns).selectPrevious()
         assertEquals(turns[1], nav.selectedTurn)
         assertFalse(nav.isViewingLatest)
     }
 
     @Test
-    fun `selectPrevious at first turn is no-op`() {
+    fun `selectPrevious, at first turn, is no-op`() {
         val nav = TurnNavigator(turns, selectedIndex = 0).selectPrevious()
         assertEquals(turns[0], nav.selectedTurn)
     }
 
     @Test
-    fun `selectNext at last turn is no-op`() {
+    fun `selectNext, at last turn, is no-op`() {
         val nav = TurnNavigator(turns).selectNext()
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
     }
 
     @Test
-    fun `selectLatest from middle returns to last`() {
+    fun `selectLatest, viewing middle turn, returns to last turn`() {
         val nav = TurnNavigator(turns, selectedIndex = 0).selectLatest()
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
     }
 
     @Test
-    fun `single turn list — all navigation is no-op`() {
+    fun `Navigation, single turn list, all navigation is no-op`() {
         val nav = TurnNavigator(listOf(turn(id = 1, number = 0)))
         assertFalse(nav.hasPrevious)
         assertFalse(nav.hasNext)
@@ -59,7 +59,7 @@ class TurnNavigatorTest {
     }
 
     @Test
-    fun `empty list returns null selectedTurn`() {
+    fun `TurnNavigator creation, empty turn list, selectedTurn is null`() {
         val nav = TurnNavigator(emptyList())
         assertNull(nav.selectedTurn)
     }

@@ -21,7 +21,7 @@ class GetGameStatisticsUseCaseTest {
     private val useCase = GetGameStatisticsUseCase(fakeGameRepository, fakeTurnRepository)
 
     @Test
-    fun `empty turn list returns zeroed statistics without crash`() = runTest {
+    fun `Statistics retrieval, empty turn list, returns zeroed statistics`() = runTest {
         val game = makeTestGame(id = 1L)
         fakeGameRepository.seedGame(game)
 
@@ -35,7 +35,7 @@ class GetGameStatisticsUseCaseTest {
     }
 
     @Test
-    fun `dice distribution groups correctly by sum`() = runTest {
+    fun `Statistics retrieval, multiple turns with dice, distribution grouped by sum`() = runTest {
         val game = makeTestGame(id = 1L)
         fakeGameRepository.seedGame(game)
         val turns = listOf(
@@ -52,7 +52,7 @@ class GetGameStatisticsUseCaseTest {
     }
 
     @Test
-    fun `average duration calculated correctly`() = runTest {
+    fun `Statistics retrieval, multiple turns with duration, average duration calculated correctly`() = runTest {
         val game = makeTestGame(id = 1L)
         fakeGameRepository.seedGame(game)
         val turns = listOf(
@@ -69,7 +69,7 @@ class GetGameStatisticsUseCaseTest {
     }
 
     @Test
-    fun `turns without dice rolls excluded from distribution`() = runTest {
+    fun `Statistics retrieval, turns without dice rolls present, excluded from distribution`() = runTest {
         val game = makeTestGame(id = 1L)
         fakeGameRepository.seedGame(game)
         val turns = listOf(
@@ -86,7 +86,7 @@ class GetGameStatisticsUseCaseTest {
     }
 
     @Test
-    fun `game not found returns failure`() = runTest {
+    fun `Statistics retrieval, game not found, returns failure`() = runTest {
         val result = useCase(gameId = 999L)
 
         assertIs<Result.Failure<DataError.Local>>(result)
@@ -94,7 +94,7 @@ class GetGameStatisticsUseCaseTest {
     }
 
     @Test
-    fun `player average durations calculated per player`() = runTest {
+    fun `Statistics retrieval, multiple players with turns, average duration calculated per player`() = runTest {
         val players = makeTestGamePlayers(count = 2, gameId = 1L)
         val game = makeTestGame(id = 1L, players = players)
         fakeGameRepository.seedGame(game)

@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
 class GameMappersTest {
 
     @Test
-    fun `GameEntity toDomain maps all fields`() {
+    fun `toDomain mapping, GameEntity with all fields, maps all fields`() {
         val players = listOf(
             GamePlayer(gameId = 1L, playerId = 1L, playerName = "Alice", orderIndex = 0)
         )
@@ -39,7 +39,7 @@ class GameMappersTest {
     }
 
     @Test
-    fun `GameEntity toDomain accepts empty players list`() {
+    fun `toDomain mapping, GameEntity with empty players list, maps correctly`() {
         val entity = GameEntity(
             id = 2L, turnDurationMillis = 60_000L,
             expansions = emptySet(), specialTurnRuleEnabled = false,
@@ -54,7 +54,7 @@ class GameMappersTest {
     }
 
     @Test
-    fun `Game toEntity drops players list`() {
+    fun `toEntity mapping, Game with players list, drops players list`() {
         val players = listOf(
             GamePlayer(gameId = 1L, playerId = 1L, playerName = "Alice", orderIndex = 0)
         )

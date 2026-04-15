@@ -12,7 +12,7 @@ class RepositoryHelpersTest {
 
     // region tryLocalRead
     @Test
-    fun `tryLocalRead returns block result when block succeeds`() = runTest {
+    fun `tryLocalRead, block succeeds, returns block result`() = runTest {
         // WHEN
         val result = tryLocalRead {
             Result.Success(42)
@@ -24,7 +24,7 @@ class RepositoryHelpersTest {
     }
 
     @Test
-    fun `tryLocalRead propagates Failure returned by block without catching it`() = runTest {
+    fun `tryLocalRead, block returns Failure, propagates Failure without catching`() = runTest {
         // WHEN
         val result = tryLocalRead {
             Result.Failure(DataError.Local.NOT_FOUND)
@@ -36,7 +36,7 @@ class RepositoryHelpersTest {
     }
 
     @Test
-    fun `tryLocalRead returns UNKNOWN when block throws SQLiteException`() = runTest {
+    fun `tryLocalRead, block throws SQLiteException, returns UNKNOWN error`() = runTest {
         // WHEN
         val result = tryLocalRead<Unit> {
             throw SQLiteException("disk error")
@@ -48,7 +48,7 @@ class RepositoryHelpersTest {
     }
 
     @Test
-    fun `tryLocalRead returns UNKNOWN when block throws unexpected exception`() = runTest {
+    fun `tryLocalRead, unexpected exception thrown, returns UNKNOWN error`() = runTest {
         // WHEN
         val result = tryLocalRead<Unit> {
             throw RuntimeException("something went wrong")
@@ -64,7 +64,7 @@ class RepositoryHelpersTest {
     // region tryLocalWrite
 
     @Test
-    fun `tryLocalWrite returns block result when block succeeds`() = runTest {
+    fun `tryLocalWrite, block succeeds, returns block result`() = runTest {
         // WHEN
         val result = tryLocalWrite {
             Result.Success(99L)
@@ -76,7 +76,7 @@ class RepositoryHelpersTest {
     }
 
     @Test
-    fun `tryLocalWrite propagates Failure returned by block without catching it`() = runTest {
+    fun `tryLocalWrite, block returns Failure, propagates Failure without catching`() = runTest {
         // WHEN
         val result = tryLocalWrite {
             Result.Failure(DataError.Local.NOT_FOUND)
@@ -88,7 +88,7 @@ class RepositoryHelpersTest {
     }
 
     @Test
-    fun `tryLocalWrite returns DISK_FULL when block throws SQLiteException`() = runTest {
+    fun `tryLocalWrite, block throws SQLiteException, returns DISK_FULL error`() = runTest {
         // WHEN
         val result = tryLocalWrite<Unit> {
             throw SQLiteException("no space left")
@@ -100,7 +100,7 @@ class RepositoryHelpersTest {
     }
 
     @Test
-    fun `tryLocalWrite returns UNKNOWN when block throws unexpected exception`() = runTest {
+    fun `tryLocalWrite, unexpected exception thrown, returns UNKNOWN error`() = runTest {
         // WHEN
         val result = tryLocalWrite<Unit> {
             throw RuntimeException("something went wrong")
@@ -116,7 +116,7 @@ class RepositoryHelpersTest {
     // region read vs write contract
 
     @Test
-    fun `tryLocalRead and tryLocalWrite map SQLiteException to different errors`() = runTest {
+    fun `tryLocalRead and tryLocalWrite, SQLiteException thrown, map to different errors`() = runTest {
         // Dokumentuje świadomą decyzję projektową: read → UNKNOWN, write → DISK_FULL
         val readResult = tryLocalRead<Unit> { throw SQLiteException("error") }
         val writeResult = tryLocalWrite<Unit> { throw SQLiteException("error") }

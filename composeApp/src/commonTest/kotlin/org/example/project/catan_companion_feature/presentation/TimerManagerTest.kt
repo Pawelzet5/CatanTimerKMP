@@ -12,14 +12,14 @@ import kotlin.test.assertTrue
 class TimerManagerTest {
 
     @Test
-    fun `initial state has zero remaining and is not running`() = runTest {
+    fun `Timer state, on creation, has zero remaining and is not running`() = runTest {
         val timer = TimerManager(this)
         assertEquals(0L, timer.state.value.remainingMillis)
         assertFalse(timer.state.value.isRunning)
     }
 
     @Test
-    fun `start sets isRunning to true`() = runTest {
+    fun `Timer start, timer idle, sets isRunning to true`() = runTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
         assertTrue(timer.state.value.isRunning)
@@ -27,7 +27,7 @@ class TimerManagerTest {
     }
 
     @Test
-    fun `stop cancels timer and returns remaining millis`() = runTest {
+    fun `Timer stop, timer running, cancels timer and returns remaining millis`() = runTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
         val remaining = timer.stop()
@@ -36,7 +36,7 @@ class TimerManagerTest {
     }
 
     @Test
-    fun `addTime increases remaining millis`() = runTest {
+    fun `addTime, timer has remaining time, increases remaining millis`() = runTest {
         val timer = TimerManager(this)
         timer.reset(30_000L)
         timer.addTime(10_000L)
@@ -44,7 +44,7 @@ class TimerManagerTest {
     }
 
     @Test
-    fun `reset sets remaining to given duration and stops timer`() = runTest {
+    fun `Timer reset, timer running, sets remaining to given duration and stops`() = runTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
         timer.reset(120_000L)
@@ -54,7 +54,7 @@ class TimerManagerTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
-    fun `timer reaches zero and sets isRunning to false`() = runTest {
+    fun `Timer expiry, duration elapsed, sets isRunning to false`() = runTest {
         val timer = TimerManager(this)
         timer.start(200L)
         advanceTimeBy(500L)

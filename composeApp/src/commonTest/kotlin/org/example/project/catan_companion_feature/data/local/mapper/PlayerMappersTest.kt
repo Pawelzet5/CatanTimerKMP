@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 class PlayerMappersTest {
 
     @Test
-    fun `PlayerEntity toDomain maps all fields correctly`() {
+    fun `toDomain mapping, PlayerEntity with all fields, maps all fields correctly`() {
         val entity = PlayerEntity(id = 5L, name = "Alice", isHidden = false)
 
         val domain = entity.toDomain(gamesPlayed = 3, gamesWon = 1)
@@ -23,7 +23,7 @@ class PlayerMappersTest {
     }
 
     @Test
-    fun `PlayerEntity toDomain with default gamesPlayed and gamesWon`() {
+    fun `toDomain mapping, PlayerEntity with default values, gamesPlayed and gamesWon default to zero`() {
         val entity = PlayerEntity(id = 1L, name = "Bob", isHidden = true)
 
         val domain = entity.toDomain()
@@ -33,7 +33,7 @@ class PlayerMappersTest {
     }
 
     @Test
-    fun `Player toEntity drops derived fields`() {
+    fun `toEntity mapping, Player with derived fields, drops gamesPlayed and gamesWon`() {
         val domain = Player(id = 7L, name = "Charlie", isHidden = true, gamesPlayed = 10, gamesWon = 5)
 
         val entity = domain.toEntity()

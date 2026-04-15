@@ -22,14 +22,14 @@ Testy dla `TimerManager`, `TurnNavigator` i kluczowych ViewModeli. Używaj fake'
 class TimerManagerTest {
 
     @Test
-    fun `initial state has zero remaining and is not running`() = runTest {
+    fun `Timer state, on creation, has zero remaining and is not running`() = runTest {
         val timer = TimerManager(this)
         assertEquals(0L, timer.state.value.remainingMillis)
         assertFalse(timer.state.value.isRunning)
     }
 
     @Test
-    fun `start sets isRunning to true`() = runTest {
+    fun `Timer start, timer idle, sets isRunning to true`() = runTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
         assertTrue(timer.state.value.isRunning)
@@ -37,7 +37,7 @@ class TimerManagerTest {
     }
 
     @Test
-    fun `stop cancels timer and returns remaining millis`() = runTest {
+    fun `Timer stop, timer running, cancels timer and returns remaining millis`() = runTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
         val remaining = timer.stop()
@@ -46,7 +46,7 @@ class TimerManagerTest {
     }
 
     @Test
-    fun `addTime increases remaining millis`() = runTest {
+    fun `addTime, timer has remaining time, increases remaining millis`() = runTest {
         val timer = TimerManager(this)
         timer.reset(30_000L)
         timer.addTime(10_000L)
@@ -54,7 +54,7 @@ class TimerManagerTest {
     }
 
     @Test
-    fun `reset sets remaining to given duration and stops timer`() = runTest {
+    fun `Timer reset, timer running, sets remaining to given duration and stops`() = runTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
         timer.reset(120_000L)
@@ -63,7 +63,7 @@ class TimerManagerTest {
     }
 
     @Test
-    fun `timer reaches zero and sets isRunning to false`() = runTest {
+    fun `Timer expiry, duration elapsed, sets isRunning to false`() = runTest {
         val timer = TimerManager(this)
         timer.start(200L)
         advanceTimeBy(500L)
@@ -85,41 +85,41 @@ class TurnNavigatorTest {
     )
 
     @Test
-    fun `default construction selects last turn`() {
+    fun `TurnNavigator creation, turns provided, selects last turn`() {
         val nav = TurnNavigator(turns)
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
     }
 
     @Test
-    fun `selectPrevious moves to previous turn`() {
+    fun `selectPrevious, not at first turn, moves to previous turn`() {
         val nav = TurnNavigator(turns).selectPrevious()
         assertEquals(turns[1], nav.selectedTurn)
         assertFalse(nav.isViewingLatest)
     }
 
     @Test
-    fun `selectPrevious at first turn is no-op`() {
+    fun `selectPrevious, at first turn, is no-op`() {
         val nav = TurnNavigator(turns, selectedIndex = 0).selectPrevious()
         assertEquals(turns[0], nav.selectedTurn)
     }
 
     @Test
-    fun `selectNext at last turn is no-op`() {
+    fun `selectNext, at last turn, is no-op`() {
         val nav = TurnNavigator(turns).selectNext()
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
     }
 
     @Test
-    fun `selectLatest from middle returns to last`() {
+    fun `selectLatest, viewing middle turn, returns to last turn`() {
         val nav = TurnNavigator(turns, selectedIndex = 0).selectLatest()
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
     }
 
     @Test
-    fun `single turn list — all navigation is no-op`() {
+    fun `Navigation, single turn list, all navigation is no-op`() {
         val nav = TurnNavigator(listOf(turn(id = 1, number = 0)))
         assertFalse(nav.hasPrevious)
         assertFalse(nav.hasNext)
@@ -127,7 +127,7 @@ class TurnNavigatorTest {
     }
 
     @Test
-    fun `empty list returns null selectedTurn`() {
+    fun `TurnNavigator creation, empty turn list, selectedTurn is null`() {
         val nav = TurnNavigator(emptyList())
         assertNull(nav.selectedTurn)
     }
@@ -176,13 +176,13 @@ class FakeGameSessionCoordinator : /* implementuje ten sam kontrakt */ {
 class DashboardViewModelTest {
 
     @Test
-    fun `initial state is loading`() = runTest {
+    fun `DashboardViewModel init, no games loaded yet, state is loading`() = runTest {
         val viewModel = DashboardViewModel(FakeGameRepository())
         // Stan zależy od implementacji — sprawdź initial value
     }
 
     @Test
-    fun `resumable game appears in state when in-progress game exists`() = runTest {
+    fun `DashboardViewModel init, in-progress game exists, resumable game appears in state`() = runTest {
         val repo = FakeGameRepository()
         repo.setInProgressGame(testGame())
         val viewModel = DashboardViewModel(repo)
@@ -191,7 +191,7 @@ class DashboardViewModelTest {
     }
 
     @Test
-    fun `no resumable game when no in-progress games`() = runTest {
+    fun `DashboardViewModel init, no in-progress games, resumable game is null`() = runTest {
         val viewModel = DashboardViewModel(FakeGameRepository())
         assertNull(viewModel.uiState.value.resumableGame)
     }
@@ -204,21 +204,21 @@ class DashboardViewModelTest {
 class GameConfigViewModelTest {
 
     @Test
-    fun `isValid false with fewer than 3 players`() = runTest {
+    fun `GameConfigViewModel validation, fewer than 3 players selected, isValid is false`() = runTest {
         val viewModel = makeViewModel()
         // selectPlayers(2 players)
         assertFalse(viewModel.uiState.value.isValid)
     }
 
     @Test
-    fun `isValid true with 3 players`() = runTest {
+    fun `GameConfigViewModel validation, 3 players selected, isValid is true`() = runTest {
         val viewModel = makeViewModel()
         // selectPlayers(3 players)
         assertTrue(viewModel.uiState.value.isValid)
     }
 
     @Test
-    fun `specialTurnRule invalid with fewer than 5 players`() = runTest {
+    fun `GameConfigViewModel validation, specialTurnRule enabled with fewer than 5 players, isValid is false`() = runTest {
         val viewModel = makeViewModel()
         viewModel.onSpecialTurnRuleToggled()
         // selectPlayers(4 players)
@@ -226,7 +226,7 @@ class GameConfigViewModelTest {
     }
 
     @Test
-    fun `onStartGame emits navigation event on success`() = runTest {
+    fun `onStartGame, valid config, emits navigation event`() = runTest {
         val viewModel = makeViewModel()
         val gameIds = mutableListOf<Long>()
         val job = launch { viewModel.navigateToGameplay.collect { gameIds.add(it) } }
@@ -250,13 +250,13 @@ class GameConfigViewModelTest {
 class GameplayViewModelTest {
 
     @Test
-    fun `initial phase is DICE_SELECTION`() = runTest {
+    fun `GameplayViewModel init, session started, initial phase is DICE_SELECTION`() = runTest {
         val viewModel = makeViewModel()
         assertEquals(GameplayPhase.DICE_SELECTION, viewModel.uiState.value.phase)
     }
 
     @Test
-    fun `onContinueFromDice with sum 7 transitions to EVENT phase`() = runTest {
+    fun `onContinueFromDice, dice sum is 7, transitions to EVENT phase`() = runTest {
         val viewModel = makeViewModel()
         viewModel.onDiceSelected(red = 3, yellow = 4, event = null)
         viewModel.onContinueFromDice()
@@ -265,7 +265,7 @@ class GameplayViewModelTest {
     }
 
     @Test
-    fun `onContinueFromDice with sum != 7 transitions to MAIN_TIMER phase`() = runTest {
+    fun `onContinueFromDice, dice sum is not 7, transitions to MAIN_TIMER phase`() = runTest {
         val viewModel = makeViewModel()
         viewModel.onDiceSelected(red = 2, yellow = 4, event = null)
         viewModel.onContinueFromDice()
@@ -274,7 +274,7 @@ class GameplayViewModelTest {
     }
 
     @Test
-    fun `onNavigateToPreviousTurn updates displayedTurn and isViewingLatest`() = runTest {
+    fun `onNavigateToPreviousTurn, multiple turns exist, updates displayedTurn and isViewingLatest`() = runTest {
         val coordinator = FakeGameSessionCoordinator()
         coordinator.setSession(testSessionWithMultipleTurns())
         val viewModel = makeViewModel(coordinator = coordinator)
@@ -284,7 +284,7 @@ class GameplayViewModelTest {
     }
 
     @Test
-    fun `onJumpToCurrentTurn restores isViewingLatest`() = runTest {
+    fun `onJumpToCurrentTurn, viewing historical turn, restores isViewingLatest`() = runTest {
         val coordinator = FakeGameSessionCoordinator()
         coordinator.setSession(testSessionWithMultipleTurns())
         val viewModel = makeViewModel(coordinator = coordinator)
@@ -295,7 +295,7 @@ class GameplayViewModelTest {
     }
 
     @Test
-    fun `onNextTurn resets phase to DICE_SELECTION`() = runTest {
+    fun `onNextTurn, turn completed, resets phase to DICE_SELECTION`() = runTest {
         val viewModel = makeViewModel()
         viewModel.onDiceSelected(2, 4, null)
         viewModel.onContinueFromDice()
@@ -322,7 +322,7 @@ class GameplayViewModelTest {
 class PlayersListViewModelTest {
 
     @Test
-    fun `players list updated from repository`() = runTest {
+    fun `PlayersListViewModel init, players exist in repository, list updated in state`() = runTest {
         val repo = FakePlayerRepository()
         repo.setPlayers(listOf(testPlayer(1L, "Alice"), testPlayer(2L, "Bob")))
         val viewModel = PlayersListViewModel(repo)
@@ -330,7 +330,7 @@ class PlayersListViewModelTest {
     }
 
     @Test
-    fun `onCreatePlayer calls repository`() = runTest {
+    fun `onCreatePlayer, name provided, calls repository`() = runTest {
         val repo = FakePlayerRepository()
         val viewModel = PlayersListViewModel(repo)
         viewModel.onCreatePlayer("Charlie")
@@ -346,7 +346,7 @@ class PlayersListViewModelTest {
 class GameSummaryViewModelTest {
 
     @Test
-    fun `statistics loaded on init`() = runTest {
+    fun `GameSummaryViewModel init, game and turns exist, statistics loaded`() = runTest {
         val gameRepo = FakeGameRepository()
         gameRepo.setGame(testGame(id = 1L))
         val turnRepo = FakeTurnRepository()
@@ -362,7 +362,7 @@ class GameSummaryViewModelTest {
     }
 
     @Test
-    fun `error state on game not found`() = runTest {
+    fun `GameSummaryViewModel init, game not found, error state set`() = runTest {
         val viewModel = GameSummaryViewModel(
             gameId = 999L,
             gameRepository = FakeGameRepository(),

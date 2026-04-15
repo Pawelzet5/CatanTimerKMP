@@ -10,7 +10,7 @@ import kotlin.test.assertNull
 class TurnMappersTest {
 
     @Test
-    fun `TurnEntity toDomain maps all fields including playerName`() {
+    fun `toDomain mapping, TurnEntity with all fields, maps all fields including playerName`() {
         val entity = TurnEntity(
             id = 1L, gameId = 2L, number = 3, playerId = 4L,
             secondaryPlayerId = 5L, redDice = 3, yellowDice = 4,
@@ -33,7 +33,7 @@ class TurnMappersTest {
     }
 
     @Test
-    fun `TurnEntity toDomain with null secondaryPlayerId`() {
+    fun `toDomain mapping, TurnEntity with null secondaryPlayerId, maps correctly`() {
         val entity = TurnEntity(
             id = 1L, gameId = 2L, number = 0, playerId = 1L,
             secondaryPlayerId = null
@@ -46,7 +46,7 @@ class TurnMappersTest {
     }
 
     @Test
-    fun `Turn toEntity drops playerName and secondaryPlayerName`() {
+    fun `toEntity mapping, Turn with player names, drops playerName and secondaryPlayerName`() {
         val domain = Turn(
             id = 1L, gameId = 2L, number = 0, playerId = 1L,
             playerName = "Alice", secondaryPlayerName = "Bob",

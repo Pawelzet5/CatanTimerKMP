@@ -26,28 +26,28 @@ class CreateGameUseCaseTest {
     private val useCase = CreateGameUseCase(fakeGameRepository)
 
     @Test
-    fun `valid input returns success with game id`()
+    fun `Game creation, valid input, returns success with game id`()
 
     @Test
-    fun `less than 3 players returns failure`()
+    fun `Game creation, fewer than 3 players, returns failure`()
 
     @Test
-    fun `more than 6 players returns failure`()
+    fun `Game creation, more than 6 players, returns failure`()
 
     @Test
-    fun `duplicate player ids returns failure`()
+    fun `Game creation, duplicate player ids, returns failure`()
 
     @Test
-    fun `specialTurnRule enabled with 4 players returns failure`()
+    fun `Game creation, specialTurnRule enabled with 4 players, returns failure`()
 
     @Test
-    fun `specialTurnRule enabled with 5 players returns success`()
+    fun `Game creation, specialTurnRule enabled with 5 players, returns success`()
 
     @Test
-    fun `exactly 3 players returns success`()
+    fun `Game creation, exactly 3 players, returns success`()
 
     @Test
-    fun `exactly 6 players returns success`()
+    fun `Game creation, exactly 6 players, returns success`()
 }
 ```
 
@@ -60,26 +60,26 @@ class GetGameStatisticsUseCaseTest {
     private val useCase = GetGameStatisticsUseCase(fakeGameRepository, fakeTurnRepository)
 
     @Test
-    fun `empty turn list returns zeroed statistics without crash`()
+    fun `Statistics retrieval, empty turn list, returns zeroed statistics`()
 
     @Test
-    fun `dice distribution groups correctly by sum`()
+    fun `Statistics retrieval, multiple turns with dice, distribution grouped by sum`()
     // Turns z (red=3,yellow=4), (red=5,yellow=2), (red=3,yellow=4)
     // → counts[7] = 2, counts[7] = 2 ← oba to 7
 
     @Test
-    fun `average duration calculated correctly`()
+    fun `Statistics retrieval, multiple turns with duration, average duration calculated correctly`()
     // 3 tury z durationMillis: 60000, 90000, 120000 → avg = 90000
 
     @Test
-    fun `turns without dice rolls excluded from distribution`()
+    fun `Statistics retrieval, turns without dice rolls present, excluded from distribution`()
     // Turn z redDice=null nie trafia do diceDistribution
 
     @Test
-    fun `game not found returns failure`()
+    fun `Statistics retrieval, game not found, returns failure`()
 
     @Test
-    fun `player average durations calculated per player`()
+    fun `Statistics retrieval, multiple players with turns, average duration calculated per player`()
 }
 ```
 
@@ -101,7 +101,7 @@ Nowy plik — testuje `List<Turn>.toBarbarianState()`:
 class BarbarianStateTest {
 
     @Test
-    fun `zero barbarian rolls returns position 0 no raids`() {
+    fun `Barbarian state, zero barbarian rolls, position 0 no raids`() {
         val turns = listOf(turnWithEvent(EventDiceType.TRADE), turnWithEvent(EventDiceType.POLITICS))
         val state = turns.toBarbarianState()
         assertEquals(0, state.position)
@@ -110,7 +110,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `7 barbarian rolls returns position 7 no raids`() {
+    fun `Barbarian state, 7 barbarian rolls, position 7 no raids`() {
         val turns = barbarianTurns(7)
         val state = turns.toBarbarianState()
         assertEquals(7, state.position)
@@ -119,7 +119,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `8 barbarian rolls resets to position 0 one raid completed`() {
+    fun `Barbarian state, 8 barbarian rolls, resets to position 0 one raid completed`() {
         val turns = barbarianTurns(8)
         val state = turns.toBarbarianState()
         assertEquals(0, state.position)
@@ -128,7 +128,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `15 barbarian rolls returns position 7 one raid completed`() {
+    fun `Barbarian state, 15 barbarian rolls, position 7 one raid completed`() {
         val turns = barbarianTurns(15)
         val state = turns.toBarbarianState()
         assertEquals(7, state.position)
@@ -137,7 +137,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `16 barbarian rolls resets to position 0 two raids completed`() {
+    fun `Barbarian state, 16 barbarian rolls, resets to position 0 two raids completed`() {
         val turns = barbarianTurns(16)
         val state = turns.toBarbarianState()
         assertEquals(0, state.position)
@@ -146,7 +146,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `empty list returns default state`() {
+    fun `Barbarian state, empty turn list, returns default state`() {
         val state = emptyList<Turn>().toBarbarianState()
         assertEquals(0, state.position)
         assertEquals(0, state.raidsCompleted)
@@ -192,13 +192,13 @@ Zanim napiszesz testy — upewnij się że fake DAO w `commonTest/` implementuj�
 ```kotlin
 class PlayerMappersTest {
     @Test
-    fun `PlayerEntity toDomain maps all fields correctly`()
+    fun `toDomain mapping, PlayerEntity with all fields, maps all fields correctly`()
 
     @Test
-    fun `PlayerEntity toDomain with default gamesPlayed and gamesWon`()
+    fun `toDomain mapping, PlayerEntity with default values, gamesPlayed and gamesWon default to zero`()
 
     @Test
-    fun `Player toEntity drops derived fields`()
+    fun `toEntity mapping, Player with derived fields, drops gamesPlayed and gamesWon`()
     // gamesPlayed i gamesWon nie trafiają do encji
 }
 ```
@@ -207,13 +207,13 @@ class PlayerMappersTest {
 ```kotlin
 class TurnMappersTest {
     @Test
-    fun `TurnEntity toDomain maps all fields including playerName`()
+    fun `toDomain mapping, TurnEntity with all fields, maps all fields including playerName`()
 
     @Test
-    fun `TurnEntity toDomain with null secondaryPlayerId`()
+    fun `toDomain mapping, TurnEntity with null secondaryPlayerId, maps correctly`()
 
     @Test
-    fun `Turn toEntity drops playerName and secondaryPlayerName`()
+    fun `toEntity mapping, Turn with player names, drops playerName and secondaryPlayerName`()
     // Nazwy graczy nie są przechowywane w encji
 }
 ```
@@ -222,13 +222,13 @@ class TurnMappersTest {
 ```kotlin
 class GameMappersTest {
     @Test
-    fun `GameEntity toDomain maps all fields`()
+    fun `toDomain mapping, GameEntity with all fields, maps all fields`()
 
     @Test
-    fun `GameEntity toDomain accepts empty players list`()
+    fun `toDomain mapping, GameEntity with empty players list, maps correctly`()
 
     @Test
-    fun `Game toEntity drops players list`()
+    fun `toEntity mapping, Game with players list, drops players list`()
 }
 ```
 
