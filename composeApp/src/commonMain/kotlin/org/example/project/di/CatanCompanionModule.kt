@@ -7,6 +7,7 @@ val catanCompanionModule = module {
         databaseModule,
         repositoryModule,
         sessionModule,
-        useCaseModule
+        useCaseModule,
+        viewModelModule
     )
 }
