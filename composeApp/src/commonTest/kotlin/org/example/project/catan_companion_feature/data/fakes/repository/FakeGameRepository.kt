@@ -34,6 +34,10 @@ class FakeGameRepository : GameRepository {
         _gamesState.value = _games.values.toList()
     }
 
+    fun setGame(game: Game) = seedGame(game)
+
+    fun setInProgressGame(game: Game) = seedGame(game)
+
     override fun getAllGames(): Flow<List<Game>> =
         _gamesState.map { it.sortedByDescending(Game::startedAt) }
 

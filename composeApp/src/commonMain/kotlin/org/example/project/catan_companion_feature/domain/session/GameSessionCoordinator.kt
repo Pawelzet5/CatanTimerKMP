@@ -17,19 +17,28 @@ import org.example.project.core.domain.Result
 import org.example.project.core.domain.onFailure
 import org.example.project.core.domain.onSuccess
 
-class GameSessionCoordinator(
+interface GameSessionCoordinator {
+    val currentSession: StateFlow<GameSession?>
+    suspend fun startSession(gameId: Long): EmptyResult<DataError.Local>
+    suspend fun finishSession(finishedAt: Long, winnerId: Long?): EmptyResult<DataError.Local>
+    suspend fun completeTurn(durationMillis: Long): Result<Unit, Error>
+    suspend fun updateSelectedTurnDice(redDice: Int?, yellowDice: Int?, eventDice: EventDiceType?): EmptyResult<DataError.Local>
+    suspend fun updateSelectedTurnDuration(durationMillis: Long): EmptyResult<DataError.Local>
+}
+
+class GameSessionCoordinatorImpl(
     private val gameRepository: GameRepository,
     private val turnRepository: TurnRepository
-) {
+) : GameSessionCoordinator {
     private val _currentSession = MutableStateFlow<GameSession?>(null)
-    val currentSession: StateFlow<GameSession?> = _currentSession.asStateFlow()
+    override val currentSession: StateFlow<GameSession?> = _currentSession.asStateFlow()
 
     /**
      * Initializes a session for the given gameId.
      * Handles both new games (no turns in db) and session restoration (existing turns).
      * Clears any previous session state before initializing.
      */
-    suspend fun startSession(gameId: Long): EmptyResult<DataError.Local> {
+    override suspend fun startSession(gameId: Long): EmptyResult<DataError.Local> {
         clearSession()
 
         val game = try {
@@ -77,7 +86,7 @@ class GameSessionCoordinator(
     /**
      * Marks the current game as finished and clears the session.
      */
-    suspend fun finishSession(finishedAt: Long, winnerId: Long?): EmptyResult<DataError.Local> {
+    override suspend fun finishSession(finishedAt: Long, winnerId: Long?): EmptyResult<DataError.Local> {
         val gameId = _currentSession.value?.game?.id
             ?: return Result.Failure(DataError.Local.NOT_FOUND)
 
@@ -91,7 +100,7 @@ class GameSessionCoordinator(
      * Returns IllegalOperationError if called while user is viewing a historical turn —
      * UI is responsible for preventing this from happening.
      */
-    suspend fun completeTurn(durationMillis: Long): Result<Unit, Error> {
+    override suspend fun completeTurn(durationMillis: Long): Result<Unit, Error> {
         val session = _currentSession.value
             ?: return Result.Failure(DataError.Local.NOT_FOUND)
 
@@ -131,7 +140,7 @@ class GameSessionCoordinator(
     /**
      * Updates dice rolls for the currently selected turn and persists immediately.
      */
-    suspend fun updateSelectedTurnDice(
+    override suspend fun updateSelectedTurnDice(
         redDice: Int?,
         yellowDice: Int?,
         eventDice: EventDiceType?
@@ -154,7 +163,7 @@ class GameSessionCoordinator(
     /**
      * Updates duration for the currently selected turn and persists immediately.
      */
-    suspend fun updateSelectedTurnDuration(durationMillis: Long): EmptyResult<DataError.Local> {
+    override suspend fun updateSelectedTurnDuration(durationMillis: Long): EmptyResult<DataError.Local> {
         val session = _currentSession.value
             ?: return Result.Failure(DataError.Local.NOT_FOUND)
 
