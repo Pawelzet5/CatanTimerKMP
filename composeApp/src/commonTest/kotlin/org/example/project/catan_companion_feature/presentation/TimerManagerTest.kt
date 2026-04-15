@@ -3,27 +3,24 @@ package org.example.project.catan_companion_feature.presentation
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
+import org.example.project.catan_companion_feature.presentation.state.TimerState
 import org.example.project.catan_companion_feature.presentation.timer.TimerManager
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 class TimerManagerTest {
 
     @Test
     fun `initial state has zero remaining and is not running`() = runTest {
         val timer = TimerManager(this)
-        assertEquals(0L, timer.state.value.remainingMillis)
-        assertFalse(timer.state.value.isRunning)
+        assertEquals(TimerState(remainingMillis = 0L, isRunning = false), timer.state.value)
     }
 
     @Test
     fun `start sets isRunning to true`() = runTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
-        assertTrue(timer.state.value.isRunning)
-        assertTrue(timer.state.value.remainingMillis <= 60_000L)
+        assertEquals(TimerState(remainingMillis = 60_000L, isRunning = true), timer.state.value)
     }
 
     @Test
@@ -31,8 +28,8 @@ class TimerManagerTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
         val remaining = timer.stop()
-        assertFalse(timer.state.value.isRunning)
-        assertTrue(remaining >= 0L)
+        assertEquals(60_000L, remaining)
+        assertEquals(TimerState(remainingMillis = 60_000L, isRunning = false), timer.state.value)
     }
 
     @Test
@@ -40,7 +37,7 @@ class TimerManagerTest {
         val timer = TimerManager(this)
         timer.reset(30_000L)
         timer.addTime(10_000L)
-        assertEquals(40_000L, timer.state.value.remainingMillis)
+        assertEquals(TimerState(remainingMillis = 40_000L, isRunning = false), timer.state.value)
     }
 
     @Test
@@ -48,8 +45,7 @@ class TimerManagerTest {
         val timer = TimerManager(this)
         timer.start(60_000L)
         timer.reset(120_000L)
-        assertEquals(120_000L, timer.state.value.remainingMillis)
-        assertFalse(timer.state.value.isRunning)
+        assertEquals(TimerState(remainingMillis = 120_000L, isRunning = false), timer.state.value)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -58,7 +54,6 @@ class TimerManagerTest {
         val timer = TimerManager(this)
         timer.start(200L)
         advanceTimeBy(500L)
-        assertEquals(0L, timer.state.value.remainingMillis)
-        assertFalse(timer.state.value.isRunning)
+        assertEquals(TimerState(remainingMillis = 0L, isRunning = false), timer.state.value)
     }
 }

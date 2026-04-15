@@ -21,6 +21,8 @@ class TurnNavigatorTest {
         val nav = TurnNavigator(turns)
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
+        assertTrue(nav.hasPrevious)
+        assertFalse(nav.hasNext)
     }
 
     @Test
@@ -28,12 +30,17 @@ class TurnNavigatorTest {
         val nav = TurnNavigator(turns).selectPrevious()
         assertEquals(turns[1], nav.selectedTurn)
         assertFalse(nav.isViewingLatest)
+        assertTrue(nav.hasPrevious)
+        assertTrue(nav.hasNext)
     }
 
     @Test
     fun `selectPrevious at first turn is no-op`() {
         val nav = TurnNavigator(turns, selectedIndex = 0).selectPrevious()
         assertEquals(turns[0], nav.selectedTurn)
+        assertFalse(nav.isViewingLatest)
+        assertFalse(nav.hasPrevious)
+        assertTrue(nav.hasNext)
     }
 
     @Test
@@ -41,6 +48,8 @@ class TurnNavigatorTest {
         val nav = TurnNavigator(turns).selectNext()
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
+        assertTrue(nav.hasPrevious)
+        assertFalse(nav.hasNext)
     }
 
     @Test
@@ -48,20 +57,27 @@ class TurnNavigatorTest {
         val nav = TurnNavigator(turns, selectedIndex = 0).selectLatest()
         assertEquals(turns.last(), nav.selectedTurn)
         assertTrue(nav.isViewingLatest)
+        assertTrue(nav.hasPrevious)
+        assertFalse(nav.hasNext)
     }
 
     @Test
     fun `single turn list — all navigation is no-op`() {
-        val nav = TurnNavigator(listOf(turn(id = 1, number = 0)))
+        val singleTurn = turn(id = 1, number = 0)
+        val nav = TurnNavigator(listOf(singleTurn))
+        assertEquals(singleTurn, nav.selectedTurn)
+        assertTrue(nav.isViewingLatest)
         assertFalse(nav.hasPrevious)
         assertFalse(nav.hasNext)
-        assertTrue(nav.isViewingLatest)
     }
 
     @Test
     fun `empty list returns null selectedTurn`() {
         val nav = TurnNavigator(emptyList())
         assertNull(nav.selectedTurn)
+        assertFalse(nav.isViewingLatest)
+        assertFalse(nav.hasPrevious)
+        assertFalse(nav.hasNext)
     }
 
     private fun turn(id: Long, number: Int) = Turn(
