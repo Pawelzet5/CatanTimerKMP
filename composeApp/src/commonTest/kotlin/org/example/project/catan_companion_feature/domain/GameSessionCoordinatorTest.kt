@@ -9,6 +9,7 @@ import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
+import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinatorImpl
 import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
 import org.example.project.catan_companion_feature.data.fakes.repository.FakeTurnRepository
 import org.example.project.catan_companion_feature.makeTestGame
@@ -33,7 +34,7 @@ class GameSessionCoordinatorTest {
     fun setUp() {
         fakeGameRepository = FakeGameRepository()
         fakeTurnRepository = FakeTurnRepository()
-        coordinator = GameSessionCoordinator(
+        coordinator = GameSessionCoordinatorImpl(
             gameRepository = fakeGameRepository,
             turnRepository = fakeTurnRepository
         )

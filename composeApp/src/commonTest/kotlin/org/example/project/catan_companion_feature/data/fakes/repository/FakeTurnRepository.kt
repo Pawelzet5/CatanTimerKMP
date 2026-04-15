@@ -26,6 +26,13 @@ class FakeTurnRepository : TurnRepository {
     private var nextId = 1L
 
     /**
+     * Prepopulates the repository with a list of turns, grouped by their gameId.
+     */
+    fun setTurns(turns: List<Turn>) {
+        turns.forEach { seedTurns(it.gameId, it) }
+    }
+
+    /**
      * Prepopulates the repository with existing turns for test setup.
      * IDs are taken from the Turn objects — [nextId] is advanced to avoid future collisions.
      */
