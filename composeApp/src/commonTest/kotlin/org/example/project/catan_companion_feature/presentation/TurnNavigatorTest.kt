@@ -1,7 +1,7 @@
 package org.example.project.catan_companion_feature.presentation
 
 import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.presentation.util.TurnNavigator
+import org.example.project.catan_companion_feature.presentation.gameplay.TurnNavigator
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

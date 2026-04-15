@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.util
+package org.example.project.catan_companion_feature.presentation.gameplay
 
 import org.example.project.catan_companion_feature.domain.dataclass.Turn
 import org.example.project.catan_companion_feature.domain.session.GameSession

@@ -3,7 +3,7 @@
 **Sesje planu:** 11, 12  
 **Gałąź startowa:** ostatni branch Sesji 10 (`session-10/viewmodel-tests`)  
 **Mockup referencyjny:** wszystkie pliki mockup (komponenty przewijają się przez wiele ekranów)  
-**Design system:** `catan_companion_design_system.md`  
+**Design system:** `catan_companion_design_system.md`
 
 ---
 
@@ -234,19 +234,84 @@ chore(i18n): add complete EN and PL string resources
 
 ---
 
-## PR 12a — Design System: Theme
+## PR 12a — Design System
 
 **Branch:** `session-12/design-system` ← `session-11/i18n`
 
-Zaimplementuj `CatanTimerTheme` zgodnie z `catan_companion_design_system.md`. Ten plik definiuje dokładne wartości — użyj go jako źródła prawdy.
+⚠️ **Krytyczne:** Design system jest fundamentem wszystkich ekranów. Żaden ekran ani komponent nie może definiować własnych kolorów, odstępów ani typografii inline. Wszystko musi pochodzić z tokenów zdefiniowanych w tej sekcji.
 
-Pliki do stworzenia w `presentation/theme/`:
-- `Color.kt` — wszystkie kolory light i dark z design system
-- `Typography.kt` — type scale zgodny z design system
-- `Theme.kt` — `CatanTimerTheme` composable z light/dark mode
+Zaimplementuj design system zgodnie z `catan_companion_design_system.md`. Ten plik definiuje dokładne wartości — użyj go jako jedynego źródła prawdy dla wartości liczbowych i kolorów.
+
+### Struktura plików
+
+```
+core/designsystem/
+├── Color.kt          # Wszystkie kolory palety — light i dark
+├── Typography.kt     # Type scale — wszystkie style tekstowe
+├── Spacing.kt        # Stałe odstępów (dp)
+├── Theme.kt          # CatanTimerTheme — łączy wszystko razem
+└── components/       # Bazowe, w pełni reużywalne komponenty UI
+    ├── CatanButton.kt
+    ├── CatanTextField.kt
+    ├── CatanText.kt
+    └── ...           # Inne prymitywy UI reużywalne potencjalnie poza feature
+```
+
+### `core/designsystem/Color.kt`
+
+Zdefiniuj wszystkie kolory z design system jako nazwane stałe `Color`. Oddziel wartości palety od przypisań semantycznych:
 
 ```kotlin
-// presentation/theme/Theme.kt
+// Paleta — surowe wartości
+val CatanOrange = Color(0xFF...)
+val CatanDarkBrown = Color(0xFF...)
+// ... pozostałe zgodnie z catan_companion_design_system.md
+
+// Schematy semantyczne
+internal val LightColorScheme = lightColorScheme(
+    primary = CatanOrange,
+    // ... zgodnie z design system
+)
+
+internal val DarkColorScheme = darkColorScheme(
+    primary = ...,
+    // ... zgodnie z design system
+)
+```
+
+### `core/designsystem/Typography.kt`
+
+Zdefiniuj pełny type scale zgodny z design system. Każdy styl typograficzny musi być nazwany według roli semantycznej (np. `displayLarge` dla timera), nie wyglądu (nie `bigRedText`):
+
+```kotlin
+val CatanTypography = Typography(
+    displayLarge = TextStyle(...),   // używany np. dla timera MM:SS
+    titleLarge = TextStyle(...),     // nagłówki sekcji
+    bodyMedium = TextStyle(...),     // treść ogólna
+    // ... pozostałe zgodnie z design system
+)
+```
+
+### `core/designsystem/Spacing.kt`
+
+Zdefiniuj wszystkie używane w aplikacji wartości odstępów jako nazwane stałe. Zero hardkodowanych wartości `dp` poza tym plikiem:
+
+```kotlin
+object CatanSpacing {
+    val xs = 4.dp
+    val sm = 8.dp
+    val md = 16.dp
+    val lg = 24.dp
+    val xl = 32.dp
+    val xxl = 48.dp
+}
+```
+
+### `core/designsystem/Theme.kt`
+
+`CatanTimerTheme` jest jedynym wrapperem całego content drzewa aplikacji. Łączy kolory, typografię i dostarcza je przez `MaterialTheme`:
+
+```kotlin
 @Composable
 fun CatanTimerTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -263,20 +328,54 @@ fun CatanTimerTheme(
 
 Zaktualizuj `App.kt` żeby owijał content w `CatanTimerTheme`.
 
+### `core/designsystem/components/` — bazowe komponenty UI
+
+Komponenty w tym pakiecie są prymitywami — w pełni reużywalne, niezależne od domeny, potencjalnie używane poza `catan_companion_feature`. Każdy wrappuje odpowiedni komponent Material3 i wymusza tokeny design systemu.
+
+Przykłady komponentów do zdefiniowania (dostosuj do potrzeb mockupów):
+
+```kotlin
+// CatanButton.kt
+@Composable
+fun CatanButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true
+)
+
+// CatanTextField.kt
+@Composable
+fun CatanTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier
+)
+```
+
+Zasady dla komponentów w `core/designsystem/components/`:
+- Zero referencji do klas domenowych (`Player`, `Game` itp.)
+- Zero `ViewModel` ani `koinViewModel()` wewnątrz
+- Parametry wyłącznie prymitywne lub Compose typy (`String`, `Boolean`, `() -> Unit`, `Modifier`)
+- Kolory i odstępy wyłącznie z `MaterialTheme` — nigdy hardkodowane
+
 ### Commit
 ```
-feat(ui): implement CatanTimerTheme with light/dark mode support
+feat(ui): implement design system — Color, Typography, Spacing, CatanTimerTheme, base components
 ```
 
 ---
 
-## PR 12b — Common components
+## PR 12b — Feature-level shared components
 
 **Branch:** `session-12/common-components` ← `session-12/design-system`
 
 Patrz mockupy: `mockup_07_players.html` dla `PlayerListItem`, `mockup_06_games_list.html` dla `GameListItem`.
 
-### `presentation/components/common/PlayerListItem.kt`
+Komponenty w `presentation/components/` są współdzielone między wieloma widokami w obrębie `catan_companion_feature`. W odróżnieniu od `core/designsystem/components/` mogą znać typy domenowe.
+
+### `presentation/components/PlayerListItem.kt`
 ```kotlin
 @Composable
 fun PlayerListItem(
@@ -288,7 +387,7 @@ fun PlayerListItem(
 // Patrz mockup_07_players.html — sekcja 12 Players List
 ```
 
-### `presentation/components/common/GameListItem.kt`
+### `presentation/components/GameListItem.kt`
 ```kotlin
 @Composable
 fun GameListItem(
@@ -300,7 +399,7 @@ fun GameListItem(
 // Patrz mockup_06_games_list.html — sekcja 11 Games List
 ```
 
-### `presentation/components/common/ConfirmationDialog.kt`
+### `presentation/components/ConfirmationDialog.kt`
 ```kotlin
 @Composable
 fun ConfirmationDialog(
@@ -315,7 +414,7 @@ fun ConfirmationDialog(
 
 ### Commit
 ```
-feat(ui): add PlayerListItem, GameListItem, ConfirmationDialog components
+feat(ui): add feature-level shared components — PlayerListItem, GameListItem, ConfirmationDialog
 ```
 
 ---
@@ -325,6 +424,8 @@ feat(ui): add PlayerListItem, GameListItem, ConfirmationDialog components
 **Branch:** `session-12/dice-components` ← `session-12/common-components`
 
 Patrz mockupy: `mockup_03_gameplay_dice_event.html` sekcja 03 — Dice Selection Phase.
+
+Komponenty kości są używane wyłącznie w kontekście rozgrywki — mieszkają w `presentation/components/dice/`.
 
 ### `presentation/components/dice/DiceLayout.kt`
 Już zdefiniowany w spec — obiekt z `getPositions(value: Int): List<Offset>`.
@@ -367,8 +468,10 @@ fun EventDiceRow(
     onTypeSelected: (EventDiceType) -> Unit,
     modifier: Modifier = Modifier
 )
-// Row z 4 kostkami zdarzeń (tylko gdy expansja Cities & Knights aktywna)
+// Row z 4 kostkami zdarzeń (tylko gdy ekspansja Cities & Knights aktywna)
 ```
+
+⚠️ `DiceType.backgroundColor` i `DiceType.dotColor` — jeśli są w `domain/enums/DiceType.kt` jako Compose `Color` — przenieś do extension functions w `presentation/components/dice/DiceTypeExtensions.kt`. Compose `Color` nie może być w `domain/`.
 
 ### Commit
 ```
@@ -390,7 +493,7 @@ fun GameTimer(
     remainingMillis: Long,
     modifier: Modifier = Modifier
 )
-// Wyświetla MM:SS — displayLarge typography
+// Wyświetla MM:SS — displayLarge typography z CatanTypography
 // Patrz mockup sekcja 05 — Timer Phase
 ```
 
@@ -407,33 +510,24 @@ fun TimerControls(
 // Play/Pause icon + "+10 sec" button + Reset icon
 ```
 
-### `presentation/components/charts/AnimatedBarChart.kt`
+### `presentation/components/charts/DiceStatisticsChart.kt`
 ```kotlin
 @Composable
-fun AnimatedBarChart(
-    data: Map<String, Int>,
-    modifier: Modifier = Modifier,
-    animationDuration: Int = 1000
-)
-// Animowane słupki z label i value pod każdym
-// animateFloatAsState dla wysokości słupków
-```
-
-### `presentation/components/charts/DiceDistributionChart.kt`
-```kotlin
-@Composable
-fun DiceDistributionChart(
+fun DiceStatisticsChart(
     distribution: DiceDistribution,
     modifier: Modifier = Modifier
 )
-// Wrapper nad AnimatedBarChart — konwertuje DiceDistribution na Map<String, Int>
-// Klucze: "2", "3", ..., "12"
+// Animowane słupki z label i value pod każdym
+// animateFloatAsState dla wysokości słupków
+// Klucze osi X: "2", "3", ..., "12"
 // Patrz mockup_04_gameplay_menu_stats.html sekcja 07 — Dice Statistics
 ```
 
+Komponent nazwany `DiceStatisticsChart` (nie `AnimatedBarChart` ani `DiceDistributionChart`) — nazwa opisuje domenowy cel, nie implementację.
+
 ### Commit
 ```
-feat(ui): add GameTimer, TimerControls, AnimatedBarChart, DiceDistributionChart
+feat(ui): add GameTimer, TimerControls, DiceStatisticsChart components
 ```
 
 ---
@@ -479,7 +573,7 @@ fun StatisticsPopup(
     distribution: DiceDistribution,
     onDismiss: () -> Unit
 )
-// Modal/BottomSheet z DiceDistributionChart
+// Modal/BottomSheet z DiceStatisticsChart
 // Patrz mockup_04 sekcja 07 — Dice Statistics
 ```
 
@@ -520,6 +614,6 @@ feat(ui): add gameplay components (BarbarianTracker, EventPhaseContent, Statisti
 ## Uwagi ogólne dla tej sesji
 
 - Wszystkie stringi przez `stringResource(Res.string.key)` — zero hardkodowanych tekstów
-- Kolory i typography wyłącznie z `MaterialTheme` / `CatanTimerTheme` — zero hardkodowanych wartości
+- Kolory, typography i odstępy wyłącznie z `MaterialTheme` / `CatanTimerTheme` tokenów — zero hardkodowanych wartości `Color(...)`, `sp`, `dp` poza `core/designsystem/`
 - Compose komponenty: `@Composable`, zero logiki biznesowej, zero `ViewModel` referencji
-- `DiceType.backgroundColor` i `DiceType.dotColor` — jeśli są w `domain/enums/DiceType.kt` jako Compose `Color` — przenieś do extension functions w `presentation/` (np. `DiceTypeExtensions.kt`) bo `Color` nie może być w `domain/`
+- `DiceType.backgroundColor` i `DiceType.dotColor` — extension functions w `presentation/`, nie w `domain/`

@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.viewmodel
+package org.example.project.catan_companion_feature.presentation.playerslist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
-import org.example.project.catan_companion_feature.presentation.state.PlayersListUiState
 
 class PlayersListViewModel(
     private val playerRepository: PlayerRepository

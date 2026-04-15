@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.viewmodel
+package org.example.project.catan_companion_feature.presentation.gamesummary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.catan_companion_feature.domain.usecase.GetGameStatisticsUseCase
-import org.example.project.catan_companion_feature.presentation.state.GameSummaryUiState
 import org.example.project.core.domain.Result
 
 class GameSummaryViewModel(

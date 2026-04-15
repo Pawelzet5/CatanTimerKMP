@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.timer
+package org.example.project.catan_companion_feature.presentation.gameplay
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.example.project.catan_companion_feature.presentation.state.TimerState
 
 class TimerManager(private val scope: CoroutineScope) {
 

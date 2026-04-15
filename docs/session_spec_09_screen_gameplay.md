@@ -3,7 +3,7 @@
 **Sesje planu:** 14  
 **Gałąź startowa:** ostatni branch Sesji 13 (`session-13/game-config-screen`)  
 **Mockup referencyjny:** `mockup_03_gameplay_dice_event.html`, `mockup_04_gameplay_menu_stats.html`  
-**Design system:** `catan_companion_design_system.md`  
+**Design system:** `catan_companion_design_system.md`
 
 ---
 
@@ -19,7 +19,7 @@ Wszystkie zmiany są w **jednym pliku** `GameplayScreen.kt` — PR-y różnią s
 
 **Branch:** `session-14/gameplay-screen-dice` ← `session-13/game-config-screen`
 
-### `presentation/screen/GameplayScreen.kt` — wersja początkowa
+### `presentation/gameplay/GameplayScreen.kt` — wersja początkowa
 
 Patrz `mockup_03_gameplay_dice_event.html` sekcja 03 — Dice Selection Phase.
 
@@ -69,6 +69,8 @@ fun GameplayScreen(
 }
 ```
 
+`DiceSelectionContent` jest prywatną funkcją `@Composable` wewnątrz `GameplayScreen.kt` — używana tylko w tym pliku, więc nie trafia do osobnego pliku.
+
 Dodaj `GameplayScreen` do `NavHost` w `App.kt`:
 ```kotlin
 composable(
@@ -98,7 +100,7 @@ feat(ui): implement GameplayScreen dice selection phase
 
 Patrz mockupy: sekcja 04 Event Phase, sekcja 05 Timer Phase.
 
-### Aktualizacja `GameplayScreen.kt`
+### Aktualizacja `presentation/gameplay/GameplayScreen.kt`
 
 **Faza EVENT:**
 Użyj `EventPhaseContent` — komponent już istnieje z Sesji 12.
@@ -132,6 +134,8 @@ GameplayPhase.MAIN_TIMER -> TimerPhaseContent(
 )
 ```
 
+`TimerPhaseContent` jest prywatną funkcją `@Composable` wewnątrz `GameplayScreen.kt`.
+
 **Turn Navigator:**
 Pasek nawigacji historii tur — strzałki + numer tury.
 - Lewy chevron → `viewModel.onNavigateToPreviousTurn()`
@@ -152,16 +156,16 @@ feat(ui): add event phase, timer phase and turn navigation to GameplayScreen
 
 Patrz mockupy: sekcja 06 In-Game Menu, sekcja 07 Dice Statistics, sekcja 08 Change Game Settings.
 
-### Aktualizacja `GameplayScreen.kt`
+### Aktualizacja `presentation/gameplay/GameplayScreen.kt`
 
 **In-Game Menu (Bottom Sheet):**
 Patrz mockup sekcja 06. Wywoływany przez ikonę menu (3 kropki) w app barze.
 
 ```kotlin
 if (uiState.showSettingsSheet) {
-    ModalBottomSheet(onDismissRequest = { /* viewModel.hideSettingsSheet() */ }) {
+    ModalBottomSheet(onDismissRequest = { /* viewModel.onHideSettingsSheet() */ }) {
         // Opcje menu:
-        // - "View Statistics" → viewModel.onShowStatistics() → showStatisticsPopup = true
+        // - "View Statistics" → viewModel.onShowStatisticsPopup()
         // - "Change Game Settings" → rozwinięcie ustawień inline
         // - "End Game" → dialog potwierdzenia → nawigacja do WinnerSelection
     }
@@ -182,7 +186,7 @@ Patrz mockup sekcja 07. Użyj `StatisticsPopup` komponentu z Sesji 12.
 if (uiState.showStatisticsPopup && uiState.diceDistribution != null) {
     StatisticsPopup(
         distribution = uiState.diceDistribution,
-        onDismiss = { /* viewModel.hideStatisticsPopup() */ }
+        onDismiss = { /* viewModel.onHideStatisticsPopup() */ }
     )
 }
 ```
@@ -213,3 +217,4 @@ feat(ui): add statistics popup and settings sheet to GameplayScreen
 - **Seafarers:** wpływa tylko na komunikat w Event Phase (pirat vs złodziej) — `event_move_robber_or_pirate` vs `event_move_robber`
 - `ModalBottomSheet` z Material3 — wymaga `ExperimentalMaterial3Api` jeśli jest w użyciu; dodaj `@OptIn` z komentarzem dlaczego
 - Navigation event "End Game" → WinnerSelection: `onNavigateToWinnerSelection: (Long) -> Unit` jako parametr `GameplayScreen`
+- Kolory, odstępy i typografia wyłącznie z `MaterialTheme` / `CatanTimerTheme` tokenów — zero wartości inline

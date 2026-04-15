@@ -3,7 +3,7 @@
 **Sesje planu:** 15, 16  
 **Gałąź startowa:** ostatni branch Sesji 14 (`session-14/gameplay-screen-stats`)  
 **Mockup referencyjny:** `mockup_05_end_game_summary.html`, `mockup_06_games_list.html`  
-**Design system:** `catan_companion_design_system.md`  
+**Design system:** `catan_companion_design_system.md`
 
 ---
 
@@ -19,7 +19,7 @@ Ostatnia sesja UI. Po tej sesji aplikacja jest w pełni funkcjonalna end-to-end.
 
 Patrz `mockup_06_games_list.html` sekcja 11 — Games List.
 
-### `presentation/screen/GamesListScreen.kt`
+### `presentation/gameslist/GamesListScreen.kt`
 
 Elementy UI:
 - App bar "Games" z back button
@@ -83,7 +83,7 @@ feat(ui): implement GamesListScreen
 
 Patrz `mockup_05_end_game_summary.html` sekcje 09 i 10.
 
-### `presentation/screen/WinnerSelectionScreen.kt`
+### `presentation/winnerselection/WinnerSelectionScreen.kt`
 
 Patrz mockup sekcja 09 — End Game / Winner Selection.
 
@@ -105,7 +105,7 @@ fun WinnerSelectionScreen(
 
 ⚠️ `WinnerSelectionScreen` reużywa `GameplayViewModel` — sesja jest nadal aktywna. `onFinishSession` kończy sesję i czyści `GameSessionCoordinator`. Po nawigacji do `GameSummary` sesja jest już `null`.
 
-### `presentation/screen/GameSummaryScreen.kt`
+### `presentation/gamesummary/GameSummaryScreen.kt`
 
 Patrz mockup sekcja 10 — Game Summary.
 
@@ -113,7 +113,7 @@ Elementy UI:
 - App bar "Game Summary"
 - Karta zwycięzcy (trophy icon + imię) — ukryta gdy `winnerId == null`
 - Statystyki ogólne: łączna liczba tur, czas trwania, średni czas tury
-- `DiceDistributionChart` z `uiState.statistics?.diceDistribution`
+- `DiceStatisticsChart` z `uiState.statistics?.diceDistribution`
 - Sekcja statystyk graczy (średni czas tury per gracz)
 - Przycisk "Back to Home" → nawigacja do Dashboard z czyszczeniem backstack
 
@@ -260,3 +260,4 @@ feat(platform): implement HapticService expect/actual for Android, iOS, Desktop
 - `popUpTo(Dashboard) { inclusive = true }` po zakończeniu gry — czyści cały backstack do Dashboard
 - `GameSummaryScreen` działa na każdej grze niezależnie od statusu — `GetGameStatisticsUseCase` nie sprawdza czy gra jest COMPLETED
 - `@Suppress("DEPRECATION")` w `HapticService.android.kt` — wymagany komentarz wyjaśniający powód
+- Kolory, odstępy i typografia wyłącznie z `MaterialTheme` / `CatanTimerTheme` tokenów — zero wartości inline
