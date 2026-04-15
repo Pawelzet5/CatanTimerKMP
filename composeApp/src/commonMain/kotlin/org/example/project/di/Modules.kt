@@ -1,17 +1,8 @@
 package org.example.project.di
 
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import org.example.project.catan_companion_feature.data.local.CatanCompanionDatabase
 import org.example.project.catan_companion_feature.data.local.DatabaseFactory
-import org.example.project.catan_companion_feature.data.repository.GameRepositoryImpl
-import org.example.project.catan_companion_feature.data.repository.PlayerRepositoryImpl
-import org.example.project.catan_companion_feature.data.repository.TurnRepositoryImpl
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
-import org.example.project.catan_companion_feature.domain.repository.TurnRepository
 import org.koin.core.module.Module
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
 import org.koin.dsl.module
 
 expect val platformModule: Module
@@ -22,15 +13,4 @@ val coreModule = module {
             .setDriver(BundledSQLiteDriver())
             .build()
     }
-}
-
-val catanCompanionModule = module {
-    single { get<CatanCompanionDatabase>().playerDao() }
-    single { get<CatanCompanionDatabase>().gameDao() }
-    single { get<CatanCompanionDatabase>().gamePlayerDao() }
-    single { get<CatanCompanionDatabase>().turnDao() }
-
-    singleOf(::PlayerRepositoryImpl).bind<PlayerRepository>()
-    singleOf(::GameRepositoryImpl).bind<GameRepository>()
-    singleOf(::TurnRepositoryImpl).bind<TurnRepository>()
 }
