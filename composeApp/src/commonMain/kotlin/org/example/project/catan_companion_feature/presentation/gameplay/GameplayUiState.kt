@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.state
+package org.example.project.catan_companion_feature.presentation.gameplay
 
 import org.example.project.catan_companion_feature.domain.dataclass.BarbarianState
 import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution

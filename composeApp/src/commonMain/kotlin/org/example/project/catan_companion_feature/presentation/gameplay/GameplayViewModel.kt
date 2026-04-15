@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.viewmodel
+package org.example.project.catan_companion_feature.presentation.gameplay
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,10 +18,6 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.catan_companion_feature.domain.repository.TurnRepository
 import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
-import org.example.project.catan_companion_feature.presentation.state.GameplayPhase
-import org.example.project.catan_companion_feature.presentation.state.GameplayUiState
-import org.example.project.catan_companion_feature.presentation.timer.TimerManager
-import org.example.project.catan_companion_feature.presentation.util.TurnNavigator
 
 class GameplayViewModel(
     private val gameId: Long,

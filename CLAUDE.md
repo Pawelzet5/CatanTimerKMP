@@ -15,8 +15,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Desktop run
 ./gradlew :composeApp:run
 
-# All common (JVM) tests
-./gradlew :composeApp:jvmTest
+# All common (JVM + desktop) tests
+./gradlew :composeApp:test
 
 # Android unit tests (includes Robolectric DAO contract tests)
 ./gradlew :composeApp:testDebugUnitTest
@@ -63,11 +63,68 @@ Never call DAO methods directly in repositories without one of these wrappers.
 
 ## Domain: GameSessionCoordinator
 
-`GameSessionCoordinator` (`domain/GameSessionCoordinator.kt`) is the central stateful object for an active game session. It is **not** a use case — it owns `StateFlow<GameSession?>` and coordinates `GameRepository` + `TurnRepository`.
+`GameSessionCoordinator` (`domain/session/GameSessionCoordinator.kt`) is the central stateful object for an active game session. It is **not** a use case — it owns `StateFlow<GameSession?>` and coordinates `GameRepository` + `TurnRepository`.
 
 Key invariant: `session.isActiveTurnSelected` gates turn completion. Calling `completeTurn()` while a historical turn is selected returns `IllegalOperationError`.
 
 `RECENT_TURNS_LIMIT = 3` — only the last 3 completed turns are kept in memory as `recentTurns`.
+
+---
+
+## Presentation Layer
+
+### Structure
+
+The presentation layer is **feature-first** per `docs/PROJECT_OVERRIDES.md`. Each screen owns its own package. See that file for the authoritative directory layout.
+
+Current screens and their ViewModels (all in `catan_companion_feature/presentation/`):
+
+| Screen | ViewModel | Route |
+|---|---|---|
+| Dashboard | `DashboardViewModel` | `CatanCompanionRoute.Dashboard` |
+| Game Config | `GameConfigViewModel` | `CatanCompanionRoute.GameConfig` |
+| Gameplay | `GameplayViewModel` | `CatanCompanionRoute.Gameplay(gameId)` |
+| Players List | `PlayersListViewModel` | `CatanCompanionRoute.PlayersList` |
+| Player Details | `PlayerDetailsViewModel` | `CatanCompanionRoute.PlayerDetails(playerId)` |
+| Games List | `GamesListViewModel` | `CatanCompanionRoute.GamesList` |
+| Game Summary | `GameSummaryViewModel` | `CatanCompanionRoute.GameSummary(gameId)` |
+
+Routes are defined as a sealed class in `presentation/navigation/CatanCompanionNavigation.kt`.
+
+### Presentation Helpers
+
+- `TimerManager` (`presentation/timer/TimerManager.kt`) — coroutine-based countdown timer. Exposes `StateFlow<TimerState>`. Methods: `start()`, `stop()`, `addTime()`, `reset()`. Inject a `CoroutineScope` on construction.
+- `TurnNavigator` (`presentation/util/TurnNavigator.kt`) — pure immutable value for navigating turn history. Methods return a new `TurnNavigator` instance. Not injected; created directly in `GameplayViewModel`.
+
+### Gameplay Phases
+
+`GameplayPhase` enum drives the Gameplay screen's content:
+- `DICE_SELECTION` — initial phase; player selects dice values
+- `EVENT` — shown when dice sum is 7 (robber/pirate/barbarians)
+- `MAIN_TIMER` — countdown timer phase
+- `IN_BETWEEN_TIMER` — secondary player timer (Cities & Knights)
+
+### UI State
+
+All UI state classes live in `presentation/state/`. Each is a data class with an `isLoading` flag and an optional `error: UiText?`. Events (one-shot navigation) are modelled as `SharedFlow` or `Channel` on the ViewModel, **not** inside `UiState`.
+
+---
+
+## Dependency Injection
+
+All Koin modules are in `catan_companion_feature/di/`:
+
+| Module file | Provides |
+|---|---|
+| `DatabaseModule.kt` | `CatanCompanionDatabase`, all DAOs |
+| `RepositoryModule.kt` | `GameRepository`, `PlayerRepository`, `TurnRepository` impls |
+| `SessionModule.kt` | `GameSessionCoordinator` (single) |
+| `UseCaseModule.kt` | `CreateGameUseCase`, `GetGameStatisticsUseCase` (factory) |
+| `CatanCompanionModule.kt` | Aggregates all the above |
+
+ViewModels are declared in `CatanCompanionModule.kt` (or a dedicated `ViewModelModule.kt` once screens are added) using `viewModelOf`.
+
+Platform-specific modules live in `androidMain/di/Modules.android.kt`, `iosMain/di/Modules.ios.kt`, `desktopMain/di/Modules.desktop.kt`. They provide platform implementations (e.g. `DatabaseFactory`) and are passed to `startKoin` in `initKoin.kt`.
 
 ---
 

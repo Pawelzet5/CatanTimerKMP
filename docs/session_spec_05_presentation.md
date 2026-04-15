@@ -2,7 +2,7 @@
 
 **Sesje planu:** 8, 9  
 **Gałąź startowa:** ostatni branch Sesji 7 (`session-7/data-tests`)  
-**Spec referencyjny:** `catan_companion_implementation_spec_v2.md` sekcje 2.2, 5.1, 5.2, 5.4  
+**Spec referencyjny:** `catan_companion_implementation_spec_v2.md` sekcje 2.2, 5.1, 5.2, 5.4
 
 ---
 
@@ -111,7 +111,9 @@ feat(presentation): add TimerManager and TurnNavigator helpers
 
 **Branch:** `session-8/ui-states` ← `session-8/presentation-helpers`
 
-### `presentation/state/GameplayUiState.kt`
+UI state klasy są umieszczone obok ViewModeli i Screen — każda w pakiecie swojego widoku. Nie istnieje wspólny pakiet `presentation/state/`.
+
+### `presentation/gameplay/GameplayUiState.kt`
 ```kotlin
 data class GameplayUiState(
     val game: Game? = null,
@@ -144,9 +146,7 @@ data class TimerState(
 )
 ```
 
-### Pozostałe UI state klasy
-
-**`presentation/state/DashboardUiState.kt`:**
+### `presentation/dashboard/DashboardUiState.kt`
 ```kotlin
 data class DashboardUiState(
     val resumableGame: Game? = null,
@@ -154,7 +154,7 @@ data class DashboardUiState(
 )
 ```
 
-**`presentation/state/GameConfigUiState.kt`:**
+### `presentation/gameconfig/GameConfigUiState.kt`
 ```kotlin
 data class GameConfigUiState(
     val turnDurationMillis: Long = 120_000L,
@@ -168,7 +168,7 @@ data class GameConfigUiState(
 )
 ```
 
-**`presentation/state/PlayersListUiState.kt`:**
+### `presentation/players/PlayersListUiState.kt`
 ```kotlin
 data class PlayersListUiState(
     val players: List<Player> = emptyList(),
@@ -177,7 +177,7 @@ data class PlayersListUiState(
 )
 ```
 
-**`presentation/state/PlayerDetailsUiState.kt`:**
+### `presentation/playerdetails/PlayerDetailsUiState.kt`
 ```kotlin
 data class PlayerDetailsUiState(
     val player: Player? = null,
@@ -186,7 +186,7 @@ data class PlayerDetailsUiState(
 )
 ```
 
-**`presentation/state/GamesListUiState.kt`:**
+### `presentation/gameslist/GamesListUiState.kt`
 ```kotlin
 data class GamesListUiState(
     val inProgressGames: List<Game> = emptyList(),
@@ -195,7 +195,7 @@ data class GamesListUiState(
 )
 ```
 
-**`presentation/state/GameSummaryUiState.kt`:**
+### `presentation/gamesummary/GameSummaryUiState.kt`
 ```kotlin
 data class GameSummaryUiState(
     val game: Game? = null,
@@ -252,7 +252,7 @@ feat(presentation): add navigation routes
 
 **Branch:** `session-9/dashboard-config-players-viewmodels` ← `session-9/navigation`
 
-### `presentation/viewmodel/DashboardViewModel.kt`
+### `presentation/dashboard/DashboardViewModel.kt`
 ```kotlin
 class DashboardViewModel(
     private val gameRepository: GameRepository
@@ -276,7 +276,7 @@ class DashboardViewModel(
 }
 ```
 
-### `presentation/viewmodel/GameConfigViewModel.kt`
+### `presentation/gameconfig/GameConfigViewModel.kt`
 ```kotlin
 class GameConfigViewModel(
     private val playerRepository: PlayerRepository,
@@ -286,7 +286,6 @@ class GameConfigViewModel(
     private val _uiState = MutableStateFlow(GameConfigUiState())
     val uiState: StateFlow<GameConfigUiState> = _uiState.asStateFlow()
 
-    // Navigation event — screen observuje i nawiguje
     private val _navigateToGameplay = MutableSharedFlow<Long>()
     val navigateToGameplay: SharedFlow<Long> = _navigateToGameplay.asSharedFlow()
 
@@ -334,7 +333,7 @@ class GameConfigViewModel(
 }
 ```
 
-### `presentation/viewmodel/PlayersListViewModel.kt`
+### `presentation/players/PlayersListViewModel.kt`
 ```kotlin
 class PlayersListViewModel(
     private val playerRepository: PlayerRepository
@@ -362,14 +361,12 @@ class PlayersListViewModel(
             if (playerRepository.canDeletePlayer(player.id)) {
                 playerRepository.deletePlayer(player.id)
             }
-            // Jeśli nie można usunąć — UI powinien pokazać ConfirmationDialog
-            // ViewModel może emitować event przez SharedFlow
         }
     }
 }
 ```
 
-### `presentation/viewmodel/PlayerDetailsViewModel.kt`
+### `presentation/playerdetails/PlayerDetailsViewModel.kt`
 ```kotlin
 class PlayerDetailsViewModel(
     private val playerId: Long,
@@ -412,7 +409,7 @@ feat(presentation): add Dashboard, GameConfig, PlayersList, PlayerDetails ViewMo
 
 **Branch:** `session-9/games-gameplay-viewmodels` ← `session-9/dashboard-config-players-viewmodels`
 
-### `presentation/viewmodel/GamesListViewModel.kt`
+### `presentation/gameslist/GamesListViewModel.kt`
 ```kotlin
 class GamesListViewModel(
     private val gameRepository: GameRepository
@@ -438,7 +435,7 @@ class GamesListViewModel(
 }
 ```
 
-### `presentation/viewmodel/GameSummaryViewModel.kt`
+### `presentation/gamesummary/GameSummaryViewModel.kt`
 ```kotlin
 class GameSummaryViewModel(
     private val gameId: Long,
@@ -472,7 +469,7 @@ class GameSummaryViewModel(
 }
 ```
 
-### `presentation/viewmodel/GameplayViewModel.kt`
+### `presentation/gameplay/GameplayViewModel.kt`
 
 Najbardziej złożony ViewModel. `TimerManager` i `TurnNavigator` tworzone w `init`.
 
@@ -547,7 +544,6 @@ class GameplayViewModel(
             .launchIn(viewModelScope)
     }
 
-    // Phase transitions
     fun onDiceSelected(red: Int, yellow: Int, event: EventDiceType?) {
         _uiState.update { it.copy(pendingDiceEdit = DiceRoll(red, yellow, event)) }
     }
@@ -582,11 +578,6 @@ class GameplayViewModel(
             sessionCoordinator.completeTurn(elapsed)
             _uiState.update { it.copy(phase = GameplayPhase.DICE_SELECTION, pendingDiceEdit = null) }
         }
-    }
-
-    fun onEndGame() {
-        // Nawigacja do WinnerSelection — obsługa w Screen przez SharedFlow lub callback
-        // finishSession zostanie wywołane po wyborze zwycięzcy
     }
 
     fun onNavigateToPreviousTurn() {

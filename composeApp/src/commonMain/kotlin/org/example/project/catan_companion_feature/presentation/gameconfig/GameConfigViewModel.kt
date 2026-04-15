@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.viewmodel
+package org.example.project.catan_companion_feature.presentation.gameconfig
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -16,7 +16,6 @@ import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
 import org.example.project.catan_companion_feature.domain.usecase.CreateGameUseCase
-import org.example.project.catan_companion_feature.presentation.state.GameConfigUiState
 import org.example.project.core.domain.Result
 
 class GameConfigViewModel(

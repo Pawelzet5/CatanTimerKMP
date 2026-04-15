@@ -3,7 +3,7 @@
 **Sesje planu:** 13  
 **Gałąź startowa:** ostatni branch Sesji 12 (`session-12/gameplay-components-and-di`)  
 **Mockup referencyjny:** `mockup_01_dashboard.html`, `mockup_02_game_config.html`, `mockup_07_players.html`  
-**Design system:** `catan_companion_design_system.md`  
+**Design system:** `catan_companion_design_system.md`
 
 ---
 
@@ -23,45 +23,45 @@ Zastąp `Text("Hello world!")` pełną nawigacją:
 ```kotlin
 @Composable
 fun App() {
-    CatanTimerTheme {
-        val navController = rememberNavController()
-        NavHost(
-            navController = navController,
-            startDestination = CatanCompanionRoute.Dashboard.route
-        ) {
-            composable(CatanCompanionRoute.Dashboard.route) {
-                DashboardScreen(
-                    onNewGame = { navController.navigate(CatanCompanionRoute.GameConfig.route) },
-                    onResumeGame = { gameId ->
-                        navController.navigate(CatanCompanionRoute.Gameplay.createRoute(gameId))
-                    },
-                    onGamesList = { navController.navigate(CatanCompanionRoute.GamesList.route) },
-                    onPlayersList = { navController.navigate(CatanCompanionRoute.PlayersList.route) }
-                )
+  CatanTimerTheme {
+    val navController = rememberNavController()
+    NavHost(
+      navController = navController,
+      startDestination = CatanCompanionRoute.Dashboard.route
+    ) {
+      composable(CatanCompanionRoute.Dashboard.route) {
+        DashboardScreen(
+          onNewGame = { navController.navigate(CatanCompanionRoute.GameConfig.route) },
+          onResumeGame = { gameId ->
+            navController.navigate(CatanCompanionRoute.Gameplay.createRoute(gameId))
+          },
+          onGamesList = { navController.navigate(CatanCompanionRoute.GamesList.route) },
+          onPlayersList = { navController.navigate(CatanCompanionRoute.PlayersList.route) }
+        )
+      }
+      composable(CatanCompanionRoute.GameConfig.route) {
+        GameConfigScreen(
+          onNavigateBack = { navController.popBackStack() },
+          onGameCreated = { gameId ->
+            navController.navigate(CatanCompanionRoute.Gameplay.createRoute(gameId)) {
+              popUpTo(CatanCompanionRoute.Dashboard.route)
             }
-            composable(CatanCompanionRoute.GameConfig.route) {
-                GameConfigScreen(
-                    onNavigateBack = { navController.popBackStack() },
-                    onGameCreated = { gameId ->
-                        navController.navigate(CatanCompanionRoute.Gameplay.createRoute(gameId)) {
-                            popUpTo(CatanCompanionRoute.Dashboard.route)
-                        }
-                    },
-                    onAddPlayer = {
-                        navController.navigate(CatanCompanionRoute.PlayersList.createRoute(selectionMode = true))
-                    }
-                )
-            }
-            // Pozostałe route'y — dodawane w kolejnych sesjach jako stub:
-            // composable(Gameplay), composable(PlayersList), etc.
-        }
+          },
+          onAddPlayer = {
+            navController.navigate(CatanCompanionRoute.PlayersList.createRoute(selectionMode = true))
+          }
+        )
+      }
+      // Pozostałe route'y — dodawane w kolejnych sesjach jako stub:
+      // composable(Gameplay), composable(PlayersList), etc.
     }
+  }
 }
 ```
 
 ⚠️ Ekrany które jeszcze nie istnieją — dodaj jako stub composable zwracający `Box { Text("Coming soon") }`. Nawigacja musi się kompilować.
 
-### `presentation/screen/DashboardScreen.kt`
+### `presentation/dashboard/DashboardScreen.kt`
 Patrz `mockup_01_dashboard.html`.
 
 Elementy UI:
@@ -98,7 +98,7 @@ feat(ui): implement DashboardScreen and wire App navigation
 
 Patrz `mockup_07_players.html` sekcje 12 i 13.
 
-### `presentation/screen/PlayersListScreen.kt`
+### `presentation/players/PlayersListScreen.kt`
 
 Elementy UI (sekcja 12 — Players List):
 - App bar z tytułem "Players" i przyciskiem "Add"
@@ -118,7 +118,7 @@ fun PlayersListScreen(
 )
 ```
 
-### `presentation/screen/PlayerDetailsScreen.kt`
+### `presentation/playerdetails/PlayerDetailsScreen.kt`
 
 Elementy UI (sekcja 13 — Player Details):
 - App bar z nazwą gracza i przyciskiem back
@@ -149,7 +149,7 @@ feat(ui): implement PlayersListScreen and PlayerDetailsScreen
 
 Patrz `mockup_02_game_config.html`.
 
-### `presentation/screen/GameConfigScreen.kt`
+### `presentation/gameconfig/GameConfigScreen.kt`
 
 Elementy UI:
 - App bar "New Game" z back button
@@ -195,5 +195,6 @@ feat(ui): implement GameConfigScreen
 - `koinViewModel()` — Koin Compose integration; `koinViewModel { parametersOf(id) }` dla ViewModeli z parametrami
 - Obserwuj `SharedFlow` navigation events przez `LaunchedEffect` — nie przez `collectAsState`
 - Wszystkie teksty przez `stringResource` — zero hardkodowanych stringów
+- Kolory, odstępy i typografia wyłącznie z `MaterialTheme` / `CatanTimerTheme` — zero wartości inline
 - Back navigation: `navController.popBackStack()` — nie `finish()` ani `onBackPressed()`
 - `selectionMode` w `PlayersListScreen` jest przekazywany jako argument nawigacyjny przez `navArgument` w `NavHost` — patrz `CatanCompanionRoute.PlayersList.createRoute(selectionMode = true)`
