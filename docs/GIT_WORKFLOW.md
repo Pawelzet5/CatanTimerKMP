@@ -17,18 +17,34 @@ Przykłady:
 
 ## Branch parent
 
-Każdy branch musi wywodzić się z bezpośredniego poprzednika sesji — **nie z `main`** — na wypadek gdy poprzednie PR-y nie zostały jeszcze zmergowane.
+Każdy branch musi wywodzić się z bezpośredniego poprzednika sesji — **nie z `master`** — na wypadek gdy poprzednie PR-y nie zostały jeszcze zmergowane.
 
 Kolejność tworzenia branchy w ramach sesji (jeśli sesja ma wiele PR-ów):
 
 ```
-main
+master
  └── session-1/domain-enums          ← pierwszy branch sesji 1
       └── session-1/domain-models     ← kolejny branch sesji 1
            └── session-2/...          ← pierwszy branch sesji 2
 ```
 
-Jeśli poprzednia sesja jest już zmergowana do `main`, checkout z `main`. Jeśli nie — checkout z ostatniego brancha poprzedniej sesji.
+Zawsze checkoutuj z ostatniego brancha poprzedniej sesji, niezależnie od tego czy poprzednia sesja jest już zmergowana do `master` czy nie.
+
+---
+
+## Pull Request base branch
+
+Każdy PR musi być otwarty z base branch ustawionym na **bezpośredni branch poprzednika** (nie `master`).
+
+```
+PR #1: base = master
+PR #2: base = session-1/domain-models   ← ostatni branch sesji 1
+PR #3: base = session-2/...             ← ostatni branch sesji 2
+```
+
+GitHub automatycznie przekieruje base branch PR-a na `master` w momencie gdy branch docelowy zostanie zmergowany i usunięty. Diff PR-a zostanie wówczas zaktualizowany i będzie pokazywał tylko zmiany wprowadzone w danym PR.
+
+**Nigdy nie ustawiaj base branch na `master` ręcznie** (z wyjątkiem PR #1). GitHub zrobi to automatycznie.
 
 ---
 
