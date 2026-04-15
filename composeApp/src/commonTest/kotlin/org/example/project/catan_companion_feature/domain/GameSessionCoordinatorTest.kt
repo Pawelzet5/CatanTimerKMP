@@ -319,6 +319,22 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
+    fun `finishSession persists winnerId when provided`() = runTest {
+        // GIVEN
+        val players = makeTestGamePlayers(count = 3)
+        val game = makeTestGame(players = players)
+        fakeGameRepository.seedGame(game)
+        coordinator.startSession(gameId = game.id)
+        val winnerId = players[1].playerId
+
+        // WHEN
+        coordinator.finishSession(finishedAt = 30_000L, winnerId = winnerId)
+
+        // THEN
+        assertEquals(winnerId, fakeGameRepository.games.first().winnerId)
+    }
+
+    @Test
     fun `finishSession returns failure and preserves session when repository fails`() = runTest {
         // GIVEN
         val game = makeTestGame()
