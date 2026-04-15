@@ -14,7 +14,7 @@ class CreateGameUseCaseTest {
     private val useCase = CreateGameUseCase(fakeGameRepository)
 
     @Test
-    fun `valid input returns success with game id`() = runTest {
+    fun `Game creation, valid input, returns success with game id`() = runTest {
         val result = useCase(
             turnDurationMillis = 180_000L,
             expansions = emptySet(),
@@ -26,7 +26,7 @@ class CreateGameUseCaseTest {
     }
 
     @Test
-    fun `less than 3 players returns failure`() = runTest {
+    fun `Game creation, fewer than 3 players, returns failure`() = runTest {
         val result = useCase(
             turnDurationMillis = 180_000L,
             expansions = emptySet(),
@@ -37,7 +37,7 @@ class CreateGameUseCaseTest {
     }
 
     @Test
-    fun `more than 6 players returns failure`() = runTest {
+    fun `Game creation, more than 6 players, returns failure`() = runTest {
         val result = useCase(
             turnDurationMillis = 180_000L,
             expansions = emptySet(),
@@ -48,7 +48,7 @@ class CreateGameUseCaseTest {
     }
 
     @Test
-    fun `duplicate player ids returns failure`() = runTest {
+    fun `Game creation, duplicate player ids, returns failure`() = runTest {
         val result = useCase(
             turnDurationMillis = 180_000L,
             expansions = emptySet(),
@@ -59,7 +59,7 @@ class CreateGameUseCaseTest {
     }
 
     @Test
-    fun `specialTurnRule enabled with 4 players returns failure`() = runTest {
+    fun `Game creation, specialTurnRule enabled with 4 players, returns failure`() = runTest {
         val result = useCase(
             turnDurationMillis = 180_000L,
             expansions = emptySet(),
@@ -70,7 +70,7 @@ class CreateGameUseCaseTest {
     }
 
     @Test
-    fun `specialTurnRule enabled with 5 players returns success`() = runTest {
+    fun `Game creation, specialTurnRule enabled with 5 players, returns success`() = runTest {
         val result = useCase(
             turnDurationMillis = 180_000L,
             expansions = emptySet(),
@@ -81,7 +81,7 @@ class CreateGameUseCaseTest {
     }
 
     @Test
-    fun `exactly 3 players returns success`() = runTest {
+    fun `Game creation, exactly 3 players, returns success`() = runTest {
         val result = useCase(
             turnDurationMillis = 180_000L,
             expansions = emptySet(),
@@ -92,7 +92,7 @@ class CreateGameUseCaseTest {
     }
 
     @Test
-    fun `exactly 6 players returns success`() = runTest {
+    fun `Game creation, exactly 6 players, returns success`() = runTest {
         val result = useCase(
             turnDurationMillis = 180_000L,
             expansions = emptySet(),

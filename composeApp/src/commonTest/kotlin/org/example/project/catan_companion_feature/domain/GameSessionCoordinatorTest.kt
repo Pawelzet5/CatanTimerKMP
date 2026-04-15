@@ -42,7 +42,7 @@ class GameSessionCoordinatorTest {
     // region startSession
 
     @Test
-    fun `startSession returns success and initializes session for new game`() = runTest {
+    fun `startSession, new game with no turns, returns success and initializes session`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -57,7 +57,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession creates and persists initial turn when game has no turns`() = runTest {
+    fun `startSession, game has no turns, creates and persists initial turn`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -72,7 +72,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession sets secondaryPlayerId on initial turn when specialTurnRule enabled`() = runTest {
+    fun `startSession, specialTurnRule enabled, sets secondaryPlayerId on initial turn`() = runTest {
         // GIVEN
         val players = makeTestGamePlayers(count = 5)
         val game = makeTestGame(specialTurnRuleEnabled = true, players = players)
@@ -88,7 +88,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession sets null secondaryPlayerId when specialTurnRule disabled`() = runTest {
+    fun `startSession, specialTurnRule disabled, sets null secondaryPlayerId`() = runTest {
         // GIVEN
         val players = makeTestGamePlayers(count = 5)
         val game = makeTestGame(specialTurnRuleEnabled = false, players = players)
@@ -102,7 +102,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession sets selectedTurn to initial turn for new game`() = runTest {
+    fun `startSession, new game, sets selectedTurn to initial turn`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -118,7 +118,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession sets selectedTurn to last turn when restoring existing game`() = runTest {
+    fun `startSession, existing game with turns, sets selectedTurn to last turn`() = runTest {
         // GIVEN
         val game = makeTestGame()
         val turns = makeTestTurns(count = 3, players = game.players)
@@ -136,7 +136,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession sets recentTurns to previous turns excluding active turn`() = runTest {
+    fun `startSession, game has multiple turns, sets recentTurns excluding active turn`() = runTest {
         // GIVEN
         val game = makeTestGame()
         val turns = makeTestTurns(count = 4, players = game.players)
@@ -154,7 +154,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession limits recentTurns to 3 even when more turns exist`() = runTest {
+    fun `startSession, game has more than 3 prior turns, limits recentTurns to 3`() = runTest {
         // GIVEN
         val game = makeTestGame()
         val turns = makeTestTurns(count = 6, players = game.players)
@@ -171,7 +171,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession sets empty recentTurns when game has only one existing turn`() = runTest {
+    fun `startSession, game has only one existing turn, recentTurns is empty`() = runTest {
         // GIVEN
         val game = makeTestGame()
         val singleTurn = makeTestTurn(id = 1L, number = 0)
@@ -188,7 +188,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession clears previous session before initializing new one`() = runTest {
+    fun `startSession, previous session exists, clears it before initializing new one`() = runTest {
         // GIVEN
         val firstGame = makeTestGame(id = 1L)
         val secondGame = makeTestGame(id = 2L)
@@ -206,7 +206,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession emits a session after calling`() = runTest {
+    fun `startSession, game exists, emits a session`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -227,7 +227,7 @@ class GameSessionCoordinatorTest {
 
 
     @Test
-    fun `startSession returns failure and leaves session null when game not found`() = runTest {
+    fun `startSession, game not found, returns failure and leaves session null`() = runTest {
         // GIVEN
         fakeGameRepository.shouldFailOnGetGame = true
 
@@ -240,7 +240,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession returns failure when getTurnsForGame fails`() = runTest {
+    fun `startSession, getTurnsForGame fails, returns failure`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -255,7 +255,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `startSession returns failure when addTurn fails for new game`() = runTest {
+    fun `startSession, addTurn fails for new game, returns failure`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -274,7 +274,7 @@ class GameSessionCoordinatorTest {
     // region finishSession
 
     @Test
-    fun `finishSession marks game as finished and clears session`() = runTest {
+    fun `finishSession, active session exists, marks game as finished and clears session`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -290,7 +290,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `finishSession emits null session after clearing`() = runTest {
+    fun `finishSession, active session exists, emits null session`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -310,7 +310,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `finishSession returns failure when no active session exists`() = runTest {
+    fun `finishSession, no active session, returns failure`() = runTest {
         // WHEN
         val result = coordinator.finishSession(finishedAt = 30_000L, winnerId = null)
 
@@ -319,7 +319,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `finishSession persists winnerId when provided`() = runTest {
+    fun `finishSession, winnerId provided, persists winnerId`() = runTest {
         // GIVEN
         val players = makeTestGamePlayers(count = 3)
         val game = makeTestGame(players = players)
@@ -335,7 +335,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `finishSession returns failure and preserves session when repository fails`() = runTest {
+    fun `finishSession, repository fails, returns failure and preserves session`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -355,7 +355,7 @@ class GameSessionCoordinatorTest {
     // region completeTurn
 
     @Test
-    fun `completeTurn returns success and persists completed turn with duration`() = runTest {
+    fun `completeTurn, active turn selected, persists completed turn with duration`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -371,7 +371,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn creates and persists next turn`() = runTest {
+    fun `completeTurn, active turn selected, creates and persists next turn`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -386,7 +386,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn sets secondaryPlayerId on next turn when specialTurnRule enabled`() = runTest {
+    fun `completeTurn, specialTurnRule enabled, sets secondaryPlayerId on next turn`() = runTest {
         // GIVEN
         val players = makeTestGamePlayers(count = 5)
         val game = makeTestGame(specialTurnRuleEnabled = true, players = players)
@@ -403,7 +403,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn sets null secondaryPlayerId when specialTurnRule disabled`() = runTest {
+    fun `completeTurn, specialTurnRule disabled, sets null secondaryPlayerId on next turn`() = runTest {
         // GIVEN
         val players = makeTestGamePlayers(count = 5)
         val game = makeTestGame(specialTurnRuleEnabled = false, players = players)
@@ -418,7 +418,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn updates selectedTurn and latestTurn to next turn`() = runTest {
+    fun `completeTurn, active turn selected, updates selectedTurn and latestTurn to next turn`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -435,7 +435,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn rotates players correctly across multiple turns`() = runTest {
+    fun `completeTurn, multiple players, rotates players correctly`() = runTest {
         // GIVEN
         val players = makeTestGamePlayers(count = 3)
         val game = makeTestGame(players = players)
@@ -453,7 +453,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn appends completed turn to recentTurns and respects limit`() = runTest {
+    fun `completeTurn, recentTurns at limit, appends and drops oldest`() = runTest {
         // GIVEN – restore a game that already has 4 turns (turns 0, 1, 2, 3)
         // so recentTurns = [1, 2, 3], selectedTurn = turn3 (limit already reached)
         val game = makeTestGame()
@@ -477,7 +477,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn keeps recentTurns within limit when called repeatedly`() = runTest {
+    fun `completeTurn, called repeatedly, keeps recentTurns within limit`() = runTest {
         // GIVEN – fresh game, no prior turns
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -495,7 +495,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn returns failure when updateTurn fails`() = runTest {
+    fun `completeTurn, updateTurn fails, returns failure`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -510,7 +510,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn returns failure when addTurn fails`() = runTest {
+    fun `completeTurn, addTurn fails, returns failure`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -525,7 +525,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `completeTurn returns failure when no active session exists`() = runTest {
+    fun `completeTurn, no active session, returns failure`() = runTest {
         // WHEN
         val result = coordinator.completeTurn(durationMillis = 60_000L)
 
@@ -539,7 +539,7 @@ class GameSessionCoordinatorTest {
     // region updateSelectedTurnDice
 
     @Test
-    fun `updateSelectedTurnDice updates dice in memory and persists`() = runTest {
+    fun `updateSelectedTurnDice, active turn selected, updates dice in memory and persists`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -557,7 +557,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `updateSelectedTurnDice persists eventDice for cities and knights expansion`() = runTest {
+    fun `updateSelectedTurnDice, eventDice provided, persists eventDice`() = runTest {
         // GIVEN
         val game = makeTestGame(expansions = setOf(GameExpansion.CITIES_AND_KNIGHTS))
         fakeGameRepository.seedGame(game)
@@ -573,7 +573,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `updateSelectedTurnDice does not update memory state when repository fails`() = runTest {
+    fun `updateSelectedTurnDice, repository fails, does not update memory state`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -592,7 +592,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `updateSelectedTurnDice returns failure when no active session exists`() = runTest {
+    fun `updateSelectedTurnDice, no active session, returns failure`() = runTest {
         // WHEN
         val result = coordinator.updateSelectedTurnDice(redDice = 3, yellowDice = 5, eventDice = null)
 
@@ -605,7 +605,7 @@ class GameSessionCoordinatorTest {
     // region updateSelectedTurnDuration
 
     @Test
-    fun `updateSelectedTurnDuration updates duration in memory and persists`() = runTest {
+    fun `updateSelectedTurnDuration, active turn selected, updates duration in memory and persists`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -623,7 +623,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `updateSelectedTurnDuration does not update memory state when repository fails`() = runTest {
+    fun `updateSelectedTurnDuration, repository fails, does not update memory state`() = runTest {
         // GIVEN
         val game = makeTestGame()
         fakeGameRepository.seedGame(game)
@@ -642,7 +642,7 @@ class GameSessionCoordinatorTest {
     }
 
     @Test
-    fun `updateSelectedTurnDuration returns failure when no active session exists`() = runTest {
+    fun `updateSelectedTurnDuration, no active session, returns failure`() = runTest {
         // WHEN
         val result = coordinator.updateSelectedTurnDuration(durationMillis = 120_000L)
 

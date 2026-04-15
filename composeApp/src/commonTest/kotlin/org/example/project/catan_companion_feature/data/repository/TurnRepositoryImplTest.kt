@@ -20,7 +20,7 @@ class TurnRepositoryImplTest {
     private val repository = TurnRepositoryImpl(fakeTurnDao, fakePlayerDao)
 
     @Test
-    fun `getTurnsForGame returns Flow emitting turns for the game`() = runTest {
+    fun `getTurnsForGame, turns exist for game, returns Flow emitting turns`() = runTest {
         fakePlayerDao.addPlayers(PlayerEntity(id = 1L, name = "Alice"))
         fakeTurnDao.insert(TurnEntity(id = 1L, gameId = 10L, number = 0, playerId = 1L))
         fakeTurnDao.insert(TurnEntity(id = 2L, gameId = 10L, number = 1, playerId = 1L))
@@ -35,7 +35,7 @@ class TurnRepositoryImplTest {
     }
 
     @Test
-    fun `updateDiceRoll updates only dice fields`() = runTest {
+    fun `updateDiceRoll, turn exists, updates only dice fields`() = runTest {
         fakePlayerDao.addPlayers(PlayerEntity(id = 1L, name = "Alice"))
         fakeTurnDao.insert(TurnEntity(id = 1L, gameId = 1L, number = 0, playerId = 1L, durationMillis = 5_000L))
 
@@ -58,7 +58,7 @@ class TurnRepositoryImplTest {
     }
 
     @Test
-    fun `updateDuration updates only durationMillis`() = runTest {
+    fun `updateDuration, turn exists, updates only durationMillis`() = runTest {
         fakePlayerDao.addPlayers(PlayerEntity(id = 1L, name = "Alice"))
         fakeTurnDao.insert(
             TurnEntity(id = 1L, gameId = 1L, number = 0, playerId = 1L, redDice = 3, yellowDice = 4)
@@ -77,7 +77,7 @@ class TurnRepositoryImplTest {
     }
 
     @Test
-    fun `updateDiceRoll returns failure when turn not found`() = runTest {
+    fun `updateDiceRoll, turn not found, returns failure`() = runTest {
         val result = repository.updateDiceRoll(
             turnId = 999L,
             redDice = 3,
@@ -89,14 +89,14 @@ class TurnRepositoryImplTest {
     }
 
     @Test
-    fun `updateDuration returns failure when turn not found`() = runTest {
+    fun `updateDuration, turn not found, returns failure`() = runTest {
         val result = repository.updateDuration(turnId = 999L, durationMillis = 1_000L)
 
         assertIs<Result.Failure<*>>(result)
     }
 
     @Test
-    fun `getTurnsForGame excludes turns from other games`() = runTest {
+    fun `getTurnsForGame, turns from multiple games exist, excludes turns from other games`() = runTest {
         fakePlayerDao.addPlayers(PlayerEntity(id = 1L, name = "Alice"))
         fakeTurnDao.insert(TurnEntity(id = 1L, gameId = 10L, number = 0, playerId = 1L))
         fakeTurnDao.insert(TurnEntity(id = 2L, gameId = 20L, number = 0, playerId = 1L))

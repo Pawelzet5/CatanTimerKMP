@@ -17,7 +17,7 @@ class PlayerRepositoryImplTest {
     private val repository = PlayerRepositoryImpl(fakePlayerDao)
 
     @Test
-    fun `getAllPlayers emits Flow with list`() = runTest {
+    fun `getAllPlayers, players exist in database, emits Flow with list`() = runTest {
         fakePlayerDao.addPlayers(
             PlayerEntity(id = 1L, name = "Alice"),
             PlayerEntity(id = 2L, name = "Bob")
@@ -31,7 +31,7 @@ class PlayerRepositoryImplTest {
     }
 
     @Test
-    fun `canDeletePlayer returns false when player has games`() = runTest {
+    fun `canDeletePlayer, player has games, returns false`() = runTest {
         fakePlayerDao.setGameCount(playerId = 1L, count = 3)
 
         val canDelete = repository.canDeletePlayer(id = 1L)
@@ -40,7 +40,7 @@ class PlayerRepositoryImplTest {
     }
 
     @Test
-    fun `canDeletePlayer returns true when player has no games`() = runTest {
+    fun `canDeletePlayer, player has no games, returns true`() = runTest {
         fakePlayerDao.addPlayers(PlayerEntity(id = 1L, name = "Alice"))
 
         val canDelete = repository.canDeletePlayer(id = 1L)
@@ -49,7 +49,7 @@ class PlayerRepositoryImplTest {
     }
 
     @Test
-    fun `hidePlayer sets isHidden to true`() = runTest {
+    fun `hidePlayer, player exists, sets isHidden to true`() = runTest {
         fakePlayerDao.addPlayers(PlayerEntity(id = 1L, name = "Alice", isHidden = false))
 
         val result = repository.hidePlayer(id = 1L)

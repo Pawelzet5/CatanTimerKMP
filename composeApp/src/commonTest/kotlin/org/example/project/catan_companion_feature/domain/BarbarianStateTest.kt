@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 class BarbarianStateTest {
 
     @Test
-    fun `zero barbarian rolls returns position 0 no raids`() {
+    fun `Barbarian state, zero barbarian rolls, position 0 no raids`() {
         val turns = listOf(turnWithEvent(EventDiceType.TRADE), turnWithEvent(EventDiceType.POLITICS))
         val state = turns.toBarbarianState()
         assertEquals(0, state.position)
@@ -21,7 +21,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `7 barbarian rolls returns position 7 no raids`() {
+    fun `Barbarian state, 7 barbarian rolls, position 7 no raids`() {
         val turns = barbarianTurns(7)
         val state = turns.toBarbarianState()
         assertEquals(7, state.position)
@@ -30,7 +30,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `8 barbarian rolls resets to position 0 one raid completed`() {
+    fun `Barbarian state, 8 barbarian rolls, resets to position 0 one raid completed`() {
         val turns = barbarianTurns(8)
         val state = turns.toBarbarianState()
         assertEquals(0, state.position)
@@ -39,7 +39,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `15 barbarian rolls returns position 7 one raid completed`() {
+    fun `Barbarian state, 15 barbarian rolls, position 7 one raid completed`() {
         val turns = barbarianTurns(15)
         val state = turns.toBarbarianState()
         assertEquals(7, state.position)
@@ -48,7 +48,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `16 barbarian rolls resets to position 0 two raids completed`() {
+    fun `Barbarian state, 16 barbarian rolls, resets to position 0 two raids completed`() {
         val turns = barbarianTurns(16)
         val state = turns.toBarbarianState()
         assertEquals(0, state.position)
@@ -57,7 +57,7 @@ class BarbarianStateTest {
     }
 
     @Test
-    fun `empty list returns default state`() {
+    fun `Barbarian state, empty turn list, returns default state`() {
         val state = emptyList<Turn>().toBarbarianState()
         assertEquals(0, state.position)
         assertEquals(0, state.raidsCompleted)
