@@ -2,6 +2,7 @@ package org.example.project.catan_companion_feature.presentation.gameconfig
 
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
+import org.example.project.core.util.UiText
 
 data class GameConfigUiState(
     val turnDurationMillis: Long = 120_000L,
@@ -11,6 +12,6 @@ data class GameConfigUiState(
     val expansions: Set<GameExpansion> = emptySet(),
     val specialTurnRuleEnabled: Boolean = false,
     val isValid: Boolean = false,
-    val validationError: String? = null,
+    val validationError: UiText? = null,
     val isLoading: Boolean = false
 )

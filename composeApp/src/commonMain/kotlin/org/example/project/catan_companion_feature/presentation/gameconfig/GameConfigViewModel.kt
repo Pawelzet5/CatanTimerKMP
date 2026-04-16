@@ -17,6 +17,7 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
 import org.example.project.catan_companion_feature.domain.usecase.CreateGameUseCase
 import org.example.project.core.domain.Result
+import org.example.project.core.presentation.toUiText
 
 class GameConfigViewModel(
     private val playerRepository: PlayerRepository,
@@ -95,7 +96,7 @@ class GameConfigViewModel(
             when (result) {
                 is Result.Success -> _navigateToGameplay.emit(result.data)
                 is Result.Failure -> _uiState.update {
-                    it.copy(validationError = "Invalid game configuration")
+                    it.copy(validationError = result.error.toUiText())
                 }
             }
         }
