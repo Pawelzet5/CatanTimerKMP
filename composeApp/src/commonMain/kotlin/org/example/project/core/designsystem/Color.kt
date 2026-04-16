@@ -41,6 +41,7 @@ val CatanBorderSecondaryDark = Color(0xFF44403C)
 
 val CatanSuccess = Color(0xFF059669)
 val CatanSuccessSubtle = Color(0xFFD1FAE5)
+val CatanSuccessSubtleDark = Color(0xFF064E3B)
 val CatanSuccessDark = Color(0xFF34D399)
 
 val CatanError = Color(0xFFDC2626)
@@ -52,6 +53,7 @@ val CatanWarningSubtle = Color(0xFFFEF3C7)
 
 val CatanInfo = Color(0xFF2563EB)
 val CatanInfoSubtle = Color(0xFFDBEAFE)
+val CatanInfoSubtleDark = Color(0xFF1E3A5F)
 val CatanInfoDark = Color(0xFF60A5FA)
 
 // Dashboard category colors

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -38,14 +37,12 @@ class DashboardViewModel(
     private fun observeTotalGames() {
         gameRepository.getAllGames()
             .onEach { games -> _uiState.update { it.copy(totalGames = games.size) } }
-            .catch { }
             .launchIn(viewModelScope)
     }
 
     private fun observeTotalPlayers() {
         playerRepository.getAllPlayers()
             .onEach { players -> _uiState.update { it.copy(totalPlayers = players.size) } }
-            .catch { }
             .launchIn(viewModelScope)
     }
 }
