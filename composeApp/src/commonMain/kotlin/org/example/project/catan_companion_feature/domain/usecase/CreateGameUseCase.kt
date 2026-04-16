@@ -1,8 +1,8 @@
 package org.example.project.catan_companion_feature.domain.usecase
 
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
+import org.example.project.catan_companion_feature.domain.error.GameValidationError
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.core.domain.IllegalOperationError
 import org.example.project.core.domain.Result
 
 class CreateGameUseCase(
@@ -13,15 +13,15 @@ class CreateGameUseCase(
         expansions: Set<GameExpansion>,
         specialTurnRuleEnabled: Boolean,
         playerIds: List<Long>
-    ): Result<Long, IllegalOperationError> {
-        if (playerIds.size < 3 || playerIds.size > 6) {
-            return Result.Failure(IllegalOperationError)
+    ): Result<Long, GameValidationError> {
+        if (playerIds.size !in 3..6) {
+            return Result.Failure(GameValidationError.InvalidPlayerCount)
         }
         if (playerIds.distinct().size != playerIds.size) {
-            return Result.Failure(IllegalOperationError)
+            return Result.Failure(GameValidationError.DuplicatePlayers)
         }
         if (specialTurnRuleEnabled && playerIds.size < 5) {
-            return Result.Failure(IllegalOperationError)
+            return Result.Failure(GameValidationError.SpecialTurnRuleRequiresFivePlayers)
         }
         return when (val result = gameRepository.createGame(
             turnDurationMillis = turnDurationMillis,
@@ -30,7 +30,7 @@ class CreateGameUseCase(
             playerIds = playerIds
         )) {
             is Result.Success -> Result.Success(result.data)
-            is Result.Failure -> Result.Failure(IllegalOperationError)
+            is Result.Failure -> Result.Failure(GameValidationError.StorageError)
         }
     }
 }
