@@ -66,6 +66,17 @@
     <string name="players_games_count">%1$d games</string>
     <string name="players_hide">Hide Player</string>
     <string name="players_delete">Delete Player</string>
+    <string name="players_add_dialog_title">Add Player</string>
+    <string name="players_name_hint">Player name</string>
+    <string name="players_delete_confirm_message">Permanently delete %1$s?</string>
+    <string name="players_hide_confirm_message">Hide %1$s from the players list?</string>
+
+    <!-- Player Details -->
+    <string name="player_details_games_played">Games Played</string>
+    <string name="player_details_wins">Wins</string>
+
+    <!-- Config -->
+    <string name="config_turn_duration_minutes">%1$d min</string>
 
     <!-- Games -->
     <string name="games_title">Games</string>
