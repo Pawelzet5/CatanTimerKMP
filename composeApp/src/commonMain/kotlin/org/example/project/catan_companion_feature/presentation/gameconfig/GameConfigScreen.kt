@@ -10,10 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -29,7 +32,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.config_add_player
 import catantimer.composeapp.generated.resources.config_cities_knights
@@ -37,13 +39,17 @@ import catantimer.composeapp.generated.resources.config_in_between_turns
 import catantimer.composeapp.generated.resources.config_options
 import catantimer.composeapp.generated.resources.config_players
 import catantimer.composeapp.generated.resources.config_seafarers
+import catantimer.composeapp.generated.resources.config_remove_player
 import catantimer.composeapp.generated.resources.config_start_game
 import catantimer.composeapp.generated.resources.config_title
 import catantimer.composeapp.generated.resources.config_turn_duration
 import catantimer.composeapp.generated.resources.config_turn_duration_minutes
+import catantimer.composeapp.generated.resources.common_back
+import catantimer.composeapp.generated.resources.ic_close
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.core.designsystem.CatanSpacing
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -73,7 +79,10 @@ fun GameConfigScreen(
                 title = { Text(stringResource(Res.string.config_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Text(text = "←", fontSize = 20.sp)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.common_back)
+                        )
                     }
                 }
             )
@@ -223,10 +232,10 @@ private fun SelectedPlayerRow(
             modifier = Modifier.weight(1f)
         )
         IconButton(onClick = onRemove) {
-            Text(
-                text = "×",
-                fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.error
+            Icon(
+                painter = painterResource(Res.drawable.ic_close),
+                contentDescription = stringResource(Res.string.config_remove_player),
+                tint = MaterialTheme.colorScheme.error
             )
         }
     }

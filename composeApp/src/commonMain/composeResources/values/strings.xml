@@ -75,6 +75,8 @@
     <string name="player_details_games_played">Games Played</string>
     <string name="player_details_wins">Wins</string>
 
+    <string name="config_remove_player">Remove player</string>
+
     <!-- Config -->
     <string name="config_turn_duration_minutes">%1$d min</string>
 
