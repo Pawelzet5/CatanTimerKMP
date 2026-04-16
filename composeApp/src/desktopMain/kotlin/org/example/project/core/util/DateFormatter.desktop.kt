@@ -5,4 +5,4 @@ import java.util.Date
 import java.util.Locale
 
 actual fun formatEpochMillis(epochMillis: Long): String =
-    SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()).format(Date(epochMillis))
+    SimpleDateFormat(GAME_DATE_PATTERN, Locale.getDefault()).format(Date(epochMillis))
