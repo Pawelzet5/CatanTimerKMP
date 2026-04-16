@@ -65,6 +65,11 @@ class GameConfigViewModel(
         revalidate()
     }
 
+    fun onPlayerSelectedById(id: Long) {
+        val player = _uiState.value.availablePlayers.find { it.id == id } ?: return
+        onPlayerToggled(player)
+    }
+
     fun onPlayerCountSelected(count: Int) {
         _uiState.update { it.copy(
             numberOfPlayers = count,

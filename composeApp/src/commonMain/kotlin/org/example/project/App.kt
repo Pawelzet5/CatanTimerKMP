@@ -1,10 +1,16 @@
 package org.example.project
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import org.example.project.catan_companion_feature.domain.dataclass.Player
+import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
+import org.koin.compose.viewmodel.koinViewModel
 import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreen
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigScreen
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreen
@@ -37,7 +43,20 @@ fun App() {
                     onPlayersList = { navController.navigate(PlayersListRoute()) }
                 )
             }
-            composable<GameConfigRoute> {
+            composable<GameConfigRoute> { backStackEntry ->
+                val viewModel = koinViewModel<GameConfigViewModel>()
+
+                val selectedPlayerId by backStackEntry.savedStateHandle
+                    .getStateFlow<Long?>("selected_player_id", null)
+                    .collectAsState()
+
+                LaunchedEffect(selectedPlayerId) {
+                    selectedPlayerId?.let { id ->
+                        viewModel.onPlayerSelectedById(id)
+                        backStackEntry.savedStateHandle.remove<Long>("selected_player_id")
+                    }
+                }
+
                 GameConfigScreen(
                     onNavigateBack = { navController.popBackStack() },
                     onGameCreated = { gameId ->
@@ -45,7 +64,8 @@ fun App() {
                             popUpTo<DashboardRoute>()
                         }
                     },
-                    onAddPlayer = { navController.navigate(PlayersListRoute(selectionMode = true)) }
+                    onAddPlayer = { navController.navigate(PlayersListRoute(selectionMode = true)) },
+                    viewModel = viewModel
                 )
             }
             composable<GameplayRoute> { backStackEntry ->
@@ -58,7 +78,12 @@ fun App() {
                     isSelectionMode = route.selectionMode,
                     onNavigateBack = { navController.popBackStack() },
                     onPlayerClick = { playerId -> navController.navigate(PlayerDetailsRoute(playerId)) },
-                    onPlayerSelected = { }
+                    onPlayerSelected = { player ->
+                        navController.previousBackStackEntry
+                            ?.savedStateHandle
+                            ?.set("selected_player_id", player.id)
+                        navController.popBackStack()
+                    }
                 )
             }
             composable<PlayerDetailsRoute> { backStackEntry ->
