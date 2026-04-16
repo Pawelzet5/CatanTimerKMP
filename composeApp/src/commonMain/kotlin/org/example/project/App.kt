@@ -50,7 +50,13 @@ fun App() {
             }
             composable<GameplayRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<GameplayRoute>()
-                GameplayScreen(gameId = route.gameId)
+                GameplayScreen(
+                    gameId = route.gameId,
+                    onNavigateToSummary = { gameId ->
+                        navController.navigate(GameSummaryRoute(gameId))
+                    },
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
             composable<PlayersListRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<PlayersListRoute>()
