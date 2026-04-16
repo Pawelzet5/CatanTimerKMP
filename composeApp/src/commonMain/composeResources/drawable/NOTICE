@@ -1,0 +1,10 @@
+The icon files in this directory (ic_close.xml, ic_dice.xml, ic_end_game.xml,
+ic_menu.xml, ic_minus.xml, ic_more_time.xml, ic_person.xml, ic_play.xml,
+ic_plus.xml, ic_refresh.xml, ic_settings.xml, ic_statistics.xml, ic_winner.xml)
+are derived from Google Material Symbols / Material Icons.
+
+Source: https://fonts.google.com/icons
+Copyright 2024 Google LLC
+
+Licensed under the Apache License, Version 2.0.
+See the LICENSE file at the root of this repository for the full license text.
