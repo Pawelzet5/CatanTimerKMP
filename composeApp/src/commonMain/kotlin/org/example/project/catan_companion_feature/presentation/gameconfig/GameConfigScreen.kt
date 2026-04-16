@@ -10,14 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -33,8 +29,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
-import catantimer.composeapp.generated.resources.common_back
 import catantimer.composeapp.generated.resources.config_add_player
 import catantimer.composeapp.generated.resources.config_cities_knights
 import catantimer.composeapp.generated.resources.config_in_between_turns
@@ -77,10 +73,7 @@ fun GameConfigScreen(
                 title = { Text(stringResource(Res.string.config_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.common_back)
-                        )
+                        Text(text = "←", fontSize = 20.sp)
                     }
                 }
             )
@@ -136,10 +129,10 @@ fun GameConfigScreen(
                 )
             }
 
-            if (uiState.validationError != null) {
+            uiState.validationError?.let { error ->
                 item {
                     Text(
-                        text = uiState.validationError,
+                        text = error,
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(horizontal = CatanSpacing.xs)
@@ -230,10 +223,10 @@ private fun SelectedPlayerRow(
             modifier = Modifier.weight(1f)
         )
         IconButton(onClick = onRemove) {
-            Icon(
-                imageVector = Icons.Default.Close,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.error
+            Text(
+                text = "×",
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.error
             )
         }
     }
