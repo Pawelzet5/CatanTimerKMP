@@ -261,3 +261,5 @@ feat(platform): implement HapticService expect/actual for Android, iOS, Desktop
 - `GameSummaryScreen` działa na każdej grze niezależnie od statusu — `GetGameStatisticsUseCase` nie sprawdza czy gra jest COMPLETED
 - `@Suppress("DEPRECATION")` w `HapticService.android.kt` — wymagany komentarz wyjaśniający powód
 - Kolory, odstępy i typografia wyłącznie z `MaterialTheme` / `CatanTimerTheme` tokenów — zero wartości inline
+- **Ikony UI:** używaj SVG ikon z `commonMain/composeResources/drawable/` (np. `ic_winner`, `ic_person`, `ic_close`) przez `painterResource(Res.drawable.ic_*)` wewnątrz komponentu `Icon` — nigdy nie zastępuj ikon znakami unicode ani stringami w `Text`
+- **Kolory w composables:** nigdy nie używaj surowych stałych palety (np. `CatanOrange`, `CatanSuccessDark`) bezpośrednio w composable. Kolor musi być zawsze odczytany przez `MaterialTheme.colorScheme.*` lub `MaterialTheme.catanColors.*` — tylko wtedy light/dark switching działa automatycznie. Surowe stałe z `Color.kt` są widoczne wyłącznie z poziomu `ExtendedColors.kt` i `Color.kt` (definicja schematów)
