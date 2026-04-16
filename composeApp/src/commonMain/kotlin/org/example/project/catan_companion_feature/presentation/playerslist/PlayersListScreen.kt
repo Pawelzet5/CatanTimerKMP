@@ -23,6 +23,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -44,6 +45,7 @@ import catantimer.composeapp.generated.resources.common_back
 import catantimer.composeapp.generated.resources.common_cancel
 import catantimer.composeapp.generated.resources.common_confirm
 import catantimer.composeapp.generated.resources.common_delete
+import catantimer.composeapp.generated.resources.ic_plus
 import catantimer.composeapp.generated.resources.players_add
 import catantimer.composeapp.generated.resources.players_add_dialog_title
 import catantimer.composeapp.generated.resources.players_add_title
