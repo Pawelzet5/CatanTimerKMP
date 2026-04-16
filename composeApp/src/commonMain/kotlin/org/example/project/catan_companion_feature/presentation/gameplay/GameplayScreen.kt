@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,9 +21,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.gameplay_continue
+import catantimer.composeapp.generated.resources.gameplay_in_between
+import catantimer.composeapp.generated.resources.gameplay_next_turn
 import catantimer.composeapp.generated.resources.gameplay_player_turn
 import catantimer.composeapp.generated.resources.gameplay_turn
 import org.example.project.catan_companion_feature.domain.enums.DiceType
@@ -31,6 +35,9 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.presentation.components.dice.DiceRow
 import org.example.project.catan_companion_feature.presentation.components.dice.EventDiceRow
 import org.example.project.catan_companion_feature.presentation.components.gameplay.BarbarianTracker
+import org.example.project.catan_companion_feature.presentation.components.gameplay.EventPhaseContent
+import org.example.project.catan_companion_feature.presentation.components.timer.GameTimer
+import org.example.project.catan_companion_feature.presentation.components.timer.TimerControls
 import org.example.project.core.designsystem.CatanSpacing
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -76,9 +83,39 @@ fun GameplayScreen(
                     },
                     onContinue = viewModel::onContinueFromDice
                 )
-                GameplayPhase.EVENT -> { /* PR 14b */ }
-                GameplayPhase.MAIN_TIMER -> { /* PR 14b */ }
-                GameplayPhase.IN_BETWEEN_TIMER -> { /* PR 14b */ }
+                GameplayPhase.EVENT -> {
+                    val turn = uiState.currentTurn ?: return@Column
+                    val game = uiState.game ?: return@Column
+                    EventPhaseContent(
+                        turn = turn,
+                        game = game,
+                        barbarianState = uiState.barbarianState,
+                        onContinue = viewModel::onContinueFromEvent,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+                GameplayPhase.MAIN_TIMER -> TimerPhaseContent(
+                    uiState = uiState,
+                    onStartStop = {
+                        if (uiState.timerState.isRunning) viewModel.onStopTimer()
+                        else viewModel.onStartTimer()
+                    },
+                    onAddTime = viewModel::onAddTime,
+                    onReset = viewModel::onResetTimer,
+                    onNextTurn = viewModel::onNextTurn,
+                    onInBetweenTurn = viewModel::onStartInBetweenTurn
+                )
+                GameplayPhase.IN_BETWEEN_TIMER -> TimerPhaseContent(
+                    uiState = uiState,
+                    onStartStop = {
+                        if (uiState.timerState.isRunning) viewModel.onStopTimer()
+                        else viewModel.onStartTimer()
+                    },
+                    onAddTime = viewModel::onAddTime,
+                    onReset = viewModel::onResetTimer,
+                    onNextTurn = viewModel::onNextTurn,
+                    onInBetweenTurn = {}
+                )
             }
         }
     }
@@ -222,6 +259,76 @@ private fun DiceSelectionContent(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(stringResource(Res.string.gameplay_continue))
+        }
+    }
+}
+
+@Composable
+private fun TimerPhaseContent(
+    uiState: GameplayUiState,
+    onStartStop: () -> Unit,
+    onAddTime: () -> Unit,
+    onReset: () -> Unit,
+    onNextTurn: () -> Unit,
+    onInBetweenTurn: () -> Unit
+) {
+    val turn = uiState.displayedTurn
+    val playerName = when (uiState.phase) {
+        GameplayPhase.IN_BETWEEN_TIMER -> turn?.secondaryPlayerName.orEmpty()
+        else -> turn?.playerName.orEmpty()
+    }
+    val showInBetweenButton = uiState.phase == GameplayPhase.MAIN_TIMER
+        && uiState.game?.specialTurnRuleEnabled == true
+        && uiState.isViewingLatest
+    val secondaryPlayerName = turn?.secondaryPlayerName.orEmpty()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(CatanSpacing.md),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = playerName,
+            style = MaterialTheme.typography.headlineLarge,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+
+        Spacer(modifier = Modifier.height(CatanSpacing.lg))
+
+        GameTimer(remainingMillis = uiState.timerState.remainingMillis)
+
+        Spacer(modifier = Modifier.height(CatanSpacing.md))
+
+        if (uiState.isViewingLatest) {
+            TimerControls(
+                isRunning = uiState.timerState.isRunning,
+                onStartStop = onStartStop,
+                onAddTime = onAddTime,
+                onReset = onReset
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        if (showInBetweenButton) {
+            Button(
+                onClick = onInBetweenTurn,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(Res.string.gameplay_in_between, secondaryPlayerName))
+            }
+            Spacer(modifier = Modifier.height(CatanSpacing.sm))
+        }
+
+        Button(
+            onClick = onNextTurn,
+            enabled = uiState.isViewingLatest,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(Res.string.gameplay_next_turn))
         }
     }
 }

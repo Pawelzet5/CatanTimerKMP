@@ -125,6 +125,12 @@ class GameplayViewModel(
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
     }
 
+    fun onStartInBetweenTurn() {
+        timerManager.stop()
+        timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
+        _uiState.update { it.copy(phase = GameplayPhase.IN_BETWEEN_TIMER) }
+    }
+
     fun onNextTurn() {
         viewModelScope.launch {
             val elapsed = timerManager.stop()
