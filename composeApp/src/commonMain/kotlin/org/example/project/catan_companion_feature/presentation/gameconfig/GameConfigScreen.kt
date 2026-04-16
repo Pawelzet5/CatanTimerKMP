@@ -168,7 +168,7 @@ fun GameConfigScreen(
             uiState.validationError?.let { error ->
                 item {
                     Text(
-                        text = error,
+                        text = error.asStringComposable(),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.padding(horizontal = CatanSpacing.xs)
