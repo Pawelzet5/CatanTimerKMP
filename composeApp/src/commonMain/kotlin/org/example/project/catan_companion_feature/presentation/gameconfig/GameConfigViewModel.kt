@@ -65,6 +65,14 @@ class GameConfigViewModel(
         revalidate()
     }
 
+    fun onPlayerCountSelected(count: Int) {
+        _uiState.update { it.copy(
+            numberOfPlayers = count,
+            selectedPlayers = it.selectedPlayers.take(count)
+        ) }
+        revalidate()
+    }
+
     fun onStartGame() {
         viewModelScope.launch {
             val state = _uiState.value
@@ -85,8 +93,9 @@ class GameConfigViewModel(
 
     private fun revalidate() {
         val state = _uiState.value
-        val valid = state.selectedPlayers.size in 3..6 &&
-            (!state.specialTurnRuleEnabled || state.selectedPlayers.size >= 5)
+        val hasCorrectCount = state.selectedPlayers.size == state.numberOfPlayers
+        val specialTurnRuleValid = !state.specialTurnRuleEnabled || state.numberOfPlayers >= 5
+        val valid = hasCorrectCount && specialTurnRuleValid
         _uiState.update { it.copy(isValid = valid, validationError = if (valid) null else it.validationError) }
     }
 }

@@ -5,6 +5,7 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 
 data class GameConfigUiState(
     val turnDurationMillis: Long = 120_000L,
+    val numberOfPlayers: Int = 4,
     val selectedPlayers: List<Player> = emptyList(),
     val availablePlayers: List<Player> = emptyList(),
     val expansions: Set<GameExpansion> = emptySet(),
