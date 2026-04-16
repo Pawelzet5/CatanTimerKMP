@@ -17,6 +17,7 @@ import org.example.project.catan_companion_feature.presentation.navigation.Gamep
 import org.example.project.catan_companion_feature.presentation.navigation.GamesListRoute
 import org.example.project.catan_companion_feature.presentation.navigation.PlayerDetailsRoute
 import org.example.project.catan_companion_feature.presentation.navigation.PlayersListRoute
+import org.example.project.catan_companion_feature.presentation.navigation.WinnerSelectionRoute
 import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreen
 import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListScreen
 import org.example.project.core.designsystem.CatanTimerTheme
@@ -54,6 +55,12 @@ fun App() {
                     gameId = route.gameId,
                     onNavigateToSummary = { gameId ->
                         navController.navigate(GameSummaryRoute(gameId))
+                    },
+                    onNavigateToWinnerSelection = { gameId ->
+                        navController.navigate(WinnerSelectionRoute(gameId))
+                    },
+                    onNavigateToGameConfig = {
+                        navController.navigate(GameConfigRoute)
                     },
                     onNavigateBack = { navController.popBackStack() }
                 )
