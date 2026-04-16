@@ -39,7 +39,7 @@ class PlayerRepositoryImpl(
 
     override suspend fun createPlayer(name: String): Result<Long, DataError.Local> =
         tryLocalWrite {
-            val id = playerDao.insert(PlayerEntity(name = name))
+            val id = playerDao.insert(PlayerEntity(name = name, createdAt = System.currentTimeMillis()))
             Result.Success(id)
         }
 

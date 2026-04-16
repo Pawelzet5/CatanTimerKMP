@@ -23,7 +23,7 @@ import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
         GamePlayerEntity::class,
         TurnEntity::class
     ],
-    version = 2,
+    version = 1,
     exportSchema = true
 )
 @TypeConverters(

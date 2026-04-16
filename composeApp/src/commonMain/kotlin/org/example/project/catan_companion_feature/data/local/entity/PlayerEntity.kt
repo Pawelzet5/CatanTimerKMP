@@ -8,5 +8,6 @@ data class PlayerEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
     val name: String,
-    val isHidden: Boolean = false
+    val isHidden: Boolean = false,
+    val createdAt: Long = System.currentTimeMillis()
 )
