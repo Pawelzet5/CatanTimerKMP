@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreen
@@ -46,14 +45,14 @@ fun App() {
             composable<GameConfigRoute> { backStackEntry ->
                 val viewModel = koinViewModel<GameConfigViewModel>()
 
-                val selectedPlayerId by backStackEntry.savedStateHandle
-                    .getStateFlow<Long?>("selected_player_id", null)
+                val selectedPlayerIds by backStackEntry.savedStateHandle
+                    .getStateFlow<List<Long>?>("selected_player_ids", null)
                     .collectAsState()
 
-                LaunchedEffect(selectedPlayerId) {
-                    selectedPlayerId?.let { id ->
-                        viewModel.onPlayerSelectedById(id)
-                        backStackEntry.savedStateHandle.remove<Long>("selected_player_id")
+                LaunchedEffect(selectedPlayerIds) {
+                    selectedPlayerIds?.let { ids ->
+                        viewModel.onPlayersSelectedByIds(ids)
+                        backStackEntry.savedStateHandle.remove<List<Long>>("selected_player_ids")
                     }
                 }
 
@@ -84,10 +83,10 @@ fun App() {
                     isSelectionMode = route.selectionMode,
                     onNavigateBack = { navController.popBackStack() },
                     onPlayerClick = { playerId -> navController.navigate(PlayerDetailsRoute(playerId)) },
-                    onPlayerSelected = { player ->
+                    onPlayersSelected = { players ->
                         navController.previousBackStackEntry
                             ?.savedStateHandle
-                            ?.set("selected_player_id", player.id)
+                            ?.set("selected_player_ids", players.map { it.id })
                         navController.popBackStack()
                     }
                 )

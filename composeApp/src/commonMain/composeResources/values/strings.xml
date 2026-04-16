@@ -72,8 +72,19 @@
     <string name="players_hide_confirm_message">Hide %1$s from the players list?</string>
 
     <!-- Player Details -->
+    <string name="player_details_title">Player Details</string>
     <string name="player_details_games_played">Games Played</string>
     <string name="player_details_wins">Wins</string>
+    <string name="player_details_win_rate">Win Rate</string>
+    <string name="player_details_statistics">Statistics</string>
+    <string name="player_details_since">Player since %1$s</string>
+    <string name="player_details_games_stats">%1$d games · %2$d wins · %3$d%%</string>
+
+    <!-- Players Selection Mode -->
+    <string name="players_add_title">Add Players</string>
+    <string name="players_selection_hint">Select players to add to the game</string>
+    <string name="players_done_count">Done (%1$d)</string>
+    <string name="players_overflow_cd">More options</string>
 
     <string name="config_remove_player">Remove player</string>
 
