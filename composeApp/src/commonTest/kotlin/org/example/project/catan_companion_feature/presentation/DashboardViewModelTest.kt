@@ -8,6 +8,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
+import org.example.project.catan_companion_feature.data.fakes.repository.FakePlayerRepository
 import org.example.project.catan_companion_feature.presentation.dashboard.DashboardViewModel
 import org.example.project.catan_companion_feature.testGame
 import kotlin.test.AfterTest
@@ -35,7 +36,7 @@ class DashboardViewModelTest {
     @Test
     fun `DashboardViewModel init, no action taken, resumableGame is null and not loading`() =
         runTest(testDispatcher) {
-            val viewModel = DashboardViewModel(FakeGameRepository())
+            val viewModel = DashboardViewModel(FakeGameRepository(), FakePlayerRepository())
             assertNull(viewModel.uiState.value.resumableGame)
             assertFalse(viewModel.uiState.value.isLoading)
         }
@@ -45,7 +46,7 @@ class DashboardViewModelTest {
         runTest(testDispatcher) {
             val repo = FakeGameRepository()
             repo.setInProgressGame(testGame())
-            val viewModel = DashboardViewModel(repo)
+            val viewModel = DashboardViewModel(repo, FakePlayerRepository())
             advanceUntilIdle()
             assertNotNull(viewModel.uiState.value.resumableGame)
         }
@@ -53,7 +54,7 @@ class DashboardViewModelTest {
     @Test
     fun `DashboardViewModel load, no in-progress games, resumableGame is null`() =
         runTest(testDispatcher) {
-            val viewModel = DashboardViewModel(FakeGameRepository())
+            val viewModel = DashboardViewModel(FakeGameRepository(), FakePlayerRepository())
             advanceUntilIdle()
             assertNull(viewModel.uiState.value.resumableGame)
         }

@@ -1,26 +1,20 @@
 package org.example.project.catan_companion_feature.data.repository
 
-import androidx.room.withTransaction
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
+import kotlinx.coroutines.flow.*
 import org.example.project.catan_companion_feature.data.local.CatanCompanionDatabase
-import org.example.project.catan_companion_feature.data.local.dao.GameDao
-import org.example.project.catan_companion_feature.data.local.dao.GamePlayerDao
-import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
+import org.example.project.catan_companion_feature.data.local.dao.*
 import org.example.project.catan_companion_feature.data.local.entity.GameEntity
 import org.example.project.catan_companion_feature.data.local.entity.GamePlayerEntity
 import org.example.project.catan_companion_feature.data.local.mapper.toDomain
-import org.example.project.catan_companion_feature.data.local.mapper.toEntity
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.core.data.tryLocalRead
 import org.example.project.core.data.tryLocalWrite
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.EmptyResult
-import org.example.project.core.domain.Result
+import org.example.project.core.domain.*
+import kotlin.time.Clock
 
 class GameRepositoryImpl(
     private val database: CatanCompanionDatabase,
@@ -50,23 +44,27 @@ class GameRepositoryImpl(
         specialTurnRuleEnabled: Boolean,
         playerIds: List<Long>
     ): Result<Long, DataError.Local> = tryLocalWrite {
-        val gameId = database.withTransaction {
-            val id = gameDao.insert(
-                GameEntity(
-                    turnDurationMillis = turnDurationMillis,
-                    expansions = expansions,
-                    specialTurnRuleEnabled = specialTurnRuleEnabled,
-                    status = GameStatus.IN_PROGRESS,
-                    startedAt = System.currentTimeMillis()
+        val gameId = database.useWriterConnection {
+            it.immediateTransaction {
+                val id = gameDao.insert(
+                    GameEntity(
+                        turnDurationMillis = turnDurationMillis,
+                        expansions = expansions,
+                        specialTurnRuleEnabled = specialTurnRuleEnabled,
+                        status = GameStatus.IN_PROGRESS,
+                        startedAt = Clock.System.now().epochSeconds
+                    )
                 )
-            )
-            gamePlayerDao.insertAll(
-                playerIds.mapIndexed { index, playerId ->
-                    GamePlayerEntity(gameId = id, playerId = playerId, orderIndex = index)
-                }
-            )
-            id
+
+                gamePlayerDao.insertAll(
+                    playerIds.mapIndexed { index, playerId ->
+                        GamePlayerEntity(gameId = id, playerId = playerId, orderIndex = index)
+                    }
+                )
+                id
+            }
         }
+
         Result.Success(gameId)
     }
 
@@ -77,7 +75,12 @@ class GameRepositoryImpl(
     ): EmptyResult<DataError.Local> = tryLocalWrite {
         val entity = gameDao.getById(gameId).first()
             ?: return@tryLocalWrite Result.Failure(DataError.Local.NOT_FOUND)
-        gameDao.update(entity.copy(expansions = expansions, specialTurnRuleEnabled = specialTurnRuleEnabled))
+        gameDao.update(
+            entity.copy(
+                expansions = expansions,
+                specialTurnRuleEnabled = specialTurnRuleEnabled
+            )
+        )
         Result.Success(Unit)
     }
 
@@ -88,7 +91,7 @@ class GameRepositoryImpl(
             gameDao.update(
                 entity.copy(
                     status = GameStatus.COMPLETED,
-                    finishedAt = System.currentTimeMillis(),
+                    finishedAt = Clock.System.now().epochSeconds,
                     winnerId = winnerId
                 )
             )
