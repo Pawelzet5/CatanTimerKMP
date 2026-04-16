@@ -73,6 +73,8 @@
     <string name="player_details_games_played">Rozegrane gry</string>
     <string name="player_details_wins">Wygrane</string>
 
+    <string name="config_remove_player">Usuń gracza</string>
+
     <!-- Config -->
     <string name="config_turn_duration_minutes">%1$d min</string>
 

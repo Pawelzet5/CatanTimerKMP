@@ -1,25 +1,34 @@
 package org.example.project.catan_companion_feature.presentation.gameconfig
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -28,28 +37,42 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
+import catantimer.composeapp.generated.resources.common_back
 import catantimer.composeapp.generated.resources.config_add_player
 import catantimer.composeapp.generated.resources.config_cities_knights
 import catantimer.composeapp.generated.resources.config_in_between_turns
 import catantimer.composeapp.generated.resources.config_options
+import catantimer.composeapp.generated.resources.config_player_count
 import catantimer.composeapp.generated.resources.config_players
+import catantimer.composeapp.generated.resources.config_remove_player
 import catantimer.composeapp.generated.resources.config_seafarers
 import catantimer.composeapp.generated.resources.config_start_game
 import catantimer.composeapp.generated.resources.config_title
 import catantimer.composeapp.generated.resources.config_turn_duration
-import catantimer.composeapp.generated.resources.config_turn_duration_minutes
+import catantimer.composeapp.generated.resources.ic_close
+import catantimer.composeapp.generated.resources.ic_minus
+import catantimer.composeapp.generated.resources.ic_plus
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.core.designsystem.CatanSpacing
+import org.example.project.core.designsystem.components.CatanCheckbox
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
-private const val TURN_DURATION_MIN_MINUTES = 1
-private const val TURN_DURATION_MAX_MINUTES = 10
-private const val MILLIS_PER_MINUTE = 60_000L
+private const val MILLIS_PER_SECOND = 1_000L
+private const val TURN_DURATION_STEP_MILLIS = 15 * MILLIS_PER_SECOND
+private const val TURN_DURATION_MIN_MILLIS = 30 * MILLIS_PER_SECOND
+private const val TURN_DURATION_MAX_MILLIS = 600 * MILLIS_PER_SECOND
+
+private val PLAYER_COUNT_OPTIONS = listOf(3, 4, 5, 6)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,7 +96,10 @@ fun GameConfigScreen(
                 title = { Text(stringResource(Res.string.config_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Text(text = "←", fontSize = 20.sp)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.common_back)
+                        )
                     }
                 }
             )
@@ -94,28 +120,38 @@ fun GameConfigScreen(
             item {
                 TurnDurationSection(
                     durationMillis = uiState.turnDurationMillis,
-                    onDurationChanged = { viewModel.onTurnDurationChanged(it) }
+                    onDecrement = {
+                        viewModel.onTurnDurationChanged(
+                            (uiState.turnDurationMillis - TURN_DURATION_STEP_MILLIS)
+                                .coerceAtLeast(TURN_DURATION_MIN_MILLIS)
+                        )
+                    },
+                    onIncrement = {
+                        viewModel.onTurnDurationChanged(
+                            (uiState.turnDurationMillis + TURN_DURATION_STEP_MILLIS)
+                                .coerceAtMost(TURN_DURATION_MAX_MILLIS)
+                        )
+                    }
                 )
             }
 
             item {
-                SectionLabel(stringResource(Res.string.config_players))
+                NumberOfPlayersSection(
+                    selectedCount = uiState.numberOfPlayers,
+                    onCountSelected = { viewModel.onPlayerCountSelected(it) }
+                )
             }
 
-            items(uiState.selectedPlayers, key = { it.id }) { player ->
+            item {
+                PlayersHeader(onAddPlayer = onAddPlayer)
+            }
+
+            itemsIndexed(uiState.selectedPlayers, key = { _, player -> player.id }) { index, player ->
                 SelectedPlayerRow(
                     player = player,
+                    index = index,
                     onRemove = { viewModel.onPlayerToggled(player) }
                 )
-            }
-
-            item {
-                OutlinedButton(
-                    onClick = onAddPlayer,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(Res.string.config_add_player))
-                }
             }
 
             item {
@@ -156,77 +192,207 @@ fun GameConfigScreen(
 @Composable
 private fun TurnDurationSection(
     durationMillis: Long,
-    onDurationChanged: (Long) -> Unit
+    onDecrement: () -> Unit,
+    onIncrement: () -> Unit
 ) {
-    val minutes = (durationMillis / MILLIS_PER_MINUTE).toInt()
-        .coerceIn(TURN_DURATION_MIN_MINUTES, TURN_DURATION_MAX_MINUTES)
+    val totalSeconds = (durationMillis / MILLIS_PER_SECOND).toInt()
+    val displayText = "%02d:%02d".format(totalSeconds / 60, totalSeconds % 60)
 
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(modifier = Modifier.padding(CatanSpacing.md)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(Res.string.config_turn_duration),
-                    style = MaterialTheme.typography.titleSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+    Column(verticalArrangement = Arrangement.spacedBy(CatanSpacing.sm)) {
+        FormLabel(stringResource(Res.string.config_turn_duration))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(10.dp)
                 )
-                Text(
-                    text = stringResource(Res.string.config_turn_duration_minutes, minutes),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            }
-            Slider(
-                value = minutes.toFloat(),
-                onValueChange = { onDurationChanged(it.toLong() * MILLIS_PER_MINUTE) },
-                valueRange = TURN_DURATION_MIN_MINUTES.toFloat()..TURN_DURATION_MAX_MINUTES.toFloat(),
-                steps = TURN_DURATION_MAX_MINUTES - TURN_DURATION_MIN_MINUTES - 1,
-                modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = CatanSpacing.md, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            StepperButton(
+                painter = painterResource(Res.drawable.ic_minus),
+                contentDescription = "Decrease duration",
+                enabled = durationMillis > TURN_DURATION_MIN_MILLIS,
+                onClick = onDecrement
+            )
+            Text(
+                text = displayText,
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.weight(1f)
+            )
+            StepperButton(
+                painter = painterResource(Res.drawable.ic_plus),
+                contentDescription = "Increase duration",
+                enabled = durationMillis < TURN_DURATION_MAX_MILLIS,
+                onClick = onIncrement
             )
         }
     }
 }
 
 @Composable
-private fun SectionLabel(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier.padding(bottom = CatanSpacing.xs)
+private fun StepperButton(
+    painter: Painter,
+    contentDescription: String,
+    enabled: Boolean,
+    onClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .size(36.dp)
+            .clip(CircleShape)
+            .background(
+                color = if (enabled)
+                    MaterialTheme.colorScheme.primaryContainer
+                else
+                    MaterialTheme.colorScheme.surfaceVariant,
+                shape = CircleShape
+            )
+            .then(if (enabled) Modifier.clickable(onClick = onClick) else Modifier),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(18.dp),
+            tint = if (enabled)
+                MaterialTheme.colorScheme.primary
+            else
+                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+        )
+    }
+}
+
+@Composable
+private fun NumberOfPlayersSection(
+    selectedCount: Int,
+    onCountSelected: (Int) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(CatanSpacing.sm)) {
+        FormLabel(stringResource(Res.string.config_player_count))
+        Row(horizontalArrangement = Arrangement.spacedBy(CatanSpacing.sm)) {
+            PLAYER_COUNT_OPTIONS.forEach { count ->
+                PlayerCountChip(
+                    count = count,
+                    isActive = count == selectedCount,
+                    onClick = { onCountSelected(count) }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun PlayerCountChip(
+    count: Int,
+    isActive: Boolean,
+    onClick: () -> Unit
+) {
+    FilterChip(
+        selected = isActive,
+        onClick = onClick,
+        label = {
+            Text(
+                text = count.toString(),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = if (isActive) FontWeight.SemiBold else FontWeight.Normal
+            )
+        },
+        shape = RoundedCornerShape(10.dp),
+        colors = FilterChipDefaults.filterChipColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+            selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+            selectedLabelColor = MaterialTheme.colorScheme.secondary
+        ),
+        border = FilterChipDefaults.filterChipBorder(
+            enabled = true,
+            selected = isActive,
+            borderColor = MaterialTheme.colorScheme.surfaceVariant,
+            selectedBorderColor = MaterialTheme.colorScheme.primary,
+            borderWidth = 1.5.dp,
+            selectedBorderWidth = 1.5.dp
+        )
     )
+}
+
+@Composable
+private fun PlayersHeader(onAddPlayer: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        FormLabel(stringResource(Res.string.config_players))
+        Button(
+            onClick = onAddPlayer,
+            contentPadding = PaddingValues(horizontal = CatanSpacing.sm, vertical = CatanSpacing.xs),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_plus),
+                contentDescription = null,
+                modifier = Modifier.size(14.dp)
+            )
+            Spacer(Modifier.width(CatanSpacing.xs))
+            Text(
+                text = stringResource(Res.string.config_add_player),
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
+    }
 }
 
 @Composable
 private fun SelectedPlayerRow(
     player: Player,
+    index: Int,
     onRemove: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(10.dp)
+            )
+            .padding(horizontal = CatanSpacing.md, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
     ) {
+        Icon(
+            imageVector = Icons.Default.DragHandle,
+            contentDescription = null,
+            modifier = Modifier.size(18.dp),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        )
         Text(
-            text = player.name,
-            style = MaterialTheme.typography.bodyLarge,
+            text = "${index + 1}. ${player.name}",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
-        IconButton(onClick = onRemove) {
-            Text(
-                text = "×",
-                fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.error
+        Box(
+            modifier = Modifier
+                .size(24.dp)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.errorContainer, CircleShape)
+                .clickable(onClick = onRemove),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(Res.drawable.ic_close),
+                contentDescription = stringResource(Res.string.config_remove_player),
+                modifier = Modifier.size(14.dp),
+                tint = MaterialTheme.colorScheme.error
             )
         }
     }
@@ -241,60 +407,70 @@ private fun GameOptionsSection(
     onSeafarersToggled: () -> Unit,
     onCitiesAndKnightsToggled: () -> Unit
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(modifier = Modifier.padding(CatanSpacing.md)) {
-            Text(
-                text = stringResource(Res.string.config_options),
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            OptionToggleRow(
+    Column(verticalArrangement = Arrangement.spacedBy(CatanSpacing.sm)) {
+        FormLabel(stringResource(Res.string.config_options))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    color = MaterialTheme.colorScheme.surfaceVariant,
+                    shape = RoundedCornerShape(12.dp)
+                )
+                .padding(CatanSpacing.sm),
+            verticalArrangement = Arrangement.spacedBy(CatanSpacing.xs)
+        ) {
+            OptionCheckboxRow(
                 label = stringResource(Res.string.config_in_between_turns),
                 checked = specialTurnRuleEnabled,
-                onCheckedChange = { onSpecialTurnRuleToggled() }
+                onToggle = onSpecialTurnRuleToggled
             )
-            OptionToggleRow(
+            OptionCheckboxRow(
                 label = stringResource(Res.string.config_seafarers),
                 checked = seafarersEnabled,
-                onCheckedChange = { onSeafarersToggled() }
+                onToggle = onSeafarersToggled
             )
-            OptionToggleRow(
+            OptionCheckboxRow(
                 label = stringResource(Res.string.config_cities_knights),
                 checked = citiesAndKnightsEnabled,
-                onCheckedChange = { onCitiesAndKnightsToggled() }
+                onToggle = onCitiesAndKnightsToggled
             )
         }
     }
 }
 
 @Composable
-private fun OptionToggleRow(
+private fun OptionCheckboxRow(
     label: String,
     checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit
+    onToggle: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = CatanSpacing.xs),
+            .clickable(onClick = onToggle)
+            .padding(vertical = CatanSpacing.sm),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
     ) {
+        CatanCheckbox(
+            checked = checked,
+            onCheckedChange = onToggle
+        )
         Text(
             text = label,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.weight(1f)
         )
-        Switch(
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
     }
+}
+
+@Composable
+private fun FormLabel(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text.uppercase(),
+        style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.8.sp),
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = modifier
+    )
 }
