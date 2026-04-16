@@ -11,14 +11,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -55,7 +53,6 @@ import catantimer.composeapp.generated.resources.players_done_count
 import catantimer.composeapp.generated.resources.players_games_count
 import catantimer.composeapp.generated.resources.players_hide
 import catantimer.composeapp.generated.resources.players_name_hint
-import catantimer.composeapp.generated.resources.players_overflow_cd
 import catantimer.composeapp.generated.resources.players_selection_hint
 import catantimer.composeapp.generated.resources.players_title
 import org.example.project.catan_companion_feature.domain.dataclass.Player
@@ -65,6 +62,7 @@ import org.example.project.catan_companion_feature.presentation.components.Playe
 import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.designsystem.components.CatanCheckbox
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -193,17 +191,17 @@ private fun NormalTopBar(
         actions = {
             IconButton(
                 onClick = onAdd,
+                shape = CircleShape,
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
                 modifier = Modifier
                     .padding(end = CatanSpacing.xs)
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary)
             ) {
                 Icon(
-                    imageVector = Icons.Filled.Add,
+                    imageVector = vectorResource(Res.drawable.ic_plus),
                     contentDescription = stringResource(Res.string.players_add),
-                    tint = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.size(16.dp)
                 )
             }
         }
@@ -373,6 +371,7 @@ private fun AddPlayerDialog(
                 Text(stringResource(Res.string.common_confirm))
             }
         },
+        containerColor = MaterialTheme.colorScheme.surface,
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(stringResource(Res.string.common_cancel))
