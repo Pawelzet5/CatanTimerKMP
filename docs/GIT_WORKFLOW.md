@@ -4,6 +4,22 @@ Reguły obowiązujące we wszystkich sesjach implementacji.
 
 ---
 
+## Branch structure
+
+Projekt używa dwupoziomowej struktury opartej na Gitflow:
+
+```
+master       ← stabilna wersja produkcyjna, nigdy nie commituj bezpośrednio
+development  ← aktywny rozwój, cel dla wszystkich PR-ów sesji
+```
+
+- Cała praca trafia do `development` przez PR-y sesji
+- `master` jest aktualizowany wyłącznie przez PR z `development` → `master` w momencie wydania
+- Bezpośrednie pushe do `master` są zablokowane (branch protection)
+- `development` jest domyślnym branchem repozytorium
+
+---
+
 ## Branch naming
 
 Format: `session-{N}/{short-description}`
@@ -17,18 +33,34 @@ Przykłady:
 
 ## Branch parent
 
-Każdy branch musi wywodzić się z bezpośredniego poprzednika sesji — **nie z `main`** — na wypadek gdy poprzednie PR-y nie zostały jeszcze zmergowane.
+Każdy branch musi wywodzić się z bezpośredniego poprzednika sesji — **nie z `development`** — na wypadek gdy poprzednie PR-y nie zostały jeszcze zmergowane.
 
 Kolejność tworzenia branchy w ramach sesji (jeśli sesja ma wiele PR-ów):
 
 ```
-main
+development
  └── session-1/domain-enums          ← pierwszy branch sesji 1
       └── session-1/domain-models     ← kolejny branch sesji 1
            └── session-2/...          ← pierwszy branch sesji 2
 ```
 
-Jeśli poprzednia sesja jest już zmergowana do `main`, checkout z `main`. Jeśli nie — checkout z ostatniego brancha poprzedniej sesji.
+Zawsze checkoutuj z ostatniego brancha poprzedniej sesji, niezależnie od tego czy poprzednia sesja jest już zmergowana do `development` czy nie.
+
+---
+
+## Pull Request base branch
+
+Każdy PR musi być otwarty z base branch ustawionym na **bezpośredni branch poprzednika** (nie `development`).
+
+```
+PR #1: base = development
+PR #2: base = session-1/domain-models   ← ostatni branch sesji 1
+PR #3: base = session-2/...             ← ostatni branch sesji 2
+```
+
+GitHub automatycznie przekieruje base branch PR-a na `development` w momencie gdy branch docelowy zostanie zmergowany i usunięty. Diff PR-a zostanie wówczas zaktualizowany i będzie pokazywał tylko zmiany wprowadzone w danym PR.
+
+**Nigdy nie ustawiaj base branch na `development` ręcznie** (z wyjątkiem PR #1). GitHub zrobi to automatycznie.
 
 ---
 

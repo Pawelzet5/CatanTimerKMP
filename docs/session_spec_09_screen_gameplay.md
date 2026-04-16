@@ -218,3 +218,5 @@ feat(ui): add statistics popup and settings sheet to GameplayScreen
 - `ModalBottomSheet` z Material3 — wymaga `ExperimentalMaterial3Api` jeśli jest w użyciu; dodaj `@OptIn` z komentarzem dlaczego
 - Navigation event "End Game" → WinnerSelection: `onNavigateToWinnerSelection: (Long) -> Unit` jako parametr `GameplayScreen`
 - Kolory, odstępy i typografia wyłącznie z `MaterialTheme` / `CatanTimerTheme` tokenów — zero wartości inline
+- **Ikony UI:** używaj SVG ikon z `commonMain/composeResources/drawable/` (np. `ic_play`, `ic_dice`, `ic_more_time`, `ic_refresh`, `ic_end_game`, `ic_statistics`, `ic_settings`) przez `painterResource(Res.drawable.ic_*)` wewnątrz komponentu `Icon` — nigdy nie zastępuj ikon znakami unicode ani stringami w `Text`
+- **Kolory w composables:** nigdy nie używaj surowych stałych palety (np. `CatanOrange`, `CatanSuccessDark`) bezpośrednio w composable. Kolor musi być zawsze odczytany przez `MaterialTheme.colorScheme.*` lub `MaterialTheme.catanColors.*` — tylko wtedy light/dark switching działa automatycznie. Surowe stałe z `Color.kt` są widoczne wyłącznie z poziomu `ExtendedColors.kt` i `Color.kt` (definicja schematów)

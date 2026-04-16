@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution
 import org.example.project.core.designsystem.CatanSpacing
@@ -52,13 +55,14 @@ fun DiceStatisticsChart(
                 Box(
                     modifier = Modifier
                         .width(20.dp)
-                        .height((animatedFraction * MAX_BAR_HEIGHT_DP).dp)
+                        .height(MAX_BAR_HEIGHT_DP.dp)
+                        .graphicsLayer {
+                            scaleY = animatedFraction
+                            transformOrigin = TransformOrigin(0.5f, 1f)
+                        }
                         .background(
                             color = MaterialTheme.colorScheme.primary,
-                            shape = androidx.compose.foundation.shape.RoundedCornerShape(
-                                topStart = 3.dp,
-                                topEnd = 3.dp,
-                            ),
+                            shape = RoundedCornerShape(topStart = 3.dp, topEnd = 3.dp),
                         ),
                 )
                 Text(
