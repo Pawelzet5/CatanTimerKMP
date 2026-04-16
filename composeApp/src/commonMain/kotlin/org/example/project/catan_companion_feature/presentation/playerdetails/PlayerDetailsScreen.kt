@@ -60,6 +60,7 @@ import catantimer.composeapp.generated.resources.players_overflow_cd
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
 import org.example.project.catan_companion_feature.presentation.components.PlayerAvatar
+import org.example.project.catan_companion_feature.presentation.components.PlayerAvatarSize
 import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.designsystem.catanColors
 import org.jetbrains.compose.resources.stringResource
@@ -201,7 +202,7 @@ private fun HeroSection(player: Player) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(CatanSpacing.md)
     ) {
-        PlayerAvatar(player = player, size = 80.dp)
+        PlayerAvatar(name = player.name, colorIndex = player.id.toInt(), size = PlayerAvatarSize.Large)
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(

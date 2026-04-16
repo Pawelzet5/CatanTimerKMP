@@ -60,6 +60,7 @@ import catantimer.composeapp.generated.resources.players_title
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
 import org.example.project.catan_companion_feature.presentation.components.PlayerAvatar
+import org.example.project.catan_companion_feature.presentation.components.PlayerAvatarSize
 import org.example.project.catan_companion_feature.presentation.components.PlayerListItem
 import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.designsystem.components.CatanCheckbox
@@ -289,7 +290,7 @@ private fun SelectionPlayerItem(
         horizontalArrangement = Arrangement.spacedBy(CatanSpacing.md)
     ) {
         CatanCheckbox(checked = isSelected, onCheckedChange = onToggle)
-        PlayerAvatar(player = player, size = 32.dp)
+        PlayerAvatar(name = player.name, colorIndex = player.id.toInt(), size = PlayerAvatarSize.Small)
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = player.name,
