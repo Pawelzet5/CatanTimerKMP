@@ -1,24 +1,28 @@
 package org.example.project.catan_companion_feature.presentation.playerdetails
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -30,22 +34,35 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
+import catantimer.composeapp.generated.resources.common_back
 import catantimer.composeapp.generated.resources.common_cancel
 import catantimer.composeapp.generated.resources.common_confirm
+import catantimer.composeapp.generated.resources.common_edit
 import catantimer.composeapp.generated.resources.common_save
 import catantimer.composeapp.generated.resources.player_details_games_played
+import catantimer.composeapp.generated.resources.player_details_since
+import catantimer.composeapp.generated.resources.player_details_statistics
+import catantimer.composeapp.generated.resources.player_details_title
+import catantimer.composeapp.generated.resources.player_details_win_rate
 import catantimer.composeapp.generated.resources.player_details_wins
 import catantimer.composeapp.generated.resources.players_delete
 import catantimer.composeapp.generated.resources.players_delete_confirm_message
 import catantimer.composeapp.generated.resources.players_hide
 import catantimer.composeapp.generated.resources.players_hide_confirm_message
 import catantimer.composeapp.generated.resources.players_name_hint
+import catantimer.composeapp.generated.resources.players_overflow_cd
+import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
+import org.example.project.catan_companion_feature.presentation.components.PlayerAvatar
+import org.example.project.catan_companion_feature.presentation.components.PlayerAvatarSize
 import org.example.project.core.designsystem.CatanSpacing
+import org.example.project.core.designsystem.catanColors
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -60,17 +77,62 @@ fun PlayerDetailsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val player = uiState.player
 
-    var editedName by remember(player?.name) { mutableStateOf(player?.name.orEmpty()) }
+    var showEditDialog by remember { mutableStateOf(false) }
+    var showOverflowMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showHideDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(player?.name.orEmpty()) },
+                title = { Text(stringResource(Res.string.player_details_title)) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Text(text = "←", fontSize = 20.sp)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(Res.string.common_back)
+                        )
+                    }
+                },
+                actions = {
+                    TextButton(onClick = { showEditDialog = true }) {
+                        Text(
+                            text = stringResource(Res.string.common_edit),
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                    Box {
+                        IconButton(onClick = { showOverflowMenu = true }) {
+                            Icon(
+                                imageVector = Icons.Filled.MoreVert,
+                                contentDescription = stringResource(Res.string.players_overflow_cd)
+                            )
+                        }
+                        DropdownMenu(
+                            expanded = showOverflowMenu,
+                            onDismissRequest = { showOverflowMenu = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text(stringResource(Res.string.players_hide)) },
+                                onClick = {
+                                    showOverflowMenu = false
+                                    showHideDialog = true
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = stringResource(Res.string.players_delete),
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+                                },
+                                onClick = {
+                                    showOverflowMenu = false
+                                    showDeleteDialog = true
+                                }
+                            )
+                        }
                     }
                 }
             )
@@ -80,44 +142,26 @@ fun PlayerDetailsScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(CatanSpacing.md)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(rememberScrollState())
+                .padding(CatanSpacing.md),
             verticalArrangement = Arrangement.spacedBy(CatanSpacing.md)
         ) {
-            NameEditSection(
-                name = editedName,
-                onNameChange = { editedName = it },
-                onSave = { viewModel.onUpdateName(editedName) },
-                isSaveEnabled = editedName.isNotBlank() && editedName != player?.name
-            )
-
             if (player != null) {
-                PlayerStatsCard(
-                    gamesPlayed = player.gamesPlayed,
-                    gamesWon = player.gamesWon
-                )
-            }
-
-            Spacer(modifier = Modifier.height(CatanSpacing.md))
-
-            OutlinedButton(
-                onClick = { showHideDialog = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(stringResource(Res.string.players_hide))
-            }
-
-            Button(
-                onClick = { showDeleteDialog = true },
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError
-                )
-            ) {
-                Text(stringResource(Res.string.players_delete))
+                HeroSection(player = player)
+                StatisticsCard(player = player)
             }
         }
+    }
+
+    if (showEditDialog && player != null) {
+        EditNameDialog(
+            currentName = player.name,
+            onSave = { newName ->
+                viewModel.onUpdateName(newName)
+                showEditDialog = false
+            },
+            onDismiss = { showEditDialog = false }
+        )
     }
 
     if (showDeleteDialog && player != null) {
@@ -150,74 +194,214 @@ fun PlayerDetailsScreen(
 }
 
 @Composable
-private fun NameEditSection(
-    name: String,
-    onNameChange: (String) -> Unit,
-    onSave: () -> Unit,
-    isSaveEnabled: Boolean
-) {
+private fun HeroSection(player: Player) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = CatanSpacing.lg),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(CatanSpacing.md)
+    ) {
+        PlayerAvatar(name = player.name, colorIndex = player.id.toInt(), size = PlayerAvatarSize.Large)
+
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = player.name,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            player.createdAt?.let { timestamp ->
+                Text(
+                    text = stringResource(
+                        Res.string.player_details_since,
+                        formatEpochMillisToMonthYear(timestamp)
+                    ),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = CatanSpacing.xs)
+                )
+            }
+        }
+
+        MiniStatsRow(player = player)
+    }
+}
+
+@Composable
+private fun MiniStatsRow(player: Player) {
+    val winRate = if (player.gamesPlayed == 0) 0 else (player.gamesWon * 100) / player.gamesPlayed
+
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedTextField(
-            value = name,
-            onValueChange = onNameChange,
-            placeholder = { Text(stringResource(Res.string.players_name_hint)) },
-            singleLine = true,
-            modifier = Modifier.weight(1f)
+        StatPill(value = player.gamesPlayed.toString(), label = stringResource(Res.string.player_details_games_played))
+        VerticalDivider()
+        StatPill(value = player.gamesWon.toString(), label = stringResource(Res.string.player_details_wins))
+        VerticalDivider()
+        StatPill(
+            value = "$winRate%",
+            label = stringResource(Res.string.player_details_win_rate),
+            valueColor = MaterialTheme.catanColors.successIcon
         )
-        TextButton(
-            onClick = onSave,
-            enabled = isSaveEnabled
-        ) {
-            Text(stringResource(Res.string.common_save))
-        }
     }
 }
 
 @Composable
-private fun PlayerStatsCard(
-    gamesPlayed: Int,
-    gamesWon: Int
+private fun StatPill(
+    value: String,
+    label: String,
+    valueColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.secondary
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(horizontal = CatanSpacing.lg)
     ) {
-        Column(modifier = Modifier.padding(CatanSpacing.md)) {
-            StatRow(
-                label = stringResource(Res.string.player_details_games_played),
-                value = gamesPlayed.toString()
-            )
-            StatRow(
-                label = stringResource(Res.string.player_details_wins),
-                value = gamesWon.toString()
-            )
-        }
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            color = valueColor,
+            textAlign = TextAlign.Center
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
 @Composable
-private fun StatRow(label: String, value: String) {
+private fun VerticalDivider() {
+    Box(
+        modifier = Modifier
+            .width(1.dp)
+            .padding(vertical = CatanSpacing.xs)
+            .background(MaterialTheme.colorScheme.outlineVariant)
+    ) {
+        Text(text = " ")  // gives the box height
+    }
+}
+
+@Composable
+private fun StatisticsCard(player: Player) {
+    val winRate = if (player.gamesPlayed == 0) 0 else (player.gamesWon * 100) / player.gamesPlayed
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(CatanSpacing.md)
+    ) {
+        Text(
+            text = stringResource(Res.string.player_details_statistics),
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.padding(bottom = CatanSpacing.sm)
+        )
+        StatRow(
+            label = stringResource(Res.string.player_details_games_played),
+            value = player.gamesPlayed.toString()
+        )
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        StatRow(
+            label = stringResource(Res.string.player_details_wins),
+            value = player.gamesWon.toString()
+        )
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        StatRow(
+            label = stringResource(Res.string.player_details_win_rate),
+            value = "$winRate%",
+            valueColor = MaterialTheme.catanColors.successIcon
+        )
+    }
+}
+
+@Composable
+private fun StatRow(
+    label: String,
+    value: String,
+    valueColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = CatanSpacing.xs),
+            .padding(vertical = CatanSpacing.sm),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyMedium,
+            style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
             text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface
+            style = MaterialTheme.typography.bodySmall,
+            fontWeight = FontWeight.SemiBold,
+            color = valueColor
         )
     }
+}
+
+@Composable
+private fun EditNameDialog(
+    currentName: String,
+    onSave: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var name by remember(currentName) { mutableStateOf(currentName) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(Res.string.common_edit)) },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                placeholder = { Text(stringResource(Res.string.players_name_hint)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { if (name.isNotBlank()) onSave(name.trim()) },
+                enabled = name.isNotBlank() && name != currentName
+            ) {
+                Text(stringResource(Res.string.common_save))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(Res.string.common_cancel))
+            }
+        }
+    )
+}
+
+private fun formatEpochMillisToMonthYear(millis: Long): String {
+    val days = (millis / 86_400_000L).toInt()
+    val z = days + 719468
+    val era = (if (z >= 0) z else z - 146096) / 146097
+    val doe = z - era * 146097
+    val yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365
+    val y = yoe + era * 400
+    val doy = doe - (365 * yoe + yoe / 4 - yoe / 100)
+    val mp = (5 * doy + 2) / 153
+    val m = mp + (if (mp < 10) 3 else -9)
+    val year = y + (if (m <= 2) 1 else 0)
+    val monthName = when (m) {
+        1 -> "January"; 2 -> "February"; 3 -> "March"; 4 -> "April"
+        5 -> "May"; 6 -> "June"; 7 -> "July"; 8 -> "August"
+        9 -> "September"; 10 -> "October"; 11 -> "November"; else -> "December"
+    }
+    return "$monthName $year"
 }

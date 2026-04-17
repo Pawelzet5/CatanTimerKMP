@@ -38,14 +38,12 @@ class DashboardViewModel(
     private fun observeTotalGames() {
         gameRepository.getAllGames()
             .onEach { games -> _uiState.update { it.copy(totalGames = games.size) } }
-            .catch { }
             .launchIn(viewModelScope)
     }
 
     private fun observeTotalPlayers() {
         playerRepository.getAllPlayers()
             .onEach { players -> _uiState.update { it.copy(totalPlayers = players.size) } }
-            .catch { }
             .launchIn(viewModelScope)
     }
 }

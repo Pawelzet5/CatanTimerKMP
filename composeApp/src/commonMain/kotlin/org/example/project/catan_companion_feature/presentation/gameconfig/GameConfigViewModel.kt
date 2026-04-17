@@ -17,6 +17,7 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
 import org.example.project.catan_companion_feature.domain.usecase.CreateGameUseCase
 import org.example.project.core.domain.Result
+import org.example.project.core.presentation.toUiText
 
 class GameConfigViewModel(
     private val playerRepository: PlayerRepository,
@@ -65,6 +66,21 @@ class GameConfigViewModel(
         revalidate()
     }
 
+    fun onPlayersSelected(players: List<Player>) {
+        val toAdd = players.filter { it !in _uiState.value.selectedPlayers }
+        if (toAdd.isEmpty()) return
+        _uiState.update { it.copy(selectedPlayers = it.selectedPlayers + toAdd) }
+        revalidate()
+    }
+
+    fun onPlayerCountSelected(count: Int) {
+        _uiState.update { it.copy(
+            numberOfPlayers = count,
+            selectedPlayers = it.selectedPlayers.take(count)
+        ) }
+        revalidate()
+    }
+
     fun onStartGame() {
         viewModelScope.launch {
             val state = _uiState.value
@@ -77,7 +93,7 @@ class GameConfigViewModel(
             when (result) {
                 is Result.Success -> _navigateToGameplay.emit(result.data)
                 is Result.Failure -> _uiState.update {
-                    it.copy(validationError = "Invalid game configuration")
+                    it.copy(validationError = result.error.toUiText())
                 }
             }
         }
@@ -85,8 +101,9 @@ class GameConfigViewModel(
 
     private fun revalidate() {
         val state = _uiState.value
-        val valid = state.selectedPlayers.size in 3..6 &&
-            (!state.specialTurnRuleEnabled || state.selectedPlayers.size >= 5)
+        val hasCorrectCount = state.selectedPlayers.size == state.numberOfPlayers
+        val specialTurnRuleValid = !state.specialTurnRuleEnabled || state.numberOfPlayers >= 5
+        val valid = hasCorrectCount && specialTurnRuleValid
         _uiState.update { it.copy(isValid = valid, validationError = if (valid) null else it.validationError) }
     }
 }

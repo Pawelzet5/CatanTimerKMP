@@ -198,3 +198,5 @@ feat(ui): implement GameConfigScreen
 - Kolory, odstępy i typografia wyłącznie z `MaterialTheme` / `CatanTimerTheme` — zero wartości inline
 - Back navigation: `navController.popBackStack()` — nie `finish()` ani `onBackPressed()`
 - `selectionMode` w `PlayersListScreen` jest przekazywany jako argument nawigacyjny przez `navArgument` w `NavHost` — patrz `CatanCompanionRoute.PlayersList.createRoute(selectionMode = true)`
+- **Ikony UI:** używaj SVG ikony z `commonMain/composeResources/drawable/` (np. `ic_play`, `ic_plus`, `ic_person`, `ic_menu`) przez `painterResource(Res.drawable.ic_*)` wewnątrz komponentu `Icon` — nigdy nie zastępuj ikon znakami unicode ani stringami w `Text`
+- **Kolory w composables:** nigdy nie używaj surowych stałych palety (np. `CatanOrange`, `CatanSuccessDark`) bezpośrednio w composable. Kolor musi być zawsze odczytany przez `MaterialTheme.colorScheme.*` lub `MaterialTheme.catanColors.*` — tylko wtedy light/dark switching działa automatycznie. Surowe stałe z `Color.kt` są widoczne wyłącznie z poziomu `ExtendedColors.kt` i `Color.kt` (definicja schematów)

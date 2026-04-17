@@ -1,31 +1,12 @@
 package org.example.project.catan_companion_feature.presentation.dashboard
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -33,32 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import catantimer.composeapp.generated.resources.Res
-import catantimer.composeapp.generated.resources.dashboard_games_list
-import catantimer.composeapp.generated.resources.dashboard_new_game
-import catantimer.composeapp.generated.resources.dashboard_players_list
-import catantimer.composeapp.generated.resources.dashboard_recent_activity
-import catantimer.composeapp.generated.resources.dashboard_resume_game
-import catantimer.composeapp.generated.resources.dashboard_subtitle
-import catantimer.composeapp.generated.resources.dashboard_title
+import catantimer.composeapp.generated.resources.*
 import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.core.designsystem.CatanBrown
-import org.example.project.core.designsystem.CatanCategoryGames
-import org.example.project.core.designsystem.CatanCategoryGamesDark
-import org.example.project.core.designsystem.CatanCategoryGamesSubtle
-import org.example.project.core.designsystem.CatanCategoryGamesSubtleDark
-import org.example.project.core.designsystem.CatanHeaderGradientEnd
-import org.example.project.core.designsystem.CatanInfo
-import org.example.project.core.designsystem.CatanInfoDark
-import org.example.project.core.designsystem.CatanInfoSubtle
-import org.example.project.core.designsystem.CatanOrange
-import org.example.project.core.designsystem.CatanOrangeDark
-import org.example.project.core.designsystem.CatanOrangeSubtle
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.CatanSuccess
-import org.example.project.core.designsystem.CatanSuccessDark
-import org.example.project.core.designsystem.CatanSuccessSubtle
-import org.jetbrains.compose.resources.stringResource
+import org.example.project.core.designsystem.*
+import org.jetbrains.compose.resources.*
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -74,7 +33,9 @@ fun DashboardScreen(
     Column(modifier = Modifier.fillMaxSize()) {
         DashboardHeader()
         LazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface),
             contentPadding = PaddingValues(
                 start = CatanSpacing.md,
                 end = CatanSpacing.md,
@@ -145,8 +106,7 @@ private fun ResumeGameCard(
     game: Game,
     onResume: () -> Unit
 ) {
-    val isDark = isSystemInDarkTheme()
-    val successColor = if (isDark) CatanSuccessDark else CatanSuccess
+    val ext = MaterialTheme.catanColors
 
     Card(
         modifier = Modifier
@@ -169,13 +129,14 @@ private fun ResumeGameCard(
             Box(
                 modifier = Modifier
                     .size(48.dp)
-                    .background(color = CatanSuccessSubtle, shape = CircleShape),
+                    .background(color = ext.successContainer, shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "▶",
-                    fontSize = 18.sp,
-                    color = successColor
+                Icon(
+                    painter = painterResource(Res.drawable.ic_play),
+                    contentDescription = null,
+                    tint = ext.successIcon,
+                    modifier = Modifier.size(24.dp)
                 )
             }
             Column(modifier = Modifier.weight(1f)) {
@@ -197,10 +158,11 @@ private fun ResumeGameCard(
                     )
                 }
             }
-            Text(
-                text = "›",
-                fontSize = 22.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+            Icon(
+                painter = painterResource(Res.drawable.ic_play),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.size(20.dp)
             )
         }
     }
@@ -212,7 +174,8 @@ private fun ActionCardsRow(
     onGamesList: () -> Unit,
     onPlayersList: () -> Unit
 ) {
-    val isDark = isSystemInDarkTheme()
+    val scheme = MaterialTheme.colorScheme
+    val ext = MaterialTheme.catanColors
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -220,28 +183,28 @@ private fun ActionCardsRow(
     ) {
         ActionCard(
             label = stringResource(Res.string.dashboard_new_game),
-            symbol = "+",
-            symbolColor = if (isDark) CatanOrangeDark else CatanOrange,
-            symbolBackground = CatanOrangeSubtle,
-            borderColor = if (isDark) CatanOrangeDark else CatanOrange,
+            icon = Res.drawable.ic_plus,
+            iconColor = scheme.primary,
+            iconBackground = scheme.primaryContainer,
+            borderColor = scheme.primary,
             onClick = onNewGame,
             modifier = Modifier.weight(1f)
         )
         ActionCard(
             label = stringResource(Res.string.dashboard_games_list),
-            symbol = "☰",
-            symbolColor = if (isDark) CatanCategoryGamesDark else CatanCategoryGames,
-            symbolBackground = if (isDark) CatanCategoryGamesSubtleDark else CatanCategoryGamesSubtle,
-            borderColor = if (isDark) CatanCategoryGamesDark else CatanCategoryGames,
+            icon = Res.drawable.ic_menu,
+            iconColor = ext.gamesIcon,
+            iconBackground = ext.gamesContainer,
+            borderColor = ext.gamesIcon,
             onClick = onGamesList,
             modifier = Modifier.weight(1f)
         )
         ActionCard(
             label = stringResource(Res.string.dashboard_players_list),
-            symbol = "◉",
-            symbolColor = if (isDark) CatanInfoDark else CatanInfo,
-            symbolBackground = CatanInfoSubtle,
-            borderColor = if (isDark) CatanInfoDark else CatanInfo,
+            icon = Res.drawable.ic_person,
+            iconColor = ext.infoIcon,
+            iconBackground = ext.infoContainer,
+            borderColor = ext.infoIcon,
             onClick = onPlayersList,
             modifier = Modifier.weight(1f)
         )
@@ -251,9 +214,9 @@ private fun ActionCardsRow(
 @Composable
 private fun ActionCard(
     label: String,
-    symbol: String,
-    symbolColor: Color,
-    symbolBackground: Color,
+    icon: DrawableResource,
+    iconColor: Color,
+    iconBackground: Color,
     borderColor: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -276,13 +239,14 @@ private fun ActionCard(
             Box(
                 modifier = Modifier
                     .size(52.dp)
-                    .background(color = symbolBackground, shape = CircleShape),
+                    .background(color = iconBackground, shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = symbol,
-                    fontSize = 22.sp,
-                    color = symbolColor
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier.size(26.dp)
                 )
             }
             Text(

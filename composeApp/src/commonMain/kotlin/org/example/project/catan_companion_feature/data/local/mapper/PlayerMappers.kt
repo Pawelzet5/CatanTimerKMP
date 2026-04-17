@@ -8,11 +8,13 @@ fun PlayerEntity.toDomain(gamesPlayed: Int = 0, gamesWon: Int = 0): Player = Pla
     name = name,
     isHidden = isHidden,
     gamesPlayed = gamesPlayed,
-    gamesWon = gamesWon
+    gamesWon = gamesWon,
+    createdAt = createdAt
 )
 
 fun Player.toEntity(): PlayerEntity = PlayerEntity(
     id = id,
     name = name,
-    isHidden = isHidden
+    isHidden = isHidden,
+    createdAt = createdAt ?: System.currentTimeMillis()
 )
