@@ -8,8 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
+import org.example.project.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
 import org.koin.compose.viewmodel.koinViewModel
 import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreen
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigScreen
@@ -45,15 +45,15 @@ fun App() {
             }
             composable<GameConfigRoute> { backStackEntry ->
                 val viewModel = koinViewModel<GameConfigViewModel>()
+                val selectionViewModel = koinViewModel<PlayersSelectionViewModel>(
+                    viewModelStoreOwner = backStackEntry
+                )
 
-                val selectedPlayerId by backStackEntry.savedStateHandle
-                    .getStateFlow<Long?>("selected_player_id", null)
-                    .collectAsState()
-
-                LaunchedEffect(selectedPlayerId) {
-                    selectedPlayerId?.let { id ->
-                        viewModel.onPlayerSelectedById(id)
-                        backStackEntry.savedStateHandle.remove<Long>("selected_player_id")
+                val pendingSelection by selectionViewModel.pendingSelection.collectAsState()
+                LaunchedEffect(pendingSelection) {
+                    pendingSelection?.let { players ->
+                        viewModel.onPlayersSelected(players)
+                        selectionViewModel.clearSelection()
                     }
                 }
 
@@ -80,14 +80,23 @@ fun App() {
             }
             composable<PlayersListRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<PlayersListRoute>()
+
+                // Navigation contract: PlayersListRoute(selectionMode = true) is only navigated
+                // to from GameConfigRoute, so its back stack entry is always present in that case.
+                val selectionViewModel = koinViewModel<PlayersSelectionViewModel>(
+                    viewModelStoreOwner = if (route.selectionMode) {
+                        navController.getBackStackEntry(GameConfigRoute)
+                    } else {
+                        backStackEntry
+                    }
+                )
+
                 PlayersListScreen(
                     isSelectionMode = route.selectionMode,
                     onNavigateBack = { navController.popBackStack() },
                     onPlayerClick = { playerId -> navController.navigate(PlayerDetailsRoute(playerId)) },
-                    onPlayerSelected = { player ->
-                        navController.previousBackStackEntry
-                            ?.savedStateHandle
-                            ?.set("selected_player_id", player.id)
+                    onPlayersSelected = { players ->
+                        selectionViewModel.setSelectedPlayers(players)
                         navController.popBackStack()
                     }
                 )

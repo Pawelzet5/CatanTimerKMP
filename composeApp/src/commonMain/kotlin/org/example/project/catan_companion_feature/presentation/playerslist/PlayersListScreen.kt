@@ -1,9 +1,10 @@
 package org.example.project.catan_companion_feature.presentation.playerslist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,16 +13,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -36,23 +38,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.common_back
 import catantimer.composeapp.generated.resources.common_cancel
 import catantimer.composeapp.generated.resources.common_confirm
 import catantimer.composeapp.generated.resources.common_delete
+import catantimer.composeapp.generated.resources.ic_plus
 import catantimer.composeapp.generated.resources.players_add
 import catantimer.composeapp.generated.resources.players_add_dialog_title
+import catantimer.composeapp.generated.resources.players_add_title
 import catantimer.composeapp.generated.resources.players_delete
 import catantimer.composeapp.generated.resources.players_delete_confirm_message
+import catantimer.composeapp.generated.resources.players_done_count
+import catantimer.composeapp.generated.resources.players_games_count
 import catantimer.composeapp.generated.resources.players_hide
 import catantimer.composeapp.generated.resources.players_name_hint
+import catantimer.composeapp.generated.resources.players_selection_hint
 import catantimer.composeapp.generated.resources.players_title
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
+import org.example.project.catan_companion_feature.presentation.components.PlayerAvatar
+import org.example.project.catan_companion_feature.presentation.components.PlayerAvatarSize
 import org.example.project.catan_companion_feature.presentation.components.PlayerListItem
 import org.example.project.core.designsystem.CatanSpacing
+import org.example.project.core.designsystem.components.CatanCheckbox
 import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +74,7 @@ fun PlayersListScreen(
     isSelectionMode: Boolean = false,
     onNavigateBack: () -> Unit,
     onPlayerClick: (Long) -> Unit,
-    onPlayerSelected: (Player) -> Unit,
+    onPlayersSelected: (List<Player>) -> Unit,
     viewModel: PlayersListViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -69,63 +82,71 @@ fun PlayersListScreen(
     var showAddDialog by remember { mutableStateOf(false) }
     var playerWithMenu by remember { mutableStateOf<Player?>(null) }
     var playerToDelete by remember { mutableStateOf<Player?>(null) }
+    val selectedIds = remember { mutableStateOf(emptySet<Long>()) }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(Res.string.players_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(Res.string.common_back)
-                        )
+            if (isSelectionMode) {
+                SelectionTopBar(
+                    selectedCount = selectedIds.value.size,
+                    onCancel = onNavigateBack,
+                    onDone = {
+                        onPlayersSelected(uiState.players.filter { it.id in selectedIds.value })
                     }
-                },
-                actions = {
-                    if (!isSelectionMode) {
-                        TextButton(onClick = { showAddDialog = true }) {
-                            Text(stringResource(Res.string.players_add))
-                        }
-                    }
-                }
-            )
+                )
+            } else {
+                NormalTopBar(
+                    onNavigateBack = onNavigateBack,
+                    onAdd = { showAddDialog = true }
+                )
+            }
         }
     ) { paddingValues ->
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues),
-            contentPadding = PaddingValues(vertical = CatanSpacing.xs)
+                .padding(paddingValues)
         ) {
-            items(uiState.players, key = { it.id }) { player ->
-                PlayerListItemWithActions(
-                    player = player,
-                    isSelectionMode = isSelectionMode,
-                    isMenuExpanded = playerWithMenu == player,
-                    onItemClick = {
-                        if (isSelectionMode) {
-                            onPlayerSelected(player)
-                            onNavigateBack()
-                        } else {
-                            onPlayerClick(player.id)
-                        }
-                    },
-                    onLongClick = { playerWithMenu = player },
-                    onDismissMenu = { playerWithMenu = null },
-                    onHide = {
-                        playerWithMenu = null
-                        viewModel.onHidePlayer(player)
-                    },
-                    onDelete = {
-                        playerWithMenu = null
-                        playerToDelete = player
+            if (isSelectionMode) {
+                SelectionHintBanner()
+            }
+
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(CatanSpacing.md),
+                verticalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
+            ) {
+                items(uiState.players, key = { it.id }) { player ->
+                    if (isSelectionMode) {
+                        SelectionPlayerItem(
+                            player = player,
+                            isSelected = player.id in selectedIds.value,
+                            onToggle = {
+                                selectedIds.value = if (player.id in selectedIds.value) {
+                                    selectedIds.value - player.id
+                                } else {
+                                    selectedIds.value + player.id
+                                }
+                            }
+                        )
+                    } else {
+                        NormalPlayerItem(
+                            player = player,
+                            isMenuExpanded = playerWithMenu == player,
+                            onItemClick = { onPlayerClick(player.id) },
+                            onLongClick = { playerWithMenu = player },
+                            onDismissMenu = { playerWithMenu = null },
+                            onHide = {
+                                playerWithMenu = null
+                                viewModel.onHidePlayer(player)
+                            },
+                            onDelete = {
+                                playerWithMenu = null
+                                playerToDelete = player
+                            }
+                        )
                     }
-                )
-                HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = CatanSpacing.md),
-                    color = MaterialTheme.colorScheme.outlineVariant
-                )
+                }
             }
         }
     }
@@ -154,11 +175,141 @@ fun PlayersListScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NormalTopBar(
+    onNavigateBack: () -> Unit,
+    onAdd: () -> Unit
+) {
+    TopAppBar(
+        title = { Text(stringResource(Res.string.players_title)) },
+        navigationIcon = {
+            IconButton(onClick = onNavigateBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(Res.string.common_back)
+                )
+            }
+        },
+        actions = {
+            IconButton(
+                onClick = onAdd,
+                shape = CircleShape,
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                ),
+                modifier = Modifier
+                    .padding(end = CatanSpacing.xs)
+            ) {
+                Icon(
+                    imageVector = vectorResource(Res.drawable.ic_plus),
+                    contentDescription = stringResource(Res.string.players_add),
+                )
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SelectionTopBar(
+    selectedCount: Int,
+    onCancel: () -> Unit,
+    onDone: () -> Unit
+) {
+    TopAppBar(
+        title = { Text(stringResource(Res.string.players_add_title)) },
+        navigationIcon = {
+            TextButton(onClick = onCancel) {
+                Text(
+                    text = stringResource(Res.string.common_cancel),
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+        },
+        actions = {
+            TextButton(
+                onClick = onDone,
+                enabled = selectedCount > 0,
+                modifier = Modifier
+                    .padding(end = CatanSpacing.xs)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(
+                        if (selectedCount > 0) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.surfaceVariant
+                    )
+            ) {
+                Text(
+                    text = stringResource(Res.string.players_done_count, selectedCount),
+                    color = if (selectedCount > 0) MaterialTheme.colorScheme.onPrimary
+                    else MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    )
+}
+
+@Composable
+private fun SelectionHintBanner() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.secondaryContainer)
+            .padding(horizontal = CatanSpacing.md, vertical = CatanSpacing.sm)
+    ) {
+        Text(
+            text = stringResource(Res.string.players_selection_hint),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSecondaryContainer
+        )
+    }
+}
+
+@Composable
+private fun SelectionPlayerItem(
+    player: Player,
+    isSelected: Boolean,
+    onToggle: () -> Unit
+) {
+    val bgColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
+    else MaterialTheme.colorScheme.surfaceVariant
+    val borderModifier = if (isSelected)
+        Modifier.border(1.5.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp))
+    else Modifier
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(12.dp))
+            .background(bgColor)
+            .then(borderModifier)
+            .combinedClickable(onClick = onToggle)
+            .padding(CatanSpacing.md),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.md)
+    ) {
+        CatanCheckbox(checked = isSelected, onCheckedChange = onToggle)
+        PlayerAvatar(name = player.name, colorIndex = player.id.toInt(), size = PlayerAvatarSize.Small)
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = player.name,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = stringResource(Res.string.players_games_count, player.gamesPlayed),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun PlayerListItemWithActions(
+private fun NormalPlayerItem(
     player: Player,
-    isSelectionMode: Boolean,
     isMenuExpanded: Boolean,
     onItemClick: () -> Unit,
     onLongClick: () -> Unit,
@@ -166,40 +317,15 @@ private fun PlayerListItemWithActions(
     onHide: () -> Unit,
     onDelete: () -> Unit
 ) {
-    Box {
-        if (isSelectionMode) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .combinedClickable(onClick = onItemClick)
-                    .padding(horizontal = CatanSpacing.md, vertical = CatanSpacing.sm),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = player.name,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        } else {
-            PlayerListItem(
-                player = player,
+    androidx.compose.foundation.layout.Box {
+        PlayerListItem(
+            player = player,
+            onClick = onItemClick,
+            modifier = Modifier.combinedClickable(
                 onClick = onItemClick,
-                modifier = Modifier.combinedClickable(
-                    onClick = onItemClick,
-                    onLongClick = onLongClick
-                )
+                onLongClick = onLongClick
             )
-        }
-
+        )
         DropdownMenu(
             expanded = isMenuExpanded,
             onDismissRequest = onDismissMenu
@@ -248,6 +374,7 @@ private fun AddPlayerDialog(
                 Text(stringResource(Res.string.common_confirm))
             }
         },
+        containerColor = MaterialTheme.colorScheme.surface,
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(stringResource(Res.string.common_cancel))
