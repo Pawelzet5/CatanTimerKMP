@@ -98,6 +98,9 @@
     <string name="games_turn_count">Turn %1$d</string>
     <string name="games_winner">Winner: %1$s</string>
 
+    <!-- Confirm End Game -->
+    <string name="confirm_end_game_message">Are you sure you want to end the game? This action cannot be undone.</string>
+
     <!-- Menu -->
     <string name="menu_statistics">View Statistics</string>
     <string name="menu_settings">Change Game Settings</string>

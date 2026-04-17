@@ -29,9 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
+import catantimer.composeapp.generated.resources.confirm_end_game_message
 import catantimer.composeapp.generated.resources.config_cities_knights
 import catantimer.composeapp.generated.resources.config_in_between_turns
 import catantimer.composeapp.generated.resources.config_seafarers
@@ -65,7 +67,6 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-// @OptIn required for ModalBottomSheet which is experimental in Material3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameplayScreen(
@@ -77,7 +78,6 @@ fun GameplayScreen(
     viewModel: GameplayViewModel = koinViewModel { parametersOf(gameId) }
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var showEndGameConfirm by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -164,7 +164,7 @@ fun GameplayScreen(
             },
             onEndGame = {
                 viewModel.onHideSettingsSheet()
-                showEndGameConfirm = true
+                viewModel.onShowEndGameConfirm()
             }
         )
     }
@@ -179,16 +179,16 @@ fun GameplayScreen(
         }
     }
 
-    if (showEndGameConfirm) {
+    if (uiState.showEndGameConfirm) {
         ConfirmationDialog(
             title = stringResource(Res.string.menu_end_game),
-            message = stringResource(Res.string.settings_warning_message),
+            message = stringResource(Res.string.confirm_end_game_message),
             onConfirm = {
-                showEndGameConfirm = false
+                viewModel.onHideEndGameConfirm()
                 viewModel.onEndGame()
                 onNavigateToWinnerSelection(gameId)
             },
-            onDismiss = { showEndGameConfirm = false }
+            onDismiss = viewModel::onHideEndGameConfirm
         )
     }
 }
@@ -335,7 +335,6 @@ private fun DiceSelectionContent(
     }
 }
 
-// @OptIn required for ModalBottomSheet which is experimental in Material3
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsBottomSheet(
@@ -404,7 +403,7 @@ private fun SettingsMenuContent(
 private fun SettingsMenuItem(
     label: String,
     onClick: () -> Unit,
-    color: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface
+    color: Color = MaterialTheme.colorScheme.onSurface
 ) {
     Text(
         text = label,

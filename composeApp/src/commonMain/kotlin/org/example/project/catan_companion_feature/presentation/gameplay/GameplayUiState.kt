@@ -19,6 +19,7 @@ data class GameplayUiState(
     val pendingDiceEdit: DiceRoll? = null,
     val showStatisticsPopup: Boolean = false,
     val showSettingsSheet: Boolean = false,
+    val showEndGameConfirm: Boolean = false,
     val isLoading: Boolean = false,
     val error: String? = null
 )

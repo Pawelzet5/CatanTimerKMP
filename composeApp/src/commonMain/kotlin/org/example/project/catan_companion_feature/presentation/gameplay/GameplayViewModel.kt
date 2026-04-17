@@ -125,15 +125,18 @@ class GameplayViewModel(
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
     }
 
+    private var primaryElapsedMillis: Long = 0L
+
     fun onStartInBetweenTurn() {
-        timerManager.stop()
+        primaryElapsedMillis = timerManager.stop()
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
         _uiState.update { it.copy(phase = GameplayPhase.IN_BETWEEN_TIMER) }
     }
 
     fun onNextTurn() {
         viewModelScope.launch {
-            val elapsed = timerManager.stop()
+            val elapsed = primaryElapsedMillis + timerManager.stop()
+            primaryElapsedMillis = 0L
             sessionCoordinator.completeTurn(elapsed)
             _uiState.update { it.copy(phase = GameplayPhase.DICE_SELECTION, pendingDiceEdit = null) }
         }
@@ -204,5 +207,13 @@ class GameplayViewModel(
 
     fun onHideSettingsSheet() {
         _uiState.update { it.copy(showSettingsSheet = false) }
+    }
+
+    fun onShowEndGameConfirm() {
+        _uiState.update { it.copy(showEndGameConfirm = true) }
+    }
+
+    fun onHideEndGameConfirm() {
+        _uiState.update { it.copy(showEndGameConfirm = false) }
     }
 }
