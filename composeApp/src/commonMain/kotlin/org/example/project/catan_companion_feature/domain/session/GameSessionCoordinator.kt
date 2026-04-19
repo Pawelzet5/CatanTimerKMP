@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import org.example.project.catan_companion_feature.domain.dataclass.Turn
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.factory.TurnFactory
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
@@ -24,6 +25,7 @@ interface GameSessionCoordinator {
     suspend fun completeTurn(durationMillis: Long): Result<Unit, Error>
     suspend fun updateSelectedTurnDice(redDice: Int?, yellowDice: Int?, eventDice: EventDiceType?): EmptyResult<DataError.Local>
     suspend fun updateSelectedTurnDuration(durationMillis: Long): EmptyResult<DataError.Local>
+    suspend fun updateTurnDice(turn: Turn, redDice: Int?, yellowDice: Int?, eventDice: EventDiceType?): EmptyResult<DataError.Local>
 }
 
 class GameSessionCoordinatorImpl(
@@ -156,7 +158,12 @@ class GameSessionCoordinatorImpl(
 
         return turnRepository.updateTurn(updatedTurn)
             .onSuccess {
-                _currentSession.update { it?.copy(selectedTurn = updatedTurn) }
+                _currentSession.update { session ->
+                    session?.let { s ->
+                        val newLatest = if (s.latestTurn.id == updatedTurn.id) updatedTurn else s.latestTurn
+                        s.copy(selectedTurn = updatedTurn, latestTurn = newLatest)
+                    }
+                }
             }
     }
 
@@ -173,6 +180,32 @@ class GameSessionCoordinatorImpl(
             .onSuccess {
                 _currentSession.update { it?.copy(selectedTurn = updatedTurn) }
             }
+    }
+
+    /**
+     * Updates dice rolls for any turn (including historical ones) and syncs all in-memory copies.
+     */
+    override suspend fun updateTurnDice(
+        turn: Turn,
+        redDice: Int?,
+        yellowDice: Int?,
+        eventDice: EventDiceType?
+    ): EmptyResult<DataError.Local> {
+        val session = _currentSession.value
+            ?: return Result.Failure(DataError.Local.NOT_FOUND)
+
+        val updatedTurn = turn.copy(redDice = redDice, yellowDice = yellowDice, eventDice = eventDice)
+
+        return turnRepository.updateTurn(updatedTurn).onSuccess {
+            _currentSession.update { s ->
+                s?.let {
+                    val newLatest = if (it.latestTurn.id == updatedTurn.id) updatedTurn else it.latestTurn
+                    val newRecent = it.recentTurns.map { t -> if (t.id == updatedTurn.id) updatedTurn else t }
+                    val newSelected = if (it.selectedTurn.id == updatedTurn.id) updatedTurn else it.selectedTurn
+                    it.copy(latestTurn = newLatest, recentTurns = newRecent, selectedTurn = newSelected)
+                }
+            }
+        }
     }
 
     private fun clearSession() {

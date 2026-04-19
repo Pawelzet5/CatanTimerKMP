@@ -19,6 +19,9 @@ interface PlayerDao {
     @Query("SELECT * FROM players WHERE id = :id")
     fun getById(id: Long): Flow<PlayerEntity?>
 
+    @Query("SELECT * FROM players WHERE id = :id")
+    suspend fun getByIdOnce(id: Long): PlayerEntity?
+
     @Insert
     suspend fun insert(player: PlayerEntity): Long
 
