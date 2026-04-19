@@ -82,9 +82,9 @@ class TurnRepositoryImpl(
     }
 
     private suspend fun TurnEntity.toDomainWithPlayerName(): Turn {
-        val playerName = playerDao.getById(playerId).first()?.name ?: ""
+        val playerName = playerDao.getByIdOnce(playerId)?.name ?: ""
         val secondaryPlayerName = secondaryPlayerId?.let {
-            playerDao.getById(it).first()?.name
+            playerDao.getByIdOnce(it)?.name
         }
         return toDomain(playerName = playerName, secondaryPlayerName = secondaryPlayerName)
     }

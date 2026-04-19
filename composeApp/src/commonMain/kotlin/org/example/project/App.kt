@@ -14,6 +14,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreen
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigScreen
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreen
+import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
 import org.example.project.catan_companion_feature.presentation.gameslist.GamesListScreen
 import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryScreen
 import org.example.project.catan_companion_feature.presentation.navigation.DashboardRoute
@@ -71,7 +72,7 @@ fun App() {
             }
             composable<GameplayRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<GameplayRoute>()
-                GameplayScreen(
+                GameplayScreenRoot(
                     gameId = route.gameId,
                     onNavigateToSummary = { gameId ->
                         navController.navigate(GameSummaryRoute(gameId))

@@ -20,6 +20,7 @@ data class GameplayUiState(
     val showStatisticsPopup: Boolean = false,
     val showSettingsSheet: Boolean = false,
     val showEndGameConfirm: Boolean = false,
+    val showHistoricalEditConfirm: Boolean = false,
     val isLoading: Boolean = false,
     val error: String? = null
 )

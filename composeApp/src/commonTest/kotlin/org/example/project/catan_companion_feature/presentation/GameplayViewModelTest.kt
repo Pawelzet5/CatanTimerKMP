@@ -10,6 +10,7 @@ import kotlinx.coroutines.test.setMain
 import org.example.project.catan_companion_feature.data.fakes.FakeGameSessionCoordinator
 import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
 import org.example.project.catan_companion_feature.data.fakes.repository.FakeTurnRepository
+import org.example.project.catan_companion_feature.presentation.gameplay.GameplayAction
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayPhase
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayViewModel
 import org.example.project.catan_companion_feature.testSessionWithMultipleTurns
@@ -46,8 +47,8 @@ class GameplayViewModelTest {
     fun `GameplayViewModel continueFromDice, dice sum is 7, phase transitions to EVENT`() =
         runTest(testDispatcher) {
             val viewModel = makeViewModel()
-            viewModel.onDiceSelected(red = 3, yellow = 4, event = null)
-            viewModel.onContinueFromDice()
+            viewModel.onAction(GameplayAction.DiceSelected(red = 3, yellow = 4, event = null))
+            viewModel.onAction(GameplayAction.ContinueFromDiceClick)
             advanceUntilIdle()
             assertEquals(GameplayPhase.EVENT, viewModel.uiState.value.phase)
         }
@@ -56,8 +57,8 @@ class GameplayViewModelTest {
     fun `GameplayViewModel continueFromDice, dice sum is not 7, phase transitions to MAIN_TIMER`() =
         runTest(testDispatcher) {
             val viewModel = makeViewModel()
-            viewModel.onDiceSelected(red = 2, yellow = 4, event = null)
-            viewModel.onContinueFromDice()
+            viewModel.onAction(GameplayAction.DiceSelected(red = 2, yellow = 4, event = null))
+            viewModel.onAction(GameplayAction.ContinueFromDiceClick)
             advanceUntilIdle()
             assertEquals(GameplayPhase.MAIN_TIMER, viewModel.uiState.value.phase)
         }
@@ -69,7 +70,7 @@ class GameplayViewModelTest {
             coordinator.setSession(testSessionWithMultipleTurns())
             val viewModel = makeViewModel(coordinator = coordinator)
             advanceUntilIdle()
-            viewModel.onNavigateToPreviousTurn()
+            viewModel.onAction(GameplayAction.PreviousClick)
             assertFalse(viewModel.uiState.value.isViewingLatest)
         }
 
@@ -80,8 +81,8 @@ class GameplayViewModelTest {
             coordinator.setSession(testSessionWithMultipleTurns())
             val viewModel = makeViewModel(coordinator = coordinator)
             advanceUntilIdle()
-            viewModel.onNavigateToPreviousTurn()
-            viewModel.onJumpToCurrentTurn()
+            viewModel.onAction(GameplayAction.PreviousClick)
+            viewModel.onAction(GameplayAction.JumpToCurrentClick)
             assertTrue(viewModel.uiState.value.isViewingLatest)
         }
 
@@ -89,10 +90,10 @@ class GameplayViewModelTest {
     fun `GameplayViewModel nextTurn, turn completed, phase resets to DICE_SELECTION`() =
         runTest(testDispatcher) {
             val viewModel = makeViewModel()
-            viewModel.onDiceSelected(2, 4, null)
-            viewModel.onContinueFromDice()
+            viewModel.onAction(GameplayAction.DiceSelected(red = 2, yellow = 4, event = null))
+            viewModel.onAction(GameplayAction.ContinueFromDiceClick)
             advanceUntilIdle()
-            viewModel.onNextTurn()
+            viewModel.onAction(GameplayAction.NextTurnClick)
             advanceUntilIdle()
             assertEquals(GameplayPhase.DICE_SELECTION, viewModel.uiState.value.phase)
         }

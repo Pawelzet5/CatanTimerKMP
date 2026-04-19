@@ -33,15 +33,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
-import catantimer.composeapp.generated.resources.confirm_end_game_message
 import catantimer.composeapp.generated.resources.config_cities_knights
 import catantimer.composeapp.generated.resources.config_in_between_turns
 import catantimer.composeapp.generated.resources.config_seafarers
+import catantimer.composeapp.generated.resources.confirm_end_game_message
 import catantimer.composeapp.generated.resources.gameplay_continue
 import catantimer.composeapp.generated.resources.gameplay_in_between
 import catantimer.composeapp.generated.resources.gameplay_next_turn
 import catantimer.composeapp.generated.resources.gameplay_player_turn
 import catantimer.composeapp.generated.resources.gameplay_turn
+import catantimer.composeapp.generated.resources.historical_edit_message
+import catantimer.composeapp.generated.resources.historical_edit_title
 import catantimer.composeapp.generated.resources.menu_end_game
 import catantimer.composeapp.generated.resources.menu_settings
 import catantimer.composeapp.generated.resources.menu_statistics
@@ -54,6 +56,7 @@ import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.enums.DiceType
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
+import org.example.project.core.presentation.ObserveAsEvents
 import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
 import org.example.project.catan_companion_feature.presentation.components.dice.DiceRow
 import org.example.project.catan_companion_feature.presentation.components.dice.EventDiceRow
@@ -67,9 +70,8 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameplayScreen(
+fun GameplayScreenRoot(
     gameId: Long,
     onNavigateToSummary: (Long) -> Unit,
     onNavigateToWinnerSelection: (Long) -> Unit,
@@ -79,11 +81,73 @@ fun GameplayScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            is GameplayEvent.NavigateToWinnerSelection -> onNavigateToWinnerSelection(event.gameId)
+            GameplayEvent.NavigateToGameConfig -> onNavigateToGameConfig()
+        }
+    }
+
+    GameplayScreen(
+        uiState = uiState,
+        onAction = viewModel::onAction
+    )
+
+    if (uiState.showSettingsSheet) {
+        SettingsBottomSheet(
+            game = uiState.game,
+            onDismiss = { viewModel.onAction(GameplayAction.DismissSettingsSheetClick) },
+            onViewStatistics = { viewModel.onAction(GameplayAction.ViewStatisticsClick) },
+            onSaveSettings = { expansions, specialTurnRuleEnabled ->
+                viewModel.onAction(GameplayAction.SaveSettingsClick(expansions, specialTurnRuleEnabled))
+            },
+            onStartNewGame = { viewModel.onAction(GameplayAction.StartNewGameClick) },
+            onEndGame = { viewModel.onAction(GameplayAction.EndGameClick) }
+        )
+    }
+
+    if (uiState.showStatisticsPopup) {
+        val distribution = uiState.diceDistribution
+        if (distribution != null) {
+            StatisticsPopup(
+                distribution = distribution,
+                onDismiss = { viewModel.onAction(GameplayAction.DismissStatisticsPopupClick) }
+            )
+        }
+    }
+
+    if (uiState.showEndGameConfirm) {
+        ConfirmationDialog(
+            title = stringResource(Res.string.menu_end_game),
+            message = stringResource(Res.string.confirm_end_game_message),
+            onConfirm = { viewModel.onAction(GameplayAction.ConfirmEndGameClick) },
+            onDismiss = { viewModel.onAction(GameplayAction.DismissEndGameConfirmClick) }
+        )
+    }
+
+    if (uiState.showHistoricalEditConfirm) {
+        val displayedTurnNumber = uiState.displayedTurn?.number ?: 0
+        val currentTurnNumber = uiState.currentTurn?.number ?: 0
+        ConfirmationDialog(
+            title = stringResource(Res.string.historical_edit_title),
+            message = stringResource(Res.string.historical_edit_message, displayedTurnNumber, currentTurnNumber),
+            onConfirm = { viewModel.onAction(GameplayAction.ConfirmHistoricalEditClick) },
+            onDismiss = { viewModel.onAction(GameplayAction.DismissHistoricalEditConfirmClick) }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GameplayScreen(
+    uiState: GameplayUiState,
+    onAction: (GameplayAction) -> Unit
+) {
     Scaffold(
         topBar = {
             GameplayAppBar(
                 uiState = uiState,
-                onMenuClick = viewModel::onShowSettingsSheet
+                onMenuClick = { onAction(GameplayAction.MenuClick) }
             )
         }
     ) { paddingValues ->
@@ -94,102 +158,61 @@ fun GameplayScreen(
         ) {
             TurnNavigatorBar(
                 uiState = uiState,
-                onPrevious = viewModel::onNavigateToPreviousTurn,
-                onNext = viewModel::onNavigateToNextTurn,
-                onJumpToCurrent = viewModel::onJumpToCurrentTurn
+                onPrevious = { onAction(GameplayAction.PreviousClick) },
+                onNext = { onAction(GameplayAction.NextClick) },
+                onJumpToCurrent = { onAction(GameplayAction.JumpToCurrentClick) }
             )
 
-            when (uiState.phase) {
-                GameplayPhase.DICE_SELECTION -> DiceSelectionContent(
-                    uiState = uiState,
-                    onDiceSelected = viewModel::onDiceSelected,
-                    onEventDiceSelected = { event ->
-                        val dice = uiState.pendingDiceEdit
-                        viewModel.onDiceSelected(dice?.red ?: 0, dice?.yellow ?: 0, event)
-                    },
-                    onContinue = viewModel::onContinueFromDice
+            if (!uiState.isViewingLatest) {
+                val turn = uiState.displayedTurn ?: return@Column
+                HistoricalDiceContent(
+                    turn = turn,
+                    game = uiState.game,
+                    pendingDiceEdit = uiState.pendingDiceEdit,
+                    onDiceSelected = { red, yellow, event -> onAction(GameplayAction.DiceSelected(red, yellow, event)) },
+                    onSaveChanges = { onAction(GameplayAction.SaveHistoricalEditClick) }
                 )
-                GameplayPhase.EVENT -> {
-                    val turn = uiState.currentTurn ?: return@Column
-                    val game = uiState.game ?: return@Column
-                    EventPhaseContent(
-                        turn = turn,
-                        game = game,
-                        barbarianState = uiState.barbarianState,
-                        onContinue = viewModel::onContinueFromEvent,
-                        modifier = Modifier.fillMaxSize()
+            } else {
+                when (uiState.phase) {
+                    GameplayPhase.DICE_SELECTION -> DiceSelectionContent(
+                        uiState = uiState,
+                        onDiceSelected = { red, yellow, event -> onAction(GameplayAction.DiceSelected(red, yellow, event)) },
+                        onEventDiceSelected = { event ->
+                            val dice = uiState.pendingDiceEdit
+                            onAction(GameplayAction.DiceSelected(dice?.red ?: 0, dice?.yellow ?: 0, event))
+                        },
+                        onContinue = { onAction(GameplayAction.ContinueFromDiceClick) }
+                    )
+                    GameplayPhase.EVENT -> {
+                        val turn = uiState.displayedTurn ?: return@Column
+                        val game = uiState.game ?: return@Column
+                        EventPhaseContent(
+                            turn = turn,
+                            game = game,
+                            barbarianState = uiState.barbarianState,
+                            onContinue = { onAction(GameplayAction.ContinueFromEventClick) },
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    GameplayPhase.MAIN_TIMER -> TimerPhaseContent(
+                        uiState = uiState,
+                        onStartStop = { onAction(GameplayAction.TimerToggleClick) },
+                        onAddTime = { onAction(GameplayAction.AddTimeClick) },
+                        onReset = { onAction(GameplayAction.ResetTimerClick) },
+                        onNextTurn = { onAction(GameplayAction.NextTurnClick) },
+                        onInBetweenTurn = { onAction(GameplayAction.InBetweenTurnClick) }
+                    )
+                    GameplayPhase.IN_BETWEEN_TIMER -> TimerPhaseContent(
+                        uiState = uiState,
+                        onStartStop = { onAction(GameplayAction.TimerToggleClick) },
+                        onAddTime = { onAction(GameplayAction.AddTimeClick) },
+                        onReset = { onAction(GameplayAction.ResetTimerClick) },
+                        onNextTurn = { onAction(GameplayAction.NextTurnClick) },
+                        onInBetweenTurn = {}
                     )
                 }
-                GameplayPhase.MAIN_TIMER -> TimerPhaseContent(
-                    uiState = uiState,
-                    onStartStop = {
-                        if (uiState.timerState.isRunning) viewModel.onStopTimer()
-                        else viewModel.onStartTimer()
-                    },
-                    onAddTime = viewModel::onAddTime,
-                    onReset = viewModel::onResetTimer,
-                    onNextTurn = viewModel::onNextTurn,
-                    onInBetweenTurn = viewModel::onStartInBetweenTurn
-                )
-                GameplayPhase.IN_BETWEEN_TIMER -> TimerPhaseContent(
-                    uiState = uiState,
-                    onStartStop = {
-                        if (uiState.timerState.isRunning) viewModel.onStopTimer()
-                        else viewModel.onStartTimer()
-                    },
-                    onAddTime = viewModel::onAddTime,
-                    onReset = viewModel::onResetTimer,
-                    onNextTurn = viewModel::onNextTurn,
-                    onInBetweenTurn = {}
-                )
             }
         }
-    }
-
-    if (uiState.showSettingsSheet) {
-        val game = uiState.game
-        SettingsBottomSheet(
-            game = game,
-            onDismiss = viewModel::onHideSettingsSheet,
-            onViewStatistics = {
-                viewModel.onHideSettingsSheet()
-                viewModel.onShowStatisticsPopup()
-            },
-            onSaveSettings = { expansions, specialTurnRuleEnabled ->
-                viewModel.onUpdateGameSettings(expansions, specialTurnRuleEnabled)
-            },
-            onStartNewGame = {
-                viewModel.onHideSettingsSheet()
-                onNavigateToGameConfig()
-            },
-            onEndGame = {
-                viewModel.onHideSettingsSheet()
-                viewModel.onShowEndGameConfirm()
-            }
-        )
-    }
-
-    if (uiState.showStatisticsPopup) {
-        val distribution = uiState.diceDistribution
-        if (distribution != null) {
-            StatisticsPopup(
-                distribution = distribution,
-                onDismiss = viewModel::onHideStatisticsPopup
-            )
-        }
-    }
-
-    if (uiState.showEndGameConfirm) {
-        ConfirmationDialog(
-            title = stringResource(Res.string.menu_end_game),
-            message = stringResource(Res.string.confirm_end_game_message),
-            onConfirm = {
-                viewModel.onHideEndGameConfirm()
-                viewModel.onEndGame()
-                onNavigateToWinnerSelection(gameId)
-            },
-            onDismiss = viewModel::onHideEndGameConfirm
-        )
     }
 }
 
@@ -337,7 +360,7 @@ private fun DiceSelectionContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun SettingsBottomSheet(
+internal fun SettingsBottomSheet(
     game: Game?,
     onDismiss: () -> Unit,
     onViewStatistics: () -> Unit,

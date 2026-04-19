@@ -88,6 +88,10 @@
     <!-- Confirm End Game -->
     <string name="confirm_end_game_message">Czy na pewno chcesz zakończyć grę? Tej operacji nie można cofnąć.</string>
 
+    <!-- Historical Edit -->
+    <string name="historical_edit_title">Zmienić historyczne rzuty?</string>
+    <string name="historical_edit_message">Edytujesz kości dla tury %1$d. Aktualna tura to %2$d. Spowoduje to aktualizację statystyk gry i pozycji barbarzyńców.</string>
+
     <!-- Menu -->
     <string name="menu_statistics">Pokaż statystyki</string>
     <string name="menu_settings">Zmień ustawienia gry</string>

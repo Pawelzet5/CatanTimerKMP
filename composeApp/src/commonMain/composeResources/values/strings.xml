@@ -101,6 +101,10 @@
     <!-- Confirm End Game -->
     <string name="confirm_end_game_message">Are you sure you want to end the game? This action cannot be undone.</string>
 
+    <!-- Historical Edit -->
+    <string name="historical_edit_title">Change Historical Rolls?</string>
+    <string name="historical_edit_message">You are editing dice for turn %1$d. The current turn is %2$d. This will update game statistics and the barbarian position.</string>
+
     <!-- Menu -->
     <string name="menu_statistics">View Statistics</string>
     <string name="menu_settings">Change Game Settings</string>
