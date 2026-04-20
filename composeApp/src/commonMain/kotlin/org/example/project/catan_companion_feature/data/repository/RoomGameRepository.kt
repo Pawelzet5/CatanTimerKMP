@@ -16,7 +16,7 @@ import org.example.project.core.data.tryLocalWrite
 import org.example.project.core.domain.*
 import kotlin.time.Clock
 
-class GameRepositoryImpl(
+class RoomGameRepository(
     private val database: CatanCompanionDatabase,
     private val gameDao: GameDao,
     private val gamePlayerDao: GamePlayerDao,

@@ -14,7 +14,7 @@ import org.example.project.core.domain.DataError
 import org.example.project.core.domain.EmptyResult
 import org.example.project.core.domain.Result
 
-class PlayerRepositoryImpl(
+class RoomPlayerRepository(
     private val playerDao: PlayerDao
 ) : PlayerRepository {
 
