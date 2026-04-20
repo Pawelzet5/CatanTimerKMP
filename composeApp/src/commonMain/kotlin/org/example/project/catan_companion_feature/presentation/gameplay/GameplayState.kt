@@ -22,7 +22,8 @@ data class GameplayState(
     val showEndGameConfirm: Boolean = false,
     val showHistoricalEditConfirm: Boolean = false,
     val isLoading: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val primaryElapsedMillis: Long = 0L
 )
 
 enum class GameplayPhase {
