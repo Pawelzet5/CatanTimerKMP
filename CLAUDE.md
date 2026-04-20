@@ -271,15 +271,61 @@ This project uses KMP/CMP. The `android-*` skills below all apply — invoke the
 tasks, but always generate output targeting `commonMain` unless a platform source set is
 explicitly required.
 
-| Task | Skill to invoke | KMP override |
-|---|---|---|
-| New screen / ViewModel / State / Action / Event | `android-presentation-mvi` | No `SavedStateHandle`; ViewModel lives in `commonMain` |
-| New repository / DAO / mapper / data source | `android-data-layer` | Room is behind `expect/actual`; no Android-specific imports in `commonMain` |
-| Writing tests (ViewModel, repository, use case) | `android-testing` | `commonTest` uses `kotlin.test`; Robolectric only in `androidUnitTest` |
-| Adding/modifying Koin modules | `android-di-koin` | Modules live in `catan_companion_feature/di/`; platform modules in `*Main/di/` |
-| New composable / UI component / layout | `android-compose-ui` | No `@Preview` in `commonMain`; use CMP equivalents |
-| Navigation routes / nav graphs | `android-navigation` | Uses Compose Multiplatform Navigation, not the `androidx.navigation` artifact |
-| Result / error type / DataError | `android-error-handling` | Already implemented in `core/domain/Result.kt` — extend, don't recreate |
-| Module layout / Gradle structure | `android-module-structure` | KMP source set structure, not Android-only module layout |
+| Task | Skill to invoke |
+|---|---|
+| New screen / ViewModel / State / Action / Event | `android-presentation-mvi` |
+| New repository / DAO / mapper / data source | `android-data-layer` |
+| Writing tests (ViewModel, repository, use case) | `android-testing` |
+| Adding/modifying Koin modules | `android-di-koin` |
+| New composable / UI component / layout | `android-compose-ui` |
+| Navigation routes / nav graphs | `android-navigation` |
+| Result / error type / DataError | `android-error-handling` |
+| Module layout / Gradle structure | `android-module-structure` |
 
-When invoking a skill, apply the KMP overrides from this table before generating any code.
+When invoking a skill, apply the overrides in the subsections below before generating any code.
+
+### Skill-Specific Overrides
+
+#### android-presentation-mvi
+- Root composable name: `<Feature>ScreenRoot`, not `<Feature>Root` → `GameplayScreenRoot`
+- Channel: always `Channel.BUFFERED` — skill defaults to rendezvous channel which silently
+  drops events when `trySend` is called before `ObserveAsEvents` subscribes
+- No `SavedStateHandle` — not available in `commonMain`
+
+#### android-data-layer
+- Result failure variant: `Result.Failure`, not `Result.Error` (matches `core/domain/Result.kt`)
+- All DAO calls must be wrapped with `tryLocalRead { }` or `tryLocalWrite { }` from
+  `core/data/RepositoryHelpers.kt` — never call DAO methods bare
+- Room is behind `expect/actual` — no Room imports in `commonMain`
+
+#### android-testing
+- Test naming: strict `<Action>, <Prerequisites>, <Effect>` format (three comma-separated parts)
+  → `Timer start, game not started, timer begins from zero`
+- Test framework by source set: `commonTest` uses `kotlin.test`; JUnit5 only in `androidUnitTest`
+- No `SavedStateHandle` — not applicable in `commonTest`
+
+#### android-di-koin
+- Koin module naming: `<feature>Module`, not `<feature><Layer>Module`
+  → `databaseModule`, `repositoryModule`, not `catanDataModule`
+- Koin startup: `initKoin.kt` (KMP multiplatform entry point), not `Application.onCreate()`
+
+#### android-compose-ui
+- No `@Preview` in `commonMain` — previews are Android-only
+- State collection: `collectAsState()`, not `collectAsStateWithLifecycle()`
+- No `R.string` / `stringResource()` — use `UiText` abstraction from `core/presentation`
+
+#### android-error-handling
+- Result failure variant: `Result.Failure`, not `Result.Error`
+- The full Result infrastructure already exists in `core/domain/Result.kt` — do not recreate it
+- This project is offline-only — all network helpers from this skill (`safeCall`,
+  `responseToResult`, `constructRoute`, `HttpClient` extensions) do not apply;
+  only `Result`, `EmptyResult`, and `DataError.Local` are relevant
+
+#### android-module-structure
+- This project is single-module KMP — there are no Gradle feature modules
+- Features are isolated by package boundaries within `composeApp`, not Gradle module boundaries
+- Source sets (`commonMain`, `androidMain`, `iosMain`, `desktopMain`) replace the
+  `:core` / `:feature` Gradle module hierarchy
+- No `:build-logic` or convention plugins apply to this project
+- Use this skill only for conceptual guidance on layer responsibilities and dependency rules —
+  ignore its Gradle module structure recommendations entirely
