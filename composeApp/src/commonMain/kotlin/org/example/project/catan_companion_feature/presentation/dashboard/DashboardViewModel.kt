@@ -17,8 +17,8 @@ class DashboardViewModel(
     private val playerRepository: PlayerRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUiState())
-    val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(DashboardState())
+    val uiState: StateFlow<DashboardState> = _uiState.asStateFlow()
 
     init {
         observeResumableGame()

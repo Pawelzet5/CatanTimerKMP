@@ -16,8 +16,8 @@ class PlayersListViewModel(
     private val playerRepository: PlayerRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PlayersListUiState())
-    val uiState: StateFlow<PlayersListUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(PlayersListState())
+    val uiState: StateFlow<PlayersListState> = _uiState.asStateFlow()
 
     init {
         playerRepository.getVisiblePlayers()

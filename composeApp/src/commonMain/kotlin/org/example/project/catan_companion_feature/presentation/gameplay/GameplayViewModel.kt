@@ -30,8 +30,8 @@ class GameplayViewModel(
     private val timerManager = TimerManager(viewModelScope)
     private val _navigator = MutableStateFlow<TurnNavigator?>(null)
 
-    private val _uiState = MutableStateFlow(GameplayUiState(isLoading = true))
-    val uiState: StateFlow<GameplayUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(GameplayState(isLoading = true))
+    val uiState: StateFlow<GameplayState> = _uiState.asStateFlow()
 
     private val _events = Channel<GameplayEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
