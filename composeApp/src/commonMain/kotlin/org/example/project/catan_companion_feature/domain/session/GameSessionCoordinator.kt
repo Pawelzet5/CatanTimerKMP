@@ -28,7 +28,7 @@ interface GameSessionCoordinator {
     suspend fun updateTurnDice(turn: Turn, redDice: Int?, yellowDice: Int?, eventDice: EventDiceType?): EmptyResult<DataError.Local>
 }
 
-class GameSessionCoordinatorImpl(
+class DefaultGameSessionCoordinator(
     private val gameRepository: GameRepository,
     private val turnRepository: TurnRepository
 ) : GameSessionCoordinator {

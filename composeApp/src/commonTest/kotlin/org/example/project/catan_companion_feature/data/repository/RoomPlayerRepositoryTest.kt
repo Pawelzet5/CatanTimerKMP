@@ -11,10 +11,10 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
-class PlayerRepositoryImplTest {
+class RoomPlayerRepositoryTest {
 
     private val fakePlayerDao = FakePlayerDao()
-    private val repository = PlayerRepositoryImpl(fakePlayerDao)
+    private val repository = RoomPlayerRepository(fakePlayerDao)
 
     @Test
     fun `getAllPlayers, players exist in database, emits Flow with list`() = runTest {
