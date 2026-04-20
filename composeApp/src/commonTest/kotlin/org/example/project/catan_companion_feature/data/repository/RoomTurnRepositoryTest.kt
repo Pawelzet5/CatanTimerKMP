@@ -13,11 +13,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNull
 
-class TurnRepositoryImplTest {
+class RoomTurnRepositoryTest {
 
     private val fakeTurnDao = FakeTurnDao()
     private val fakePlayerDao = FakePlayerDao()
-    private val repository = TurnRepositoryImpl(fakeTurnDao, fakePlayerDao)
+    private val repository = RoomTurnRepository(fakeTurnDao, fakePlayerDao)
 
     @Test
     fun `getTurnsForGame, turns exist for game, returns Flow emitting turns`() = runTest {
