@@ -1,5 +1,6 @@
 package org.example.project.catan_companion_feature.presentation
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -13,6 +14,7 @@ import org.example.project.catan_companion_feature.data.fakes.repository.FakeTur
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayAction
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayPhase
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayViewModel
+import org.example.project.catan_companion_feature.presentation.gameplay.TimerManager
 import org.example.project.catan_companion_feature.testSessionWithMultipleTurns
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -39,14 +41,14 @@ class GameplayViewModelTest {
     @Test
     fun `GameplayViewModel init, session started, phase is DICE_SELECTION`() =
         runTest(testDispatcher) {
-            val viewModel = makeViewModel()
+            val viewModel = makeViewModel(this)
             assertEquals(GameplayPhase.DICE_SELECTION, viewModel.uiState.value.phase)
         }
 
     @Test
     fun `GameplayViewModel continueFromDice, dice sum is 7, phase transitions to EVENT`() =
         runTest(testDispatcher) {
-            val viewModel = makeViewModel()
+            val viewModel = makeViewModel(this)
             viewModel.onAction(GameplayAction.DiceSelected(red = 3, yellow = 4, event = null))
             viewModel.onAction(GameplayAction.ContinueFromDiceClick)
             advanceUntilIdle()
@@ -56,7 +58,7 @@ class GameplayViewModelTest {
     @Test
     fun `GameplayViewModel continueFromDice, dice sum is not 7, phase transitions to MAIN_TIMER`() =
         runTest(testDispatcher) {
-            val viewModel = makeViewModel()
+            val viewModel = makeViewModel(this)
             viewModel.onAction(GameplayAction.DiceSelected(red = 2, yellow = 4, event = null))
             viewModel.onAction(GameplayAction.ContinueFromDiceClick)
             advanceUntilIdle()
@@ -68,7 +70,7 @@ class GameplayViewModelTest {
         runTest(testDispatcher) {
             val coordinator = FakeGameSessionCoordinator()
             coordinator.setSession(testSessionWithMultipleTurns())
-            val viewModel = makeViewModel(coordinator = coordinator)
+            val viewModel = makeViewModel(this, coordinator = coordinator)
             advanceUntilIdle()
             viewModel.onAction(GameplayAction.PreviousClick)
             assertFalse(viewModel.uiState.value.isViewingLatest)
@@ -79,7 +81,7 @@ class GameplayViewModelTest {
         runTest(testDispatcher) {
             val coordinator = FakeGameSessionCoordinator()
             coordinator.setSession(testSessionWithMultipleTurns())
-            val viewModel = makeViewModel(coordinator = coordinator)
+            val viewModel = makeViewModel(this, coordinator = coordinator)
             advanceUntilIdle()
             viewModel.onAction(GameplayAction.PreviousClick)
             viewModel.onAction(GameplayAction.JumpToCurrentClick)
@@ -89,7 +91,7 @@ class GameplayViewModelTest {
     @Test
     fun `GameplayViewModel nextTurn, turn completed, phase resets to DICE_SELECTION`() =
         runTest(testDispatcher) {
-            val viewModel = makeViewModel()
+            val viewModel = makeViewModel(this)
             viewModel.onAction(GameplayAction.DiceSelected(red = 2, yellow = 4, event = null))
             viewModel.onAction(GameplayAction.ContinueFromDiceClick)
             advanceUntilIdle()
@@ -99,11 +101,13 @@ class GameplayViewModelTest {
         }
 
     private fun makeViewModel(
+        scope: CoroutineScope,
         coordinator: FakeGameSessionCoordinator = FakeGameSessionCoordinator()
     ) = GameplayViewModel(
         gameId = 1L,
         sessionCoordinator = coordinator,
         turnRepository = FakeTurnRepository(),
-        gameRepository = FakeGameRepository()
+        gameRepository = FakeGameRepository(),
+        timerManager = TimerManager(scope)
     )
 }

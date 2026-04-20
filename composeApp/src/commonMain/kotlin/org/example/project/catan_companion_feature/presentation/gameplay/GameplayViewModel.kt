@@ -24,10 +24,9 @@ class GameplayViewModel(
     private val gameId: Long,
     private val sessionCoordinator: GameSessionCoordinator,
     private val turnRepository: TurnRepository,
-    private val gameRepository: GameRepository
+    private val gameRepository: GameRepository,
+    private val timerManager: TimerManager
 ) : ViewModel() {
-
-    private val timerManager = TimerManager(viewModelScope)
     private val _navigator = MutableStateFlow<TurnNavigator?>(null)
 
     private val _uiState = MutableStateFlow(GameplayState(isLoading = true))
@@ -143,18 +142,16 @@ class GameplayViewModel(
         _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER) }
     }
 
-    private var primaryElapsedMillis: Long = 0L
-
     private fun onStartInBetweenTurn() {
-        primaryElapsedMillis = timerManager.stop()
+        val primaryElapsed = timerManager.stop()
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
-        _uiState.update { it.copy(phase = GameplayPhase.IN_BETWEEN_TIMER) }
+        _uiState.update { it.copy(phase = GameplayPhase.IN_BETWEEN_TIMER, primaryElapsedMillis = primaryElapsed) }
     }
 
     private fun onNextTurn() {
         viewModelScope.launch {
-            val elapsed = primaryElapsedMillis + timerManager.stop()
-            primaryElapsedMillis = 0L
+            val elapsed = _uiState.value.primaryElapsedMillis + timerManager.stop()
+            _uiState.update { it.copy(primaryElapsedMillis = 0L) }
             sessionCoordinator.completeTurn(elapsed)
             _uiState.update { it.copy(phase = GameplayPhase.DICE_SELECTION, pendingDiceEdit = null) }
         }
