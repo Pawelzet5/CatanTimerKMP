@@ -42,22 +42,8 @@ Despite the root `CLAUDE.md` mentioning SQLDelight, this project uses **AndroidX
 
 ## Error Handling
 
-All repository and data operations return `Result<D, E : Error>` (`core/domain/Result.kt`).
-
-```kotlin
-sealed interface Result<out D, out E : Error> {
-    data class Success<out D>(val data: D) : Result<D, Nothing>
-    data class Failure<out E : Error>(val error: E) : Result<Nothing, E>
-}
-typealias EmptyResult<E> = Result<Unit, E>
-```
-
-Wrap every DAO call with the helpers in `core/data/RepositoryHelpers.kt`:
-
-- `tryLocalRead { ... }` — catches `SQLiteException` → `DataError.Local.UNKNOWN`
-- `tryLocalWrite { ... }` — catches `SQLiteException` → `DataError.Local.DISK_FULL`
-
-Never call DAO methods directly in repositories without one of these wrappers.
+All repository and data operations return `Result<D, E : Error>` — see `core/domain/Result.kt`.
+DAO calls must be wrapped with `tryLocalRead { }` / `tryLocalWrite { }` from `core/data/RepositoryHelpers.kt`.
 
 ---
 
@@ -75,21 +61,16 @@ Key invariant: `session.isActiveTurnSelected` gates turn completion. Calling `co
 
 ### Structure
 
-The presentation layer is **feature-first** per `docs/PROJECT_OVERRIDES.md`. Each screen owns its own package. See that file for the authoritative directory layout.
+The presentation layer is **feature-first** — each screen owns its own package in `catan_companion_feature/presentation/`. Routes are defined in `presentation/navigation/CatanCompanionNavigation.kt`.
 
-Current screens and their ViewModels (all in `catan_companion_feature/presentation/`):
+Composable placement rules:
 
-| Screen | ViewModel | Route |
-|---|---|---|
-| Dashboard | `DashboardViewModel` | `CatanCompanionRoute.Dashboard` |
-| Game Config | `GameConfigViewModel` | `CatanCompanionRoute.GameConfig` |
-| Gameplay | `GameplayViewModel` | `CatanCompanionRoute.Gameplay(gameId)` |
-| Players List | `PlayersListViewModel` | `CatanCompanionRoute.PlayersList` |
-| Player Details | `PlayerDetailsViewModel` | `CatanCompanionRoute.PlayerDetails(playerId)` |
-| Games List | `GamesListViewModel` | `CatanCompanionRoute.GamesList` |
-| Game Summary | `GameSummaryViewModel` | `CatanCompanionRoute.GameSummary(gameId)` |
-
-Routes are defined as a sealed class in `presentation/navigation/CatanCompanionNavigation.kt`.
+| Scope | Location |
+|---|---|
+| Used only in one `*Screen.kt` | Private `@Composable` in the same file |
+| Used across multiple files in one `<screen>/` package | Separate `.kt` file in that `<screen>/` package |
+| Shared across multiple screens (feature-level) | `presentation/components/` |
+| Base UI component reusable outside the feature | `core/designsystem/components/` |
 
 ### Presentation Helpers
 
@@ -104,101 +85,11 @@ Routes are defined as a sealed class in `presentation/navigation/CatanCompanionN
 - `MAIN_TIMER` — countdown timer phase
 - `IN_BETWEEN_TIMER` — secondary player timer (Cities & Knights)
 
-### Screen Structure: Root / Screen / Action
+### Screen Conventions
 
-Every screen follows a three-part structure:
-
-**`<Feature>ScreenRoot`** — wires ViewModel to the screen. Owns:
-- `collectAsState()` and passes `uiState` down
-- `viewModel::onAction` forwarded to the screen
-- Navigation callbacks (`onNavigateToX`) — never passed into the content composable
-- Overlays (bottom sheets, dialogs) that trigger navigation — rendered here, not inside the content composable, because they need navigation lambdas that Root owns
-
-**`<Feature>Screen`** — pure content composable. Private. Accepts:
-- `uiState: <Feature>UiState`
-- `onAction: (<Feature>Action) -> Unit`
-
-No ViewModel reference. No navigation lambdas. Testable in isolation.
-
-**`<Feature>Action`** — sealed interface of user intents. Rules:
-- Members are named after what the **user did**, not what the system should do (`NextTurnClick`, not `NavigateToNextTurn`)
-- No `On` prefix
-- Simple taps → `data object`; taps that carry data → `data class`
-- Covers all user interactions — screen content, overlays, and dialogs — everything routes through `onAction`
-
-**`<Feature>Event`** — sealed interface of one-time navigation events emitted by the ViewModel. Observed in Root via `ObserveAsEvents`. See the *One-Time Navigation Events* section below for the full pattern and `trySend` vs `send` rules.
-
-**ViewModel `onAction` dispatcher:**
-- Single public `fun onAction(action: <Feature>Action)` method — the only entry point for all user interactions
-- All handler methods called exclusively from `onAction` are `private`
-- One-liner handlers are inlined directly in the `when` block; extract a private function only when the body is multi-line
-- Logic that previously lived in Root (e.g. reading state to decide which of two VM methods to call) moves into `onAction`
-
-```kotlin
-// Root — minimal wiring
-GameplayScreen(uiState = uiState, onAction = viewModel::onAction)
-
-// Action sealed interface — user intent naming
-sealed interface GameplayAction {
-    data object NextTurnClick : GameplayAction
-    data class DiceSelected(val red: Int, val yellow: Int, val event: EventDiceType?) : GameplayAction
-}
-
-// ViewModel — single dispatcher, private handlers
-fun onAction(action: GameplayAction) {
-    when (action) {
-        GameplayAction.NextTurnClick -> onNextTurn()
-        is GameplayAction.DiceSelected -> onDiceSelected(action.red, action.yellow, action.event)
-    }
-}
-private fun onNextTurn() { ... }
-private fun onDiceSelected(...) { ... }
-```
-
-### One-Time Navigation Events
-
-Navigation triggered by ViewModel logic (especially after async work) must go through a `Channel<*Event*>`, never via an imperative call paired with `onAction` in Root. This prevents race conditions where navigation fires before a coroutine completes.
-
-**Pattern:**
-
-```kotlin
-// ViewModel
-private val _events = Channel<GameplayEvent>(Channel.BUFFERED)
-val events = _events.receiveAsFlow()
-
-fun onAction(action: GameplayAction) {
-    when (action) {
-        // Synchronous — trySend is safe; buffer absorbs the single event
-        GameplayAction.ConfirmEndGameClick -> {
-            _uiState.update { it.copy(showEndGameConfirm = false) }
-            _events.trySend(GameplayEvent.NavigateToWinnerSelection(gameId))
-        }
-        // Async — send after work completes so navigation is guaranteed to be post-work
-        GameplayAction.ConfirmEndGameClick -> viewModelScope.launch {
-            finishSession()
-            _events.send(GameplayEvent.NavigateToWinnerSelection(gameId))
-        }
-    }
-}
-```
-
-```kotlin
-// Root — observe with ObserveAsEvents (core/presentation/ObserveAsEvents.kt)
-ObserveAsEvents(viewModel.events) { event ->
-    when (event) {
-        is GameplayEvent.NavigateToWinnerSelection -> onNavigateToWinnerSelection(event.gameId)
-        GameplayEvent.NavigateToGameConfig -> onNavigateToGameConfig()
-    }
-}
-```
-
-**`trySend` vs `send`:**
-- Use `trySend` when the emission is synchronous — no coroutine needed, buffer handles the single event safely.
-- Use `send` (inside `viewModelScope.launch`) when navigation must wait for a coroutine to complete.
-
-### UI State
-
-All UI state classes live in `presentation/state/`. Each is a data class with an `isLoading` flag and an optional `error: UiText?`. Events (one-shot navigation) are modelled as `Channel` on the ViewModel (see above), **not** inside `UiState`.
+Every screen follows the `android-presentation-mvi` skill structure. Additional project rules:
+- Navigation overlays (bottom sheets, dialogs that trigger navigation) belong in Root, not the Screen composable — they need the navigation lambdas that Root owns.
+- UI state classes live in `presentation/state/`. Each is a data class with `isLoading: Boolean` and `error: UiText?`.
 
 ---
 
@@ -214,7 +105,7 @@ All Koin modules are in `catan_companion_feature/di/`:
 | `UseCaseModule.kt` | `CreateGameUseCase`, `GetGameStatisticsUseCase` (factory) |
 | `CatanCompanionModule.kt` | Aggregates all the above |
 
-ViewModels are declared in `CatanCompanionModule.kt` (or a dedicated `ViewModelModule.kt` once screens are added) using `viewModelOf`.
+ViewModels are declared in `CatanCompanionModule.kt` using `viewModelOf`.
 
 Platform-specific modules live in `androidMain/di/Modules.android.kt`, `iosMain/di/Modules.ios.kt`, `desktopMain/di/Modules.desktop.kt`. They provide platform implementations (e.g. `DatabaseFactory`) and are passed to `startKoin` in `initKoin.kt`.
 
@@ -242,18 +133,6 @@ When adding a new DAO method, add a contract test case to the abstract class **b
 ### Fake DAOs
 
 Live in `commonTest/.../data/fakes/dao/`. They are in-memory `MutableMap` implementations that mirror Room's behaviour precisely. If a fake deviates from Room (e.g. wrong sort order, missing null handling), the contract tests will catch it.
-
-### Test Naming Convention
-
-Unit tests (ViewModels, UseCases, Repositories, helpers) use the `<Action>, <Prerequisites>, <Effect>` scheme:
-
-```kotlin
-fun `Timer start, game not started, timer begins from zero`()
-fun `Turn end, one player remaining, game over state emitted`()
-```
-
-Three comma-separated parts, noun or infinitive form — no questions, no `should`.
-See `docs/PROJECT_OVERRIDES.md` for the authoritative definition and examples.
 
 ### Logging
 
