@@ -28,4 +28,4 @@ jobs:
           key: gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
       - name: Run common tests
-        run: ./gradlew jvmTest
+        run: ./gradlew test
