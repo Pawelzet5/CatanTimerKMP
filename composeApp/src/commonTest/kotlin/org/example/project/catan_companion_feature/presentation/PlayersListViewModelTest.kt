@@ -8,6 +8,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.example.project.catan_companion_feature.data.fakes.repository.FakePlayerRepository
+import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListAction
 import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListViewModel
 import org.example.project.catan_companion_feature.testPlayer
 import kotlin.test.AfterTest
@@ -45,7 +46,7 @@ class PlayersListViewModelTest {
         runTest(testDispatcher) {
             val repo = FakePlayerRepository()
             val viewModel = PlayersListViewModel(repo)
-            viewModel.onCreatePlayer("Charlie")
+            viewModel.onAction(PlayersListAction.CreatePlayer("Charlie"))
             advanceUntilIdle()
             assertTrue(repo.createdPlayers.contains("Charlie"))
         }

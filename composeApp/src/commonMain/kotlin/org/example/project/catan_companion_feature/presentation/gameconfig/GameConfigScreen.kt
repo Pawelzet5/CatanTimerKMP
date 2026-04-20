@@ -32,7 +32,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -63,6 +62,7 @@ import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.designsystem.components.CatanCheckbox
+import org.example.project.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -74,9 +74,8 @@ private const val TURN_DURATION_MAX_MILLIS = 600 * MILLIS_PER_SECOND
 
 private val PLAYER_COUNT_OPTIONS = listOf(3, 4, 5, 6)
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameConfigScreen(
+fun GameConfigScreenRoot(
     onNavigateBack: () -> Unit,
     onGameCreated: (Long) -> Unit,
     onAddPlayer: () -> Unit,
@@ -84,18 +83,29 @@ fun GameConfigScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.navigateToGameplay.collect { gameId ->
-            onGameCreated(gameId)
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            GameConfigEvent.NavigateBack -> onNavigateBack()
+            is GameConfigEvent.NavigateToGameplay -> onGameCreated(event.gameId)
+            GameConfigEvent.NavigateToPlayerSelection -> onAddPlayer()
         }
     }
 
+    GameConfigScreen(state = uiState, onAction = viewModel::onAction)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GameConfigScreen(
+    state: GameConfigState,
+    onAction: (GameConfigAction) -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(Res.string.config_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = { onAction(GameConfigAction.BackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(Res.string.common_back)
@@ -119,53 +129,53 @@ fun GameConfigScreen(
         ) {
             item {
                 TurnDurationSection(
-                    durationMillis = uiState.turnDurationMillis,
+                    durationMillis = state.turnDurationMillis,
                     onDecrement = {
-                        viewModel.onTurnDurationChanged(
-                            (uiState.turnDurationMillis - TURN_DURATION_STEP_MILLIS)
+                        onAction(GameConfigAction.TurnDurationChanged(
+                            (state.turnDurationMillis - TURN_DURATION_STEP_MILLIS)
                                 .coerceAtLeast(TURN_DURATION_MIN_MILLIS)
-                        )
+                        ))
                     },
                     onIncrement = {
-                        viewModel.onTurnDurationChanged(
-                            (uiState.turnDurationMillis + TURN_DURATION_STEP_MILLIS)
+                        onAction(GameConfigAction.TurnDurationChanged(
+                            (state.turnDurationMillis + TURN_DURATION_STEP_MILLIS)
                                 .coerceAtMost(TURN_DURATION_MAX_MILLIS)
-                        )
+                        ))
                     }
                 )
             }
 
             item {
                 NumberOfPlayersSection(
-                    selectedCount = uiState.numberOfPlayers,
-                    onCountSelected = { viewModel.onPlayerCountSelected(it) }
+                    selectedCount = state.numberOfPlayers,
+                    onCountSelected = { onAction(GameConfigAction.PlayerCountSelected(it)) }
                 )
             }
 
             item {
-                PlayersHeader(onAddPlayer = onAddPlayer)
+                PlayersHeader(onAddPlayer = { onAction(GameConfigAction.AddPlayerClick) })
             }
 
-            itemsIndexed(uiState.selectedPlayers, key = { _, player -> player.id }) { index, player ->
+            itemsIndexed(state.selectedPlayers, key = { _, player -> player.id }) { index, player ->
                 SelectedPlayerRow(
                     player = player,
                     index = index,
-                    onRemove = { viewModel.onPlayerToggled(player) }
+                    onRemove = { onAction(GameConfigAction.PlayerToggled(player)) }
                 )
             }
 
             item {
                 GameOptionsSection(
-                    specialTurnRuleEnabled = uiState.specialTurnRuleEnabled,
-                    seafarersEnabled = uiState.expansions.contains(GameExpansion.SEAFARERS),
-                    citiesAndKnightsEnabled = uiState.expansions.contains(GameExpansion.CITIES_AND_KNIGHTS),
-                    onSpecialTurnRuleToggled = { viewModel.onSpecialTurnRuleToggled() },
-                    onSeafarersToggled = { viewModel.onExpansionToggled(GameExpansion.SEAFARERS) },
-                    onCitiesAndKnightsToggled = { viewModel.onExpansionToggled(GameExpansion.CITIES_AND_KNIGHTS) }
+                    specialTurnRuleEnabled = state.specialTurnRuleEnabled,
+                    seafarersEnabled = state.expansions.contains(GameExpansion.SEAFARERS),
+                    citiesAndKnightsEnabled = state.expansions.contains(GameExpansion.CITIES_AND_KNIGHTS),
+                    onSpecialTurnRuleToggled = { onAction(GameConfigAction.SpecialTurnRuleToggled) },
+                    onSeafarersToggled = { onAction(GameConfigAction.ExpansionToggled(GameExpansion.SEAFARERS)) },
+                    onCitiesAndKnightsToggled = { onAction(GameConfigAction.ExpansionToggled(GameExpansion.CITIES_AND_KNIGHTS)) }
                 )
             }
 
-            uiState.validationError?.let { error ->
+            state.validationError?.let { error ->
                 item {
                     Text(
                         text = error.asStringComposable(),
@@ -178,8 +188,8 @@ fun GameConfigScreen(
 
             item {
                 Button(
-                    onClick = { viewModel.onStartGame() },
-                    enabled = uiState.isValid,
+                    onClick = { onAction(GameConfigAction.StartGameClick) },
+                    enabled = state.isValid,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(Res.string.config_start_game))

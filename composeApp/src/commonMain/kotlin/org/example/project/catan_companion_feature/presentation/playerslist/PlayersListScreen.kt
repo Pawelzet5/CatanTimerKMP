@@ -64,13 +64,13 @@ import org.example.project.catan_companion_feature.presentation.components.Playe
 import org.example.project.catan_companion_feature.presentation.components.PlayerListItem
 import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.designsystem.components.CatanCheckbox
+import org.example.project.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlayersListScreen(
+fun PlayersListScreenRoot(
     isSelectionMode: Boolean = false,
     onNavigateBack: () -> Unit,
     onPlayerClick: (Long) -> Unit,
@@ -79,6 +79,28 @@ fun PlayersListScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            PlayersListEvent.NavigateBack -> onNavigateBack()
+            is PlayersListEvent.NavigateToPlayerDetails -> onPlayerClick(event.playerId)
+            is PlayersListEvent.PlayersSelected -> onPlayersSelected(event.players)
+        }
+    }
+
+    PlayersListScreen(
+        state = uiState,
+        isSelectionMode = isSelectionMode,
+        onAction = viewModel::onAction
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PlayersListScreen(
+    state: PlayersListState,
+    isSelectionMode: Boolean = false,
+    onAction: (PlayersListAction) -> Unit
+) {
     var showAddDialog by remember { mutableStateOf(false) }
     var playerWithMenu by remember { mutableStateOf<Player?>(null) }
     var playerToDelete by remember { mutableStateOf<Player?>(null) }
@@ -89,14 +111,16 @@ fun PlayersListScreen(
             if (isSelectionMode) {
                 SelectionTopBar(
                     selectedCount = selectedIds.value.size,
-                    onCancel = onNavigateBack,
+                    onCancel = { onAction(PlayersListAction.BackClick) },
                     onDone = {
-                        onPlayersSelected(uiState.players.filter { it.id in selectedIds.value })
+                        onAction(PlayersListAction.DoneWithSelection(
+                            state.players.filter { it.id in selectedIds.value }
+                        ))
                     }
                 )
             } else {
                 NormalTopBar(
-                    onNavigateBack = onNavigateBack,
+                    onNavigateBack = { onAction(PlayersListAction.BackClick) },
                     onAdd = { showAddDialog = true }
                 )
             }
@@ -116,7 +140,7 @@ fun PlayersListScreen(
                 contentPadding = PaddingValues(CatanSpacing.md),
                 verticalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
             ) {
-                items(uiState.players, key = { it.id }) { player ->
+                items(state.players, key = { it.id }) { player ->
                     if (isSelectionMode) {
                         SelectionPlayerItem(
                             player = player,
@@ -133,12 +157,12 @@ fun PlayersListScreen(
                         NormalPlayerItem(
                             player = player,
                             isMenuExpanded = playerWithMenu == player,
-                            onItemClick = { onPlayerClick(player.id) },
+                            onItemClick = { onAction(PlayersListAction.PlayerClick(player.id)) },
                             onLongClick = { playerWithMenu = player },
                             onDismissMenu = { playerWithMenu = null },
                             onHide = {
                                 playerWithMenu = null
-                                viewModel.onHidePlayer(player)
+                                onAction(PlayersListAction.HidePlayer(player))
                             },
                             onDelete = {
                                 playerWithMenu = null
@@ -154,7 +178,7 @@ fun PlayersListScreen(
     if (showAddDialog) {
         AddPlayerDialog(
             onConfirm = { name ->
-                viewModel.onCreatePlayer(name)
+                onAction(PlayersListAction.CreatePlayer(name))
                 showAddDialog = false
             },
             onDismiss = { showAddDialog = false }
@@ -167,7 +191,7 @@ fun PlayersListScreen(
             message = stringResource(Res.string.players_delete_confirm_message, player.name),
             confirmLabel = stringResource(Res.string.common_delete),
             onConfirm = {
-                viewModel.onDeletePlayer(player)
+                onAction(PlayersListAction.DeletePlayer(player))
                 playerToDelete = null
             },
             onDismiss = { playerToDelete = null }
