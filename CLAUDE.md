@@ -74,7 +74,7 @@ Composable placement rules:
 
 ### Presentation Helpers
 
-- `TimerManager` (`presentation/timer/TimerManager.kt`) — coroutine-based countdown timer. Exposes `StateFlow<TimerState>`. Methods: `start()`, `stop()`, `addTime()`, `reset()`. Inject a `CoroutineScope` on construction.
+- `TimerManager` (`presentation/gameplay/TimerManager.kt`) — coroutine-based countdown timer. Exposes `StateFlow<TimerState>`. Methods: `start()`, `stop()`, `addTime()`, `reset()`. Inject a `CoroutineScope` on construction.
 - `TurnNavigator` (`presentation/util/TurnNavigator.kt`) — pure immutable value for navigating turn history. Methods return a new `TurnNavigator` instance. Not injected; created directly in `GameplayViewModel`.
 
 ### Gameplay Phases
@@ -89,7 +89,7 @@ Composable placement rules:
 
 Every screen follows the `android-presentation-mvi` skill structure. Additional project rules:
 - Navigation overlays (bottom sheets, dialogs that trigger navigation) belong in Root, not the Screen composable — they need the navigation lambdas that Root owns.
-- UI state classes live in `presentation/state/`. Each is a data class with `isLoading: Boolean` and `error: UiText?`.
+- UI state classes live alongside their ViewModel in the screen's own package (e.g. `presentation/dashboard/DashboardState.kt`). Each is a data class with `isLoading: Boolean` and `error: UiText?`.
 
 ---
 
@@ -134,12 +134,8 @@ When adding a new DAO method, add a contract test case to the abstract class **b
 
 Live in `commonTest/.../data/fakes/dao/`. They are in-memory `MutableMap` implementations that mirror Room's behaviour precisely. If a fake deviates from Room (e.g. wrong sort order, missing null handling), the contract tests will catch it.
 
-### Logging
-
-Use `core/util/LogUtils` (wraps Kermit). Never use `println` or `android.util.Log` directly.
-
 ### Git Workflow
-
+Default PR base branch: `development`       
 When doing git operations be compliant with GIT_WORKFLOW.md
 
 ---
