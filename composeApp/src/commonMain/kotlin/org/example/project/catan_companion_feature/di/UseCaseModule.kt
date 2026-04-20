@@ -1,4 +1,4 @@
-package org.example.project.di
+package org.example.project.catan_companion_feature.di
 
 import org.example.project.catan_companion_feature.domain.usecase.CreateGameUseCase
 import org.example.project.catan_companion_feature.domain.usecase.GetGameStatisticsUseCase

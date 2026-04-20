@@ -1,4 +1,4 @@
-package org.example.project.di
+package org.example.project.catan_companion_feature.di
 
 import org.example.project.catan_companion_feature.data.repository.RoomGameRepository
 import org.example.project.catan_companion_feature.data.repository.RoomPlayerRepository
