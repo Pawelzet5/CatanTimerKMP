@@ -1,4 +1,4 @@
-package org.example.project.di
+package org.example.project.catan_companion_feature.di
 
 import org.example.project.catan_companion_feature.data.local.CatanCompanionDatabase
 import org.koin.dsl.module
