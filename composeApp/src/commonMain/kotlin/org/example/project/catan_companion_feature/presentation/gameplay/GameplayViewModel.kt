@@ -2,18 +2,19 @@ package org.example.project.catan_companion_feature.presentation.gameplay
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution
 import org.example.project.catan_companion_feature.domain.dataclass.DiceRoll
 import org.example.project.catan_companion_feature.domain.dataclass.toBarbarianState
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.catan_companion_feature.domain.repository.TurnRepository
@@ -31,6 +32,9 @@ class GameplayViewModel(
 
     private val _uiState = MutableStateFlow(GameplayUiState(isLoading = true))
     val uiState: StateFlow<GameplayUiState> = _uiState.asStateFlow()
+
+    private val _events = Channel<GameplayEvent>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
 
     init {
         startSession()
@@ -88,11 +92,41 @@ class GameplayViewModel(
             .launchIn(viewModelScope)
     }
 
-    fun onDiceSelected(red: Int, yellow: Int, event: EventDiceType?) {
-        _uiState.update { it.copy(pendingDiceEdit = DiceRoll(red, yellow, event)) }
+    fun onAction(action: GameplayAction) {
+        when (action) {
+            GameplayAction.MenuClick -> _uiState.update { it.copy(showSettingsSheet = true) }
+            GameplayAction.PreviousClick -> onNavigateToPreviousTurn()
+            GameplayAction.NextClick -> onNavigateToNextTurn()
+            GameplayAction.JumpToCurrentClick -> onJumpToCurrentTurn()
+            is GameplayAction.DiceSelected -> _uiState.update { it.copy(pendingDiceEdit = DiceRoll(action.red, action.yellow, action.event)) }
+            GameplayAction.ContinueFromDiceClick -> onContinueFromDice()
+            GameplayAction.ContinueFromEventClick -> onContinueFromEvent()
+            GameplayAction.TimerToggleClick -> if (_uiState.value.timerState.isRunning) timerManager.stop() else timerManager.start(_uiState.value.timerState.remainingMillis)
+            GameplayAction.AddTimeClick -> timerManager.addTime(10_000L)
+            GameplayAction.ResetTimerClick -> timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
+            GameplayAction.NextTurnClick -> onNextTurn()
+            GameplayAction.InBetweenTurnClick -> onStartInBetweenTurn()
+            GameplayAction.SaveHistoricalEditClick -> _uiState.update { it.copy(showHistoricalEditConfirm = true) }
+            GameplayAction.DismissSettingsSheetClick -> _uiState.update { it.copy(showSettingsSheet = false) }
+            GameplayAction.ViewStatisticsClick -> _uiState.update { it.copy(showSettingsSheet = false, showStatisticsPopup = true) }
+            is GameplayAction.SaveSettingsClick -> onUpdateGameSettings(action.expansions, action.specialTurnRuleEnabled)
+            GameplayAction.StartNewGameClick -> {
+                _uiState.update { it.copy(showSettingsSheet = false) }
+                _events.trySend(GameplayEvent.NavigateToGameConfig)
+            }
+            GameplayAction.EndGameClick -> _uiState.update { it.copy(showSettingsSheet = false, showEndGameConfirm = true) }
+            GameplayAction.DismissStatisticsPopupClick -> _uiState.update { it.copy(showStatisticsPopup = false) }
+            GameplayAction.ConfirmEndGameClick -> {
+                _uiState.update { it.copy(showEndGameConfirm = false) }
+                _events.trySend(GameplayEvent.NavigateToWinnerSelection(gameId))
+            }
+            GameplayAction.DismissEndGameConfirmClick -> _uiState.update { it.copy(showEndGameConfirm = false) }
+            GameplayAction.ConfirmHistoricalEditClick -> onConfirmHistoricalDiceEdit()
+            GameplayAction.DismissHistoricalEditConfirmClick -> _uiState.update { it.copy(showHistoricalEditConfirm = false) }
+        }
     }
 
-    fun onContinueFromDice() {
+    private fun onContinueFromDice() {
         val dice = _uiState.value.pendingDiceEdit ?: return
         viewModelScope.launch {
             sessionCoordinator.updateSelectedTurnDice(dice.red, dice.yellow, dice.event)
@@ -104,56 +138,88 @@ class GameplayViewModel(
         }
     }
 
-    fun onContinueFromEvent() {
+    private fun onContinueFromEvent() {
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
         _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER) }
     }
 
-    fun onStartTimer() {
-        timerManager.start(_uiState.value.timerState.remainingMillis)
-    }
+    private var primaryElapsedMillis: Long = 0L
 
-    fun onStopTimer() {
-        timerManager.stop()
-    }
-
-    fun onAddTime() {
-        timerManager.addTime(10_000L)
-    }
-
-    fun onResetTimer() {
+    private fun onStartInBetweenTurn() {
+        primaryElapsedMillis = timerManager.stop()
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
+        _uiState.update { it.copy(phase = GameplayPhase.IN_BETWEEN_TIMER) }
     }
 
-    fun onNextTurn() {
+    private fun onNextTurn() {
         viewModelScope.launch {
-            val elapsed = timerManager.stop()
+            val elapsed = primaryElapsedMillis + timerManager.stop()
+            primaryElapsedMillis = 0L
             sessionCoordinator.completeTurn(elapsed)
             _uiState.update { it.copy(phase = GameplayPhase.DICE_SELECTION, pendingDiceEdit = null) }
         }
     }
 
-    fun onEndGame() {
-        // Navigation to WinnerSelection is handled by the screen via a SharedFlow or callback
-        // finishSession will be called after winner selection
-    }
-
-    fun onNavigateToPreviousTurn() {
+    private fun onNavigateToPreviousTurn() {
         val nav = _navigator.value?.selectPrevious() ?: return
         _navigator.value = nav
-        _uiState.update { it.copy(displayedTurn = nav.selectedTurn, isViewingLatest = nav.isViewingLatest) }
+        val pendingDice = nav.selectedTurn?.let { t ->
+            if (!nav.isViewingLatest && t.redDice != null && t.yellowDice != null) {
+                DiceRoll(t.redDice, t.yellowDice, t.eventDice)
+            } else null
+        }
+        _uiState.update {
+            it.copy(
+                displayedTurn = nav.selectedTurn,
+                isViewingLatest = nav.isViewingLatest,
+                pendingDiceEdit = pendingDice
+            )
+        }
     }
 
-    fun onNavigateToNextTurn() {
+    private fun onNavigateToNextTurn() {
         val nav = _navigator.value?.selectNext() ?: return
         _navigator.value = nav
-        _uiState.update { it.copy(displayedTurn = nav.selectedTurn, isViewingLatest = nav.isViewingLatest) }
+        val pendingDice = nav.selectedTurn?.let { t ->
+            if (!nav.isViewingLatest && t.redDice != null && t.yellowDice != null) {
+                DiceRoll(t.redDice, t.yellowDice, t.eventDice)
+            } else null
+        }
+        _uiState.update {
+            it.copy(
+                displayedTurn = nav.selectedTurn,
+                isViewingLatest = nav.isViewingLatest,
+                pendingDiceEdit = pendingDice
+            )
+        }
     }
 
-    fun onJumpToCurrentTurn() {
+    private fun onJumpToCurrentTurn() {
         val nav = _navigator.value?.selectLatest() ?: return
         _navigator.value = nav
-        _uiState.update { it.copy(displayedTurn = nav.selectedTurn, isViewingLatest = true) }
+        _uiState.update {
+            it.copy(
+                displayedTurn = nav.selectedTurn,
+                isViewingLatest = true,
+                pendingDiceEdit = null
+            )
+        }
+    }
+
+    private fun onConfirmHistoricalDiceEdit() {
+        val turn = _uiState.value.displayedTurn ?: return
+        val dice = _uiState.value.pendingDiceEdit ?: return
+        viewModelScope.launch {
+            sessionCoordinator.updateTurnDice(turn, dice.red, dice.yellow, dice.event)
+            _uiState.update { it.copy(showHistoricalEditConfirm = false) }
+        }
+    }
+
+    private fun onUpdateGameSettings(expansions: Set<GameExpansion>, specialTurnRuleEnabled: Boolean) {
+        viewModelScope.launch {
+            gameRepository.updateGameSettings(gameId, expansions, specialTurnRuleEnabled)
+            _uiState.update { it.copy(showSettingsSheet = false) }
+        }
     }
 
     fun onSaveEdit() {
@@ -168,13 +234,6 @@ class GameplayViewModel(
         _uiState.update { it.copy(isEditing = false, pendingDiceEdit = null) }
     }
 
-    fun onUpdateGameSettings(expansions: Set<GameExpansion>, specialTurnRuleEnabled: Boolean) {
-        viewModelScope.launch {
-            gameRepository.updateGameSettings(gameId, expansions, specialTurnRuleEnabled)
-            _uiState.update { it.copy(showSettingsSheet = false) }
-        }
-    }
-
     fun onFinishSession(winnerId: Long?) {
         viewModelScope.launch {
             sessionCoordinator.finishSession(
@@ -182,21 +241,5 @@ class GameplayViewModel(
                 winnerId = winnerId
             )
         }
-    }
-
-    fun onShowStatisticsPopup() {
-        _uiState.update { it.copy(showStatisticsPopup = true) }
-    }
-
-    fun onHideStatisticsPopup() {
-        _uiState.update { it.copy(showStatisticsPopup = false) }
-    }
-
-    fun onShowSettingsSheet() {
-        _uiState.update { it.copy(showSettingsSheet = true) }
-    }
-
-    fun onHideSettingsSheet() {
-        _uiState.update { it.copy(showSettingsSheet = false) }
     }
 }

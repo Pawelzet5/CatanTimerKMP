@@ -14,6 +14,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreen
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigScreen
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreen
+import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
 import org.example.project.catan_companion_feature.presentation.gameslist.GamesListScreen
 import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryScreen
 import org.example.project.catan_companion_feature.presentation.navigation.DashboardRoute
@@ -23,6 +24,7 @@ import org.example.project.catan_companion_feature.presentation.navigation.Gamep
 import org.example.project.catan_companion_feature.presentation.navigation.GamesListRoute
 import org.example.project.catan_companion_feature.presentation.navigation.PlayerDetailsRoute
 import org.example.project.catan_companion_feature.presentation.navigation.PlayersListRoute
+import org.example.project.catan_companion_feature.presentation.navigation.WinnerSelectionRoute
 import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreen
 import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListScreen
 import org.example.project.core.designsystem.CatanTimerTheme
@@ -70,10 +72,16 @@ fun App() {
             }
             composable<GameplayRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<GameplayRoute>()
-                GameplayScreen(
+                GameplayScreenRoot(
                     gameId = route.gameId,
                     onNavigateToSummary = { gameId ->
                         navController.navigate(GameSummaryRoute(gameId))
+                    },
+                    onNavigateToWinnerSelection = { gameId ->
+                        navController.navigate(WinnerSelectionRoute(gameId))
+                    },
+                    onNavigateToGameConfig = {
+                        navController.navigate(GameConfigRoute)
                     },
                     onNavigateBack = { navController.popBackStack() }
                 )
