@@ -11,6 +11,8 @@ import kotlinx.coroutines.test.setMain
 import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
 import org.example.project.catan_companion_feature.data.fakes.repository.FakePlayerRepository
 import org.example.project.catan_companion_feature.domain.usecase.CreateGameUseCase
+import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigAction
+import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigEvent
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
 import org.example.project.catan_companion_feature.testPlayer
 import kotlin.test.AfterTest
@@ -38,8 +40,8 @@ class GameConfigViewModelTest {
     fun `GameConfig validation, fewer than 3 players selected, isValid is false`() =
         runTest(testDispatcher) {
             val viewModel = makeViewModel()
-            viewModel.onPlayerToggled(testPlayer(1L))
-            viewModel.onPlayerToggled(testPlayer(2L))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(1L)))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(2L)))
             assertFalse(viewModel.uiState.value.isValid)
         }
 
@@ -47,9 +49,10 @@ class GameConfigViewModelTest {
     fun `GameConfig validation, 3 players selected, isValid is true`() =
         runTest(testDispatcher) {
             val viewModel = makeViewModel()
-            viewModel.onPlayerToggled(testPlayer(1L))
-            viewModel.onPlayerToggled(testPlayer(2L))
-            viewModel.onPlayerToggled(testPlayer(3L))
+            viewModel.onAction(GameConfigAction.PlayerCountSelected(3))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(1L)))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(2L)))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(3L)))
             assertTrue(viewModel.uiState.value.isValid)
         }
 
@@ -57,26 +60,27 @@ class GameConfigViewModelTest {
     fun `GameConfig specialTurnRule toggle, fewer than 5 players selected, isValid is false`() =
         runTest(testDispatcher) {
             val viewModel = makeViewModel()
-            viewModel.onSpecialTurnRuleToggled()
-            viewModel.onPlayerToggled(testPlayer(1L))
-            viewModel.onPlayerToggled(testPlayer(2L))
-            viewModel.onPlayerToggled(testPlayer(3L))
-            viewModel.onPlayerToggled(testPlayer(4L))
+            viewModel.onAction(GameConfigAction.SpecialTurnRuleToggled)
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(1L)))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(2L)))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(3L)))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(4L)))
             assertFalse(viewModel.uiState.value.isValid)
         }
 
     @Test
-    fun `GameConfig start game, valid config, navigation event emitted`() =
+    fun `GameConfig start game, valid config, NavigateToGameplay event emitted`() =
         runTest(testDispatcher) {
             val viewModel = makeViewModel()
-            val gameIds = mutableListOf<Long>()
-            val job = launch { viewModel.navigateToGameplay.collect { gameIds.add(it) } }
-            viewModel.onPlayerToggled(testPlayer(1L))
-            viewModel.onPlayerToggled(testPlayer(2L))
-            viewModel.onPlayerToggled(testPlayer(3L))
-            viewModel.onStartGame()
+            val events = mutableListOf<GameConfigEvent>()
+            val job = launch { viewModel.events.collect { events.add(it) } }
+            viewModel.onAction(GameConfigAction.PlayerCountSelected(3))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(1L)))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(2L)))
+            viewModel.onAction(GameConfigAction.PlayerToggled(testPlayer(3L)))
+            viewModel.onAction(GameConfigAction.StartGameClick)
             advanceUntilIdle()
-            assertTrue(gameIds.isNotEmpty())
+            assertTrue(events.any { it is GameConfigEvent.NavigateToGameplay })
             job.cancel()
         }
 

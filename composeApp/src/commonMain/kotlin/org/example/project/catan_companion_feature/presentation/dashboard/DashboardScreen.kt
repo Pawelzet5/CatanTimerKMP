@@ -17,11 +17,12 @@ import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.*
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.core.designsystem.*
+import org.example.project.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.*
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun DashboardScreen(
+fun DashboardScreenRoot(
     onNewGame: () -> Unit,
     onResumeGame: (Long) -> Unit,
     onGamesList: () -> Unit,
@@ -30,6 +31,23 @@ fun DashboardScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            DashboardEvent.NavigateToNewGame -> onNewGame()
+            is DashboardEvent.NavigateToResumeGame -> onResumeGame(event.gameId)
+            DashboardEvent.NavigateToGamesList -> onGamesList()
+            DashboardEvent.NavigateToPlayersList -> onPlayersList()
+        }
+    }
+
+    DashboardScreen(state = uiState, onAction = viewModel::onAction)
+}
+
+@Composable
+fun DashboardScreen(
+    state: DashboardState,
+    onAction: (DashboardAction) -> Unit
+) {
     Column(modifier = Modifier.fillMaxSize()) {
         DashboardHeader()
         LazyColumn(
@@ -44,25 +62,25 @@ fun DashboardScreen(
             ),
             verticalArrangement = Arrangement.spacedBy(CatanSpacing.md)
         ) {
-            uiState.resumableGame?.let { game ->
+            state.resumableGame?.let { game ->
                 item {
                     ResumeGameCard(
                         game = game,
-                        onResume = { onResumeGame(game.id) }
+                        onResume = { onAction(DashboardAction.ResumeGameClick(game.id)) }
                     )
                 }
             }
             item {
                 ActionCardsRow(
-                    onNewGame = onNewGame,
-                    onGamesList = onGamesList,
-                    onPlayersList = onPlayersList
+                    onNewGame = { onAction(DashboardAction.NewGameClick) },
+                    onGamesList = { onAction(DashboardAction.GamesListClick) },
+                    onPlayersList = { onAction(DashboardAction.PlayersListClick) }
                 )
             }
             item {
                 RecentActivitySection(
-                    totalGames = uiState.totalGames,
-                    totalPlayers = uiState.totalPlayers
+                    totalGames = state.totalGames,
+                    totalPlayers = state.totalPlayers
                 )
             }
         }

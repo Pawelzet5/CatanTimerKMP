@@ -63,19 +63,35 @@ import org.example.project.catan_companion_feature.presentation.components.Playe
 import org.example.project.catan_companion_feature.presentation.components.PlayerAvatarSize
 import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.designsystem.catanColors
+import org.example.project.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PlayerDetailsScreen(
+fun PlayerDetailsScreenRoot(
     playerId: Long,
     onNavigateBack: () -> Unit,
     viewModel: PlayerDetailsViewModel = koinViewModel { parametersOf(playerId) }
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val player = uiState.player
+
+    ObserveAsEvents(viewModel.events) { event ->
+        when (event) {
+            PlayerDetailsEvent.NavigateBack -> onNavigateBack()
+        }
+    }
+
+    PlayerDetailsScreen(state = uiState, onAction = viewModel::onAction)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PlayerDetailsScreen(
+    state: PlayerDetailsState,
+    onAction: (PlayerDetailsAction) -> Unit
+) {
+    val player = state.player
 
     var showEditDialog by remember { mutableStateOf(false) }
     var showOverflowMenu by remember { mutableStateOf(false) }
@@ -87,7 +103,7 @@ fun PlayerDetailsScreen(
             TopAppBar(
                 title = { Text(stringResource(Res.string.player_details_title)) },
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
+                    IconButton(onClick = { onAction(PlayerDetailsAction.BackClick) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(Res.string.common_back)
@@ -157,7 +173,7 @@ fun PlayerDetailsScreen(
         EditNameDialog(
             currentName = player.name,
             onSave = { newName ->
-                viewModel.onUpdateName(newName)
+                onAction(PlayerDetailsAction.UpdateName(newName))
                 showEditDialog = false
             },
             onDismiss = { showEditDialog = false }
@@ -170,9 +186,8 @@ fun PlayerDetailsScreen(
             message = stringResource(Res.string.players_delete_confirm_message, player.name),
             confirmLabel = stringResource(Res.string.common_confirm),
             onConfirm = {
-                viewModel.onDeletePlayer()
+                onAction(PlayerDetailsAction.DeletePlayerClick)
                 showDeleteDialog = false
-                onNavigateBack()
             },
             onDismiss = { showDeleteDialog = false }
         )
@@ -184,9 +199,8 @@ fun PlayerDetailsScreen(
             message = stringResource(Res.string.players_hide_confirm_message, player.name),
             confirmLabel = stringResource(Res.string.common_confirm),
             onConfirm = {
-                viewModel.onHidePlayer()
+                onAction(PlayerDetailsAction.HidePlayerClick)
                 showHideDialog = false
-                onNavigateBack()
             },
             onDismiss = { showHideDialog = false }
         )

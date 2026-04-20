@@ -8,15 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigAction
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
 import org.example.project.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
 import org.koin.compose.viewmodel.koinViewModel
-import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreen
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigScreen
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreen
+import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreenRoot
+import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigScreenRoot
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
-import org.example.project.catan_companion_feature.presentation.gameslist.GamesListScreen
-import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryScreen
+import org.example.project.catan_companion_feature.presentation.gameslist.GamesListScreenRoot
+import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryScreenRoot
 import org.example.project.catan_companion_feature.presentation.navigation.DashboardRoute
 import org.example.project.catan_companion_feature.presentation.navigation.GameConfigRoute
 import org.example.project.catan_companion_feature.presentation.navigation.GameSummaryRoute
@@ -25,8 +25,8 @@ import org.example.project.catan_companion_feature.presentation.navigation.Games
 import org.example.project.catan_companion_feature.presentation.navigation.PlayerDetailsRoute
 import org.example.project.catan_companion_feature.presentation.navigation.PlayersListRoute
 import org.example.project.catan_companion_feature.presentation.navigation.WinnerSelectionRoute
-import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreen
-import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListScreen
+import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreenRoot
+import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListScreenRoot
 import org.example.project.core.designsystem.CatanTimerTheme
 
 @Composable
@@ -38,7 +38,7 @@ fun App() {
             startDestination = DashboardRoute
         ) {
             composable<DashboardRoute> {
-                DashboardScreen(
+                DashboardScreenRoot(
                     onNewGame = { navController.navigate(GameConfigRoute) },
                     onResumeGame = { gameId -> navController.navigate(GameplayRoute(gameId)) },
                     onGamesList = { navController.navigate(GamesListRoute) },
@@ -46,7 +46,7 @@ fun App() {
                 )
             }
             composable<GameConfigRoute> { backStackEntry ->
-                val viewModel = koinViewModel<GameConfigViewModel>()
+                val viewModel = koinViewModel<GameConfigViewModel>(viewModelStoreOwner = backStackEntry)
                 val selectionViewModel = koinViewModel<PlayersSelectionViewModel>(
                     viewModelStoreOwner = backStackEntry
                 )
@@ -54,12 +54,12 @@ fun App() {
                 val pendingSelection by selectionViewModel.pendingSelection.collectAsState()
                 LaunchedEffect(pendingSelection) {
                     pendingSelection?.let { players ->
-                        viewModel.onPlayersSelected(players)
+                        viewModel.onAction(GameConfigAction.PlayersSelected(players))
                         selectionViewModel.clearSelection()
                     }
                 }
 
-                GameConfigScreen(
+                GameConfigScreenRoot(
                     onNavigateBack = { navController.popBackStack() },
                     onGameCreated = { gameId ->
                         navController.navigate(GameplayRoute(gameId)) {
@@ -99,7 +99,7 @@ fun App() {
                     }
                 )
 
-                PlayersListScreen(
+                PlayersListScreenRoot(
                     isSelectionMode = route.selectionMode,
                     onNavigateBack = { navController.popBackStack() },
                     onPlayerClick = { playerId -> navController.navigate(PlayerDetailsRoute(playerId)) },
@@ -111,20 +111,20 @@ fun App() {
             }
             composable<PlayerDetailsRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<PlayerDetailsRoute>()
-                PlayerDetailsScreen(
+                PlayerDetailsScreenRoot(
                     playerId = route.playerId,
                     onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable<GamesListRoute> {
-                GamesListScreen(
+                GamesListScreenRoot(
                     onNavigateBack = { navController.popBackStack() },
                     onGameClick = { gameId -> navController.navigate(GameSummaryRoute(gameId)) }
                 )
             }
             composable<GameSummaryRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<GameSummaryRoute>()
-                GameSummaryScreen(
+                GameSummaryScreenRoot(
                     gameId = route.gameId,
                     onNavigateBack = { navController.popBackStack() }
                 )
