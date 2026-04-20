@@ -16,8 +16,8 @@ class PlayerDetailsViewModel(
     private val playerRepository: PlayerRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(PlayerDetailsUiState())
-    val uiState: StateFlow<PlayerDetailsUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(PlayerDetailsState())
+    val uiState: StateFlow<PlayerDetailsState> = _uiState.asStateFlow()
 
     init {
         playerRepository.getPlayerById(playerId)

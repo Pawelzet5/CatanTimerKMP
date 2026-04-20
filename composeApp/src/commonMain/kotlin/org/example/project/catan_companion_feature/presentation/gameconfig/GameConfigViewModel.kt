@@ -24,8 +24,8 @@ class GameConfigViewModel(
     private val createGameUseCase: CreateGameUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GameConfigUiState())
-    val uiState: StateFlow<GameConfigUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(GameConfigState())
+    val uiState: StateFlow<GameConfigState> = _uiState.asStateFlow()
 
     private val _navigateToGameplay = MutableSharedFlow<Long>(replay = 0)
     val navigateToGameplay: SharedFlow<Long> = _navigateToGameplay.asSharedFlow()

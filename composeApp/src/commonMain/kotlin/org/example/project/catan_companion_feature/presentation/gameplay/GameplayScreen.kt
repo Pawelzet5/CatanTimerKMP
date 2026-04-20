@@ -140,7 +140,7 @@ fun GameplayScreenRoot(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameplayScreen(
-    uiState: GameplayUiState,
+    uiState: GameplayState,
     onAction: (GameplayAction) -> Unit
 ) {
     Scaffold(
@@ -219,7 +219,7 @@ fun GameplayScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun GameplayAppBar(
-    uiState: GameplayUiState,
+    uiState: GameplayState,
     onMenuClick: () -> Unit
 ) {
     val turn = uiState.displayedTurn
@@ -256,7 +256,7 @@ private fun GameplayAppBar(
 
 @Composable
 private fun TurnNavigatorBar(
-    uiState: GameplayUiState,
+    uiState: GameplayState,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     onJumpToCurrent: () -> Unit
@@ -297,7 +297,7 @@ private fun TurnNavigatorBar(
 
 @Composable
 private fun DiceSelectionContent(
-    uiState: GameplayUiState,
+    uiState: GameplayState,
     onDiceSelected: (Int, Int, EventDiceType?) -> Unit,
     onEventDiceSelected: (EventDiceType) -> Unit,
     onContinue: () -> Unit
@@ -550,7 +550,7 @@ private fun SettingsToggleRow(
 
 @Composable
 private fun TimerPhaseContent(
-    uiState: GameplayUiState,
+    uiState: GameplayState,
     onStartStop: () -> Unit,
     onAddTime: () -> Unit,
     onReset: () -> Unit,

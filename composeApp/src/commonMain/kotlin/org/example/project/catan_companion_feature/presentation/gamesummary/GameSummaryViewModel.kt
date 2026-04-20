@@ -18,8 +18,8 @@ class GameSummaryViewModel(
     private val getGameStatisticsUseCase: GetGameStatisticsUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GameSummaryUiState(isLoading = true))
-    val uiState: StateFlow<GameSummaryUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(GameSummaryState(isLoading = true))
+    val uiState: StateFlow<GameSummaryState> = _uiState.asStateFlow()
 
     init {
         loadSummary()

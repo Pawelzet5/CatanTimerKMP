@@ -6,7 +6,7 @@ import org.example.project.catan_companion_feature.domain.dataclass.DiceRoll
 import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.Turn
 
-data class GameplayUiState(
+data class GameplayState(
     val game: Game? = null,
     val currentTurn: Turn? = null,
     val displayedTurn: Turn? = null,

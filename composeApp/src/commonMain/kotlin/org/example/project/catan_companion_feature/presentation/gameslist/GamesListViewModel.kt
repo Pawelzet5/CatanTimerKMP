@@ -16,15 +16,15 @@ class GamesListViewModel(
     private val gameRepository: GameRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GamesListUiState())
-    val uiState: StateFlow<GamesListUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(GamesListState())
+    val uiState: StateFlow<GamesListState> = _uiState.asStateFlow()
 
     init {
         combine(
             gameRepository.getInProgressGames(),
             gameRepository.getCompletedGames()
         ) { inProgress, completed ->
-            GamesListUiState(inProgressGames = inProgress, completedGames = completed)
+            GamesListState(inProgressGames = inProgress, completedGames = completed)
         }
             .onEach { state -> _uiState.value = state }
             .launchIn(viewModelScope)
