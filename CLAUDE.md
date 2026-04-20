@@ -261,4 +261,25 @@ Use `core/util/LogUtils` (wraps Kermit). Never use `println` or `android.util.Lo
 
 ### Git Workflow
 
-When doing git operations be compliant with GIT_WORKFLOW.md 
+When doing git operations be compliant with GIT_WORKFLOW.md
+
+---
+
+## Skills & Claude Code Conventions
+
+This project uses KMP/CMP. The `android-*` skills below all apply — invoke them for the listed
+tasks, but always generate output targeting `commonMain` unless a platform source set is
+explicitly required.
+
+| Task | Skill to invoke | KMP override |
+|---|---|---|
+| New screen / ViewModel / State / Action / Event | `android-presentation-mvi` | No `SavedStateHandle`; ViewModel lives in `commonMain` |
+| New repository / DAO / mapper / data source | `android-data-layer` | Room is behind `expect/actual`; no Android-specific imports in `commonMain` |
+| Writing tests (ViewModel, repository, use case) | `android-testing` | `commonTest` uses `kotlin.test`; Robolectric only in `androidUnitTest` |
+| Adding/modifying Koin modules | `android-di-koin` | Modules live in `catan_companion_feature/di/`; platform modules in `*Main/di/` |
+| New composable / UI component / layout | `android-compose-ui` | No `@Preview` in `commonMain`; use CMP equivalents |
+| Navigation routes / nav graphs | `android-navigation` | Uses Compose Multiplatform Navigation, not the `androidx.navigation` artifact |
+| Result / error type / DataError | `android-error-handling` | Already implemented in `core/domain/Result.kt` — extend, don't recreate |
+| Module layout / Gradle structure | `android-module-structure` | KMP source set structure, not Android-only module layout |
+
+When invoking a skill, apply the KMP overrides from this table before generating any code.
