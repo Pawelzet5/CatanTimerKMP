@@ -2,10 +2,12 @@ package org.example.project.catan_companion_feature.presentation.gamesummary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
@@ -21,8 +23,17 @@ class GameSummaryViewModel(
     private val _uiState = MutableStateFlow(GameSummaryState(isLoading = true))
     val uiState: StateFlow<GameSummaryState> = _uiState.asStateFlow()
 
+    private val _events = Channel<GameSummaryEvent>(Channel.BUFFERED)
+    val events = _events.receiveAsFlow()
+
     init {
         loadSummary()
+    }
+
+    fun onAction(action: GameSummaryAction) {
+        when (action) {
+            GameSummaryAction.BackClick -> _events.trySend(GameSummaryEvent.NavigateBack)
+        }
     }
 
     private fun loadSummary() {
