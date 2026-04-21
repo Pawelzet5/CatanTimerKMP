@@ -19,16 +19,17 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.catan_companion_feature.domain.repository.TurnRepository
 import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
+import kotlin.time.Clock
 
 class GameplayViewModel(
     private val gameId: Long,
     private val sessionCoordinator: GameSessionCoordinator,
     private val turnRepository: TurnRepository,
-    private val gameRepository: GameRepository
+    private val gameRepository: GameRepository,
+    private val timerManager: TimerManager
 ) : ViewModel() {
-
-    private val timerManager = TimerManager(viewModelScope)
     private val _navigator = MutableStateFlow<TurnNavigator?>(null)
+    private var primaryElapsedMillis: Long = 0L
 
     private val _uiState = MutableStateFlow(GameplayState(isLoading = true))
     val uiState: StateFlow<GameplayState> = _uiState.asStateFlow()
@@ -101,7 +102,8 @@ class GameplayViewModel(
             is GameplayAction.DiceSelected -> _uiState.update { it.copy(pendingDiceEdit = DiceRoll(action.red, action.yellow, action.event)) }
             GameplayAction.ContinueFromDiceClick -> onContinueFromDice()
             GameplayAction.ContinueFromEventClick -> onContinueFromEvent()
-            GameplayAction.TimerToggleClick -> if (_uiState.value.timerState.isRunning) timerManager.stop() else timerManager.start(_uiState.value.timerState.remainingMillis)
+            GameplayAction.TimerToggleClick -> if (_uiState.value.timerState.isRunning) timerManager.stop()
+            else timerManager.start(viewModelScope, _uiState.value.timerState.remainingMillis)
             GameplayAction.AddTimeClick -> timerManager.addTime(10_000L)
             GameplayAction.ResetTimerClick -> timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
             GameplayAction.NextTurnClick -> onNextTurn()
@@ -142,8 +144,6 @@ class GameplayViewModel(
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
         _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER) }
     }
-
-    private var primaryElapsedMillis: Long = 0L
 
     private fun onStartInBetweenTurn() {
         primaryElapsedMillis = timerManager.stop()
@@ -222,22 +222,10 @@ class GameplayViewModel(
         }
     }
 
-    fun onSaveEdit() {
-        val dice = _uiState.value.pendingDiceEdit ?: return
-        viewModelScope.launch {
-            sessionCoordinator.updateSelectedTurnDice(dice.red, dice.yellow, dice.event)
-            _uiState.update { it.copy(isEditing = false, pendingDiceEdit = null) }
-        }
-    }
-
-    fun onCancelEdit() {
-        _uiState.update { it.copy(isEditing = false, pendingDiceEdit = null) }
-    }
-
     fun onFinishSession(winnerId: Long?) {
         viewModelScope.launch {
             sessionCoordinator.finishSession(
-                finishedAt = System.currentTimeMillis(),
+                finishedAt = Clock.System.now().epochSeconds,
                 winnerId = winnerId
             )
         }

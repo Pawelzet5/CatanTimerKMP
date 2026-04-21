@@ -9,14 +9,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class TimerManager(private val scope: CoroutineScope) {
+class TimerManager {
 
     private val _state = MutableStateFlow(TimerState())
     val state: StateFlow<TimerState> = _state.asStateFlow()
 
     private var timerJob: Job? = null
 
-    fun start(fromMillis: Long) {
+    fun start(scope: CoroutineScope, fromMillis: Long) {
         timerJob?.cancel()
         _state.update { it.copy(remainingMillis = fromMillis, isRunning = true) }
         timerJob = scope.launch {

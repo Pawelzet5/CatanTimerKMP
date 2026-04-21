@@ -4,6 +4,7 @@ import org.example.project.catan_companion_feature.presentation.dashboard.Dashbo
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
 import org.example.project.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayViewModel
+import org.example.project.catan_companion_feature.presentation.gameplay.TimerManager
 import org.example.project.catan_companion_feature.presentation.gameslist.GamesListViewModel
 import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryViewModel
 import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsViewModel
@@ -15,10 +16,20 @@ import org.koin.dsl.module
 val catanCompanionModule = module {
     includes(databaseModule, repositoryModule, sessionModule, useCaseModule)
 
+    factory { TimerManager() }
+
     viewModelOf(::DashboardViewModel)
     viewModelOf(::GameConfigViewModel)
     viewModelOf(::PlayersSelectionViewModel)
-    viewModel { params -> GameplayViewModel(params.get(), get(), get(), get()) }
+    viewModel { params ->
+        GameplayViewModel(
+            gameId = params.get(),
+            sessionCoordinator = get(),
+            turnRepository = get(),
+            gameRepository = get(),
+            timerManager = get()
+        )
+    }
     viewModelOf(::PlayersListViewModel)
     viewModel { params -> PlayerDetailsViewModel(params.get(), get()) }
     viewModelOf(::GamesListViewModel)
