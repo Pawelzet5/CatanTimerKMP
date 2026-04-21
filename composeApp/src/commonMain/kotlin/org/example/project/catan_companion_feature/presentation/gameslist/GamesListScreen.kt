@@ -1,5 +1,6 @@
 package org.example.project.catan_companion_feature.presentation.gameslist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,11 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +34,6 @@ import catantimer.composeapp.generated.resources.games_completed
 import catantimer.composeapp.generated.resources.games_in_progress
 import catantimer.composeapp.generated.resources.games_title
 import catantimer.composeapp.generated.resources.ic_close
-import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
 import org.example.project.catan_companion_feature.presentation.components.GameListItem
 import org.example.project.core.designsystem.CatanSpacing
@@ -70,8 +68,6 @@ fun GamesListScreen(
     state: GamesListState,
     onAction: (GamesListAction) -> Unit
 ) {
-    var gameToDelete by remember { mutableStateOf<Game?>(null) }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -122,7 +118,7 @@ fun GamesListScreen(
                     }
                     items(state.inProgressGames, key = { it.id }) { game ->
                         SwipeToDeleteItem(
-                            onSwipedToDelete = { gameToDelete = game }
+                            onSwipedToDelete = { onAction(GamesListAction.RequestDeleteGame(game)) }
                         ) {
                             GameListItem(
                                 game = game,
@@ -139,7 +135,7 @@ fun GamesListScreen(
                     }
                     items(state.completedGames, key = { it.id }) { game ->
                         SwipeToDeleteItem(
-                            onSwipedToDelete = { gameToDelete = game }
+                            onSwipedToDelete = { onAction(GamesListAction.RequestDeleteGame(game)) }
                         ) {
                             GameListItem(
                                 game = game,
@@ -153,17 +149,14 @@ fun GamesListScreen(
         }
     }
 
-    gameToDelete?.let { game ->
+    state.gameToDelete?.let { game ->
         ConfirmationDialog(
             title = stringResource(Res.string.common_delete),
             message = game.players.sortedBy { it.orderIndex }.joinToString(", ") { it.playerName },
             confirmLabel = stringResource(Res.string.common_delete),
             dismissLabel = stringResource(Res.string.common_cancel),
-            onConfirm = {
-                onAction(GamesListAction.DeleteGameClick(game))
-                gameToDelete = null
-            },
-            onDismiss = { gameToDelete = null }
+            onConfirm = { onAction(GamesListAction.ConfirmDeleteGame) },
+            onDismiss = { onAction(GamesListAction.DismissDeleteGame) }
         )
     }
 }
@@ -189,18 +182,32 @@ private fun SwipeToDeleteItem(
     onSwipedToDelete: () -> Unit,
     content: @Composable () -> Unit
 ) {
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = { value ->
-            if (value == SwipeToDismissBoxValue.EndToStart) {
-                onSwipedToDelete()
-            }
-            false
+    val dismissState = rememberSwipeToDismissBoxState()
+
+    LaunchedEffect(dismissState.currentValue) {
+        if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
+            onSwipedToDelete()
+            dismissState.snapTo(SwipeToDismissBoxValue.Settled)
         }
-    )
+    }
 
     SwipeToDismissBox(
         state = dismissState,
-        backgroundContent = {},
+        backgroundContent = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.errorContainer),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_close),
+                    contentDescription = stringResource(Res.string.common_delete),
+                    tint = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.padding(end = CatanSpacing.md)
+                )
+            }
+        },
         enableDismissFromStartToEnd = false,
         enableDismissFromEndToStart = true,
         content = { content() }

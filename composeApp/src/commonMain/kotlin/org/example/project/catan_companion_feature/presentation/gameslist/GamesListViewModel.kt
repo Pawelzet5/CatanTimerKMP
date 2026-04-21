@@ -47,9 +47,13 @@ class GamesListViewModel(
                     GamesListEvent.NavigateToGameSummary(action.gameId)
                 _events.trySend(event)
             }
-            is GamesListAction.DeleteGameClick -> viewModelScope.launch {
-                gameRepository.deleteGame(action.game.id)
+            is GamesListAction.RequestDeleteGame -> _uiState.value = _uiState.value.copy(gameToDelete = action.game)
+            GamesListAction.ConfirmDeleteGame -> {
+                val gameId = _uiState.value.gameToDelete?.id ?: return
+                _uiState.value = _uiState.value.copy(gameToDelete = null)
+                viewModelScope.launch { gameRepository.deleteGame(gameId) }
             }
+            GamesListAction.DismissDeleteGame -> _uiState.value = _uiState.value.copy(gameToDelete = null)
         }
     }
 }
