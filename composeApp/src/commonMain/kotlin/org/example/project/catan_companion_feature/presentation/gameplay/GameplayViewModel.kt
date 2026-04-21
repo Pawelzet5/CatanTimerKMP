@@ -102,7 +102,8 @@ class GameplayViewModel(
             is GameplayAction.DiceSelected -> _uiState.update { it.copy(pendingDiceEdit = DiceRoll(action.red, action.yellow, action.event)) }
             GameplayAction.ContinueFromDiceClick -> onContinueFromDice()
             GameplayAction.ContinueFromEventClick -> onContinueFromEvent()
-            GameplayAction.TimerToggleClick -> if (_uiState.value.timerState.isRunning) timerManager.stop() else timerManager.start(_uiState.value.timerState.remainingMillis)
+            GameplayAction.TimerToggleClick -> if (_uiState.value.timerState.isRunning) timerManager.stop()
+            else timerManager.start(viewModelScope, _uiState.value.timerState.remainingMillis)
             GameplayAction.AddTimeClick -> timerManager.addTime(10_000L)
             GameplayAction.ResetTimerClick -> timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
             GameplayAction.NextTurnClick -> onNextTurn()

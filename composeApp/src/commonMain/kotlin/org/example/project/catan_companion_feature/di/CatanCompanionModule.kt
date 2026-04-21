@@ -1,8 +1,5 @@
 package org.example.project.catan_companion_feature.di
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import org.example.project.catan_companion_feature.presentation.dashboard.DashboardViewModel
 import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
 import org.example.project.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
@@ -14,13 +11,12 @@ import org.example.project.catan_companion_feature.presentation.playerdetails.Pl
 import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
-import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 val catanCompanionModule = module {
     includes(databaseModule, repositoryModule, sessionModule, useCaseModule)
 
-    factory { (scope: CoroutineScope) -> TimerManager(scope) }
+    factory { TimerManager() }
 
     viewModelOf(::DashboardViewModel)
     viewModelOf(::GameConfigViewModel)
@@ -31,7 +27,7 @@ val catanCompanionModule = module {
             sessionCoordinator = get(),
             turnRepository = get(),
             gameRepository = get(),
-            timerManager = get<TimerManager> { parametersOf(CoroutineScope(SupervisorJob() + Dispatchers.Main)) }
+            timerManager = get()
         )
     }
     viewModelOf(::PlayersListViewModel)
