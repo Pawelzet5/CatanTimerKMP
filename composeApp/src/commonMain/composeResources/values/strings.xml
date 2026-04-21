@@ -27,8 +27,10 @@
     <string name="gameplay_turn">Turn %1$d</string>
     <string name="gameplay_player_turn">%1$s\'s Turn</string>
     <string name="gameplay_continue">Continue</string>
+    <string name="gameplay_continue_to_timer">Continue to Turn Timer</string>
     <string name="gameplay_next_turn">Next Turn</string>
     <string name="gameplay_in_between">In-Between Turn (%1$s)</string>
+    <string name="gameplay_active_player">Active player</string>
 
     <!-- Timer -->
     <string name="timer_start">Start</string>
@@ -43,6 +45,10 @@
     <string name="event_move_robber_or_pirate">Move the thief or pirate to a different tile.</string>
     <string name="event_robber_not_active">The thief cannot be moved yet.\n(First barbarian raid has not occurred)</string>
     <string name="event_barbarians_arrived">The barbarians have arrived!\nResolve the attack now.</string>
+    <string name="event_thief_title">The Thief!</string>
+    <string name="event_barbarians_title">The Barbarians!</string>
+    <string name="event_barbarians_description">Resolve the barbarian attack now.\nCompare knights to cities.</string>
+    <string name="event_barbarians_arrived_header">The Barbarians have arrived!</string>
 
     <!-- Statistics -->
     <string name="stats_title">Statistics</string>
@@ -106,9 +112,12 @@
     <string name="historical_edit_message">You are editing dice for turn %1$d. The current turn is %2$d. This will update game statistics and the barbarian position.</string>
 
     <!-- Menu -->
+    <string name="menu_open">Menu</string>
     <string name="menu_statistics">View Statistics</string>
     <string name="menu_settings">Change Game Settings</string>
     <string name="menu_end_game">End Game</string>
+    <!-- Timer warning -->
+    <string name="timer_warning_low">Time running low</string>
 
     <!-- Settings Warning -->
     <string name="settings_warning_title">Warning</string>

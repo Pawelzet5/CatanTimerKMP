@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.ic_barbarians
@@ -40,7 +39,8 @@ fun EventDice(
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(8.dp)
-    val borderColor = if (isSelected) CatanDiceSelectedBorder else Color.Transparent
+    val borderColor = if (isSelected) CatanDiceSelectedBorder else MaterialTheme.colorScheme.outline
+    val borderWidth = if (isSelected) 3.dp else 1.5.dp
     val bgColor = CatanDiceEventBackground
 
     Box(
@@ -48,7 +48,7 @@ fun EventDice(
             .size(50.dp)
             .clip(shape)
             .drawBehind { drawRect(bgColor) }
-            .border(width = 3.dp, color = borderColor, shape = shape)
+            .border(width = borderWidth, color = borderColor, shape = shape)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
