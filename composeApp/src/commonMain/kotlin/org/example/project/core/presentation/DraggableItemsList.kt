@@ -52,6 +52,7 @@ fun <T> DraggableItemsLazyColumn(
     lazyListState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    onDragStart: () -> Unit = {},
 ) {
     val localItems = remember { mutableStateListOf<T>() }
 
@@ -72,6 +73,7 @@ fun <T> DraggableItemsLazyColumn(
             scope = scope,
             state = dragDropState,
             overscrollJob = overscrollJob,
+            onDragStart = onDragStart,
             onDragEnd = { onOrderChanged(localItems.toList()) }
         ),
         state = lazyListState,
@@ -258,10 +260,14 @@ private fun Modifier.dragGestureHandler(
     scope: CoroutineScope,
     state: ItemListDragAndDropState,
     overscrollJob: MutableState<Job?>,
+    onDragStart: () -> Unit = {},
     onDragEnd: () -> Unit = {}
 ): Modifier = this.pointerInput(Unit) {
     detectDragGesturesAfterLongPress(
-        onDragStart = { offset -> state.onDragStart(offset) },
+        onDragStart = { offset ->
+            state.onDragStart(offset)
+            onDragStart()
+        },
         onDrag = { change, offset ->
             change.consume()
             state.onDrag(offset)

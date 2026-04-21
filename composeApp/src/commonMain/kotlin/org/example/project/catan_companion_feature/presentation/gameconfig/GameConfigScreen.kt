@@ -55,6 +55,8 @@ import org.example.project.core.designsystem.components.CatanCheckbox
 import org.example.project.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import org.example.project.catan_companion_feature.presentation.service.HapticService
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
 private const val MILLIS_PER_SECOND = 1_000L
@@ -88,7 +90,8 @@ fun GameConfigScreenRoot(
 @Composable
 fun GameConfigScreen(
     state: GameConfigState,
-    onAction: (GameConfigAction) -> Unit
+    onAction: (GameConfigAction) -> Unit,
+    hapticService: HapticService = koinInject()
 ) {
     Scaffold(
         topBar = {
@@ -158,6 +161,7 @@ fun GameConfigScreen(
                     items = state.selectedPlayers,
                     key = { it.id },
                     onOrderChanged = { onAction(GameConfigAction.PlayersReordered(it)) },
+                    onDragStart = { hapticService.vibrateOnce() },
                     itemContent = { index, player, modifier ->
                         SelectedPlayerRow(
                             player = player,

@@ -76,7 +76,7 @@ class GameplayViewModel(
             .onEach { timerState ->
                 _uiState.update { it.copy(timerState = timerState) }
                 if (wasRunning && !timerState.isRunning && timerState.remainingMillis == 0L) {
-                    hapticService.vibrateTimerEnd()
+                    hapticService.vibrateMultiple()
                 }
                 wasRunning = timerState.isRunning
             }
@@ -163,6 +163,7 @@ class GameplayViewModel(
             val elapsed = primaryElapsedMillis + timerManager.stop()
             primaryElapsedMillis = 0L
             sessionCoordinator.completeTurn(elapsed)
+            hapticService.vibrateOnce()
             _uiState.update { it.copy(phase = GameplayPhase.DICE_SELECTION, pendingDiceEdit = null) }
         }
     }

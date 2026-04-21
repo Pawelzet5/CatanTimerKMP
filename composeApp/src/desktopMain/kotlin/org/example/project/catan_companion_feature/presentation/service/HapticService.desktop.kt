@@ -1,7 +1,15 @@
 package org.example.project.catan_companion_feature.presentation.service
 
 actual class HapticService {
-    actual fun vibrateTimerEnd() {
+    actual fun vibrateOnce() {
+        // Desktop: no-op — no vibration API available
+    }
+
+    actual fun vibrateOnceHeavy() {
+        // Desktop: no-op — no vibration API available
+    }
+
+    actual fun vibrateMultiple() {
         // Desktop: no-op — no vibration API available
     }
 }
