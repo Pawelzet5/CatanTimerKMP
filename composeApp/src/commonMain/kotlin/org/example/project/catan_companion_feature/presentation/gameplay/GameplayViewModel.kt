@@ -19,6 +19,7 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.catan_companion_feature.domain.repository.TurnRepository
 import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
+import kotlin.time.Clock
 
 class GameplayViewModel(
     private val gameId: Long,
@@ -28,6 +29,7 @@ class GameplayViewModel(
     private val timerManager: TimerManager
 ) : ViewModel() {
     private val _navigator = MutableStateFlow<TurnNavigator?>(null)
+    private var primaryElapsedMillis: Long = 0L
 
     private val _uiState = MutableStateFlow(GameplayState(isLoading = true))
     val uiState: StateFlow<GameplayState> = _uiState.asStateFlow()
@@ -143,15 +145,15 @@ class GameplayViewModel(
     }
 
     private fun onStartInBetweenTurn() {
-        val primaryElapsed = timerManager.stop()
+        primaryElapsedMillis = timerManager.stop()
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
-        _uiState.update { it.copy(phase = GameplayPhase.IN_BETWEEN_TIMER, primaryElapsedMillis = primaryElapsed) }
+        _uiState.update { it.copy(phase = GameplayPhase.IN_BETWEEN_TIMER) }
     }
 
     private fun onNextTurn() {
         viewModelScope.launch {
-            val elapsed = _uiState.value.primaryElapsedMillis + timerManager.stop()
-            _uiState.update { it.copy(primaryElapsedMillis = 0L) }
+            val elapsed = primaryElapsedMillis + timerManager.stop()
+            primaryElapsedMillis = 0L
             sessionCoordinator.completeTurn(elapsed)
             _uiState.update { it.copy(phase = GameplayPhase.DICE_SELECTION, pendingDiceEdit = null) }
         }
@@ -219,22 +221,10 @@ class GameplayViewModel(
         }
     }
 
-    fun onSaveEdit() {
-        val dice = _uiState.value.pendingDiceEdit ?: return
-        viewModelScope.launch {
-            sessionCoordinator.updateSelectedTurnDice(dice.red, dice.yellow, dice.event)
-            _uiState.update { it.copy(isEditing = false, pendingDiceEdit = null) }
-        }
-    }
-
-    fun onCancelEdit() {
-        _uiState.update { it.copy(isEditing = false, pendingDiceEdit = null) }
-    }
-
     fun onFinishSession(winnerId: Long?) {
         viewModelScope.launch {
             sessionCoordinator.finishSession(
-                finishedAt = System.currentTimeMillis(),
+                finishedAt = Clock.System.now().epochSeconds,
                 winnerId = winnerId
             )
         }

@@ -15,15 +15,13 @@ data class GameplayState(
     val timerState: TimerState = TimerState(),
     val barbarianState: BarbarianState? = null,
     val diceDistribution: DiceDistribution? = null,
-    val isEditing: Boolean = false,
     val pendingDiceEdit: DiceRoll? = null,
     val showStatisticsPopup: Boolean = false,
     val showSettingsSheet: Boolean = false,
     val showEndGameConfirm: Boolean = false,
     val showHistoricalEditConfirm: Boolean = false,
     val isLoading: Boolean = false,
-    val error: String? = null,
-    val primaryElapsedMillis: Long = 0L
+    val error: String? = null
 )
 
 enum class GameplayPhase {
