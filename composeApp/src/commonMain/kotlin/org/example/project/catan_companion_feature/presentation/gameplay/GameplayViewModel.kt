@@ -19,12 +19,14 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.catan_companion_feature.domain.repository.TurnRepository
 import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
+import org.example.project.catan_companion_feature.presentation.service.HapticService
 
 class GameplayViewModel(
     private val gameId: Long,
     private val sessionCoordinator: GameSessionCoordinator,
     private val turnRepository: TurnRepository,
-    private val gameRepository: GameRepository
+    private val gameRepository: GameRepository,
+    private val hapticService: HapticService
 ) : ViewModel() {
 
     private val timerManager = TimerManager(viewModelScope)
@@ -69,9 +71,14 @@ class GameplayViewModel(
     }
 
     private fun observeTimer() {
+        var wasRunning = false
         timerManager.state
             .onEach { timerState ->
                 _uiState.update { it.copy(timerState = timerState) }
+                if (wasRunning && !timerState.isRunning && timerState.remainingMillis == 0L) {
+                    hapticService.vibrateTimerEnd()
+                }
+                wasRunning = timerState.isRunning
             }
             .launchIn(viewModelScope)
     }
