@@ -1,6 +1,9 @@
 package org.example.project.catan_companion_feature.presentation.gameconfig
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +31,7 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -42,22 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import catantimer.composeapp.generated.resources.Res
-import catantimer.composeapp.generated.resources.common_back
-import catantimer.composeapp.generated.resources.config_add_player
-import catantimer.composeapp.generated.resources.config_cities_knights
-import catantimer.composeapp.generated.resources.config_in_between_turns
-import catantimer.composeapp.generated.resources.config_options
-import catantimer.composeapp.generated.resources.config_player_count
-import catantimer.composeapp.generated.resources.config_players
-import catantimer.composeapp.generated.resources.config_remove_player
-import catantimer.composeapp.generated.resources.config_seafarers
-import catantimer.composeapp.generated.resources.config_start_game
-import catantimer.composeapp.generated.resources.config_title
-import catantimer.composeapp.generated.resources.config_turn_duration
-import catantimer.composeapp.generated.resources.ic_close
-import catantimer.composeapp.generated.resources.ic_minus
-import catantimer.composeapp.generated.resources.ic_plus
+import catantimer.composeapp.generated.resources.*
 import org.example.project.catan_companion_feature.domain.dataclass.Player
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.core.designsystem.CatanSpacing
@@ -131,16 +120,20 @@ fun GameConfigScreen(
                 TurnDurationSection(
                     durationMillis = state.turnDurationMillis,
                     onDecrement = {
-                        onAction(GameConfigAction.TurnDurationChanged(
-                            (state.turnDurationMillis - TURN_DURATION_STEP_MILLIS)
-                                .coerceAtLeast(TURN_DURATION_MIN_MILLIS)
-                        ))
+                        onAction(
+                            GameConfigAction.TurnDurationChanged(
+                                (state.turnDurationMillis - TURN_DURATION_STEP_MILLIS)
+                                    .coerceAtLeast(TURN_DURATION_MIN_MILLIS)
+                            )
+                        )
                     },
                     onIncrement = {
-                        onAction(GameConfigAction.TurnDurationChanged(
-                            (state.turnDurationMillis + TURN_DURATION_STEP_MILLIS)
-                                .coerceAtMost(TURN_DURATION_MAX_MILLIS)
-                        ))
+                        onAction(
+                            GameConfigAction.TurnDurationChanged(
+                                (state.turnDurationMillis + TURN_DURATION_STEP_MILLIS)
+                                    .coerceAtMost(TURN_DURATION_MAX_MILLIS)
+                            )
+                        )
                     }
                 )
             }
@@ -197,6 +190,7 @@ fun GameConfigScreen(
                 Button(
                     onClick = { onAction(GameConfigAction.StartGameClick) },
                     enabled = state.isValid,
+                    shape = RoundedCornerShape(8.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(stringResource(Res.string.config_start_game))
@@ -258,6 +252,11 @@ private fun StepperButton(
     enabled: Boolean,
     onClick: () -> Unit
 ) {
+    val shape = CircleShape
+    val accentColor = if (enabled)
+        MaterialTheme.colorScheme.primary
+    else
+        MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
     Box(
         modifier = Modifier
             .size(36.dp)
@@ -267,8 +266,9 @@ private fun StepperButton(
                     MaterialTheme.colorScheme.primaryContainer
                 else
                     MaterialTheme.colorScheme.surfaceVariant,
-                shape = CircleShape
+                shape = shape
             )
+            .border(.5.dp, accentColor, shape)
             .then(if (enabled) Modifier.clickable(onClick = onClick) else Modifier),
         contentAlignment = Alignment.Center
     ) {
@@ -276,10 +276,7 @@ private fun StepperButton(
             painter = painter,
             contentDescription = contentDescription,
             modifier = Modifier.size(18.dp),
-            tint = if (enabled)
-                MaterialTheme.colorScheme.primary
-            else
-                MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+            tint = accentColor
         )
     }
 }
@@ -345,13 +342,17 @@ private fun PlayersHeader(onAddPlayer: () -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         FormLabel(stringResource(Res.string.config_players))
-        Button(
+        OutlinedButton(
             onClick = onAddPlayer,
-            contentPadding = PaddingValues(horizontal = CatanSpacing.sm, vertical = CatanSpacing.xs),
-            colors = ButtonDefaults.buttonColors(
+            contentPadding = PaddingValues(
+                horizontal = CatanSpacing.sm,
+                vertical = CatanSpacing.xs
+            ),
+            colors = ButtonDefaults.outlinedButtonColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.primary
-            )
+            ),
+            border = BorderStroke(.5.dp, MaterialTheme.colorScheme.primary)
         ) {
             Icon(
                 painter = painterResource(Res.drawable.ic_plus),
