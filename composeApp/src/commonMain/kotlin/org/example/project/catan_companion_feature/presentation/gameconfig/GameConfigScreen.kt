@@ -166,12 +166,19 @@ fun GameConfigScreen(
 
             item {
                 GameOptionsSection(
+                    showSpecialTurnRule = state.numberOfPlayers > 4,
                     specialTurnRuleEnabled = state.specialTurnRuleEnabled,
                     seafarersEnabled = state.expansions.contains(GameExpansion.SEAFARERS),
                     citiesAndKnightsEnabled = state.expansions.contains(GameExpansion.CITIES_AND_KNIGHTS),
                     onSpecialTurnRuleToggled = { onAction(GameConfigAction.SpecialTurnRuleToggled) },
                     onSeafarersToggled = { onAction(GameConfigAction.ExpansionToggled(GameExpansion.SEAFARERS)) },
-                    onCitiesAndKnightsToggled = { onAction(GameConfigAction.ExpansionToggled(GameExpansion.CITIES_AND_KNIGHTS)) }
+                    onCitiesAndKnightsToggled = {
+                        onAction(
+                            GameConfigAction.ExpansionToggled(
+                                GameExpansion.CITIES_AND_KNIGHTS
+                            )
+                        )
+                    }
                 )
             }
 
@@ -410,6 +417,7 @@ private fun SelectedPlayerRow(
 
 @Composable
 private fun GameOptionsSection(
+    showSpecialTurnRule: Boolean,
     specialTurnRuleEnabled: Boolean,
     seafarersEnabled: Boolean,
     citiesAndKnightsEnabled: Boolean,
@@ -430,11 +438,6 @@ private fun GameOptionsSection(
             verticalArrangement = Arrangement.spacedBy(CatanSpacing.xs)
         ) {
             OptionCheckboxRow(
-                label = stringResource(Res.string.config_in_between_turns),
-                checked = specialTurnRuleEnabled,
-                onToggle = onSpecialTurnRuleToggled
-            )
-            OptionCheckboxRow(
                 label = stringResource(Res.string.config_seafarers),
                 checked = seafarersEnabled,
                 onToggle = onSeafarersToggled
@@ -444,6 +447,13 @@ private fun GameOptionsSection(
                 checked = citiesAndKnightsEnabled,
                 onToggle = onCitiesAndKnightsToggled
             )
+            AnimatedVisibility(showSpecialTurnRule) {
+                OptionCheckboxRow(
+                    label = stringResource(Res.string.config_in_between_turns),
+                    checked = specialTurnRuleEnabled,
+                    onToggle = onSpecialTurnRuleToggled
+                )
+            }
         }
     }
 }
