@@ -61,7 +61,8 @@ fun NavGraphBuilder.catanCompanionGraph(
         composable<GamesListRoute> {
             GamesListScreenRoot(
                 onNavigateBack = { navController.popBackStack() },
-                onGameClick = { gameId -> navController.navigate(GameSummaryRoute(gameId)) }
+                onResumeGame = { gameId -> navController.navigate(GameplayRoute(gameId)) },
+                onGameSummary = { gameId -> navController.navigate(GameSummaryRoute(gameId)) }
             )
         }
         composable<GameSummaryRoute> { backStackEntry ->

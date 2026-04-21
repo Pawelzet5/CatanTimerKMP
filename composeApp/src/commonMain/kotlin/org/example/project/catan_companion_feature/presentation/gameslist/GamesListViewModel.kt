@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 
 class GamesListViewModel(
@@ -37,7 +38,15 @@ class GamesListViewModel(
     fun onAction(action: GamesListAction) {
         when (action) {
             GamesListAction.BackClick -> _events.trySend(GamesListEvent.NavigateBack)
-            is GamesListAction.GameClick -> _events.trySend(GamesListEvent.NavigateToGame(action.gameId))
+            is GamesListAction.GameClick -> {
+                val game = _uiState.value.inProgressGames.find { it.id == action.gameId }
+                    ?: _uiState.value.completedGames.find { it.id == action.gameId }
+                val event = if (game?.status == GameStatus.IN_PROGRESS)
+                    GamesListEvent.NavigateToGameplay(action.gameId)
+                else
+                    GamesListEvent.NavigateToGameSummary(action.gameId)
+                _events.trySend(event)
+            }
             is GamesListAction.DeleteGameClick -> viewModelScope.launch {
                 gameRepository.deleteGame(action.game.id)
             }
