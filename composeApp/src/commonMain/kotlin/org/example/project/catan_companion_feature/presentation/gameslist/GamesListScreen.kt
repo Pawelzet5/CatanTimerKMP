@@ -59,7 +59,6 @@ import catantimer.composeapp.generated.resources.games_title
 import catantimer.composeapp.generated.resources.ic_close
 import kotlinx.coroutines.launch
 import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
-import org.example.project.catan_companion_feature.presentation.components.GameListItem
 import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.painterResource

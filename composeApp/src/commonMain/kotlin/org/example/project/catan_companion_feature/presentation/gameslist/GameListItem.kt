@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components
+package org.example.project.catan_companion_feature.presentation.gameslist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
