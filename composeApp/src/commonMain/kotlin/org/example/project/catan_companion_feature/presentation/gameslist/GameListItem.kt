@@ -40,6 +40,7 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.designsystem.catanColors
+import org.example.project.core.util.formatDuration
 import org.example.project.core.util.formatEpochMillis
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -223,9 +224,3 @@ private fun GameStatusBadge(isInProgress: Boolean, hasWinner: Boolean) {
     }
 }
 
-private fun formatDuration(startMillis: Long, endMillis: Long): String {
-    val totalMinutes = ((endMillis - startMillis) / 60_000).coerceAtLeast(0)
-    val hours = totalMinutes / 60
-    val minutes = totalMinutes % 60
-    return if (hours > 0L) "${hours}h ${minutes}m" else "${minutes}m"
-}

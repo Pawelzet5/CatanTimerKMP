@@ -62,6 +62,7 @@ import org.example.project.catan_companion_feature.presentation.components.Confi
 import org.example.project.catan_companion_feature.presentation.components.PlayerAvatar
 import org.example.project.catan_companion_feature.presentation.components.PlayerAvatarSize
 import org.example.project.core.designsystem.CatanSpacing
+import org.example.project.core.util.formatEpochMillisToMonthYear
 import org.example.project.core.designsystem.catanColors
 import org.example.project.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.stringResource
@@ -401,21 +402,3 @@ private fun EditNameDialog(
     )
 }
 
-private fun formatEpochMillisToMonthYear(millis: Long): String {
-    val days = (millis / 86_400_000L).toInt()
-    val z = days + 719468
-    val era = (if (z >= 0) z else z - 146096) / 146097
-    val doe = z - era * 146097
-    val yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365
-    val y = yoe + era * 400
-    val doy = doe - (365 * yoe + yoe / 4 - yoe / 100)
-    val mp = (5 * doy + 2) / 153
-    val m = mp + (if (mp < 10) 3 else -9)
-    val year = y + (if (m <= 2) 1 else 0)
-    val monthName = when (m) {
-        1 -> "January"; 2 -> "February"; 3 -> "March"; 4 -> "April"
-        5 -> "May"; 6 -> "June"; 7 -> "July"; 8 -> "August"
-        9 -> "September"; 10 -> "October"; 11 -> "November"; else -> "December"
-    }
-    return "$monthName $year"
-}
