@@ -97,6 +97,10 @@
     <string name="games_completed">Completed</string>
     <string name="games_turn_count">Turn %1$d</string>
     <string name="games_winner">Winner: %1$s</string>
+    <string name="games_badge_active">Active</string>
+    <string name="games_badge_done">Done</string>
+    <string name="games_abandoned">Abandoned</string>
+    <string name="games_empty">No games yet</string>
 
     <!-- Confirm End Game -->
     <string name="confirm_end_game_message">Are you sure you want to end the game? This action cannot be undone.</string>

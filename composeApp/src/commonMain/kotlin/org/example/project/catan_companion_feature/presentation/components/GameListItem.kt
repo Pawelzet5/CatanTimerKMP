@@ -1,24 +1,46 @@
 package org.example.project.catan_companion_feature.presentation.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
-import catantimer.composeapp.generated.resources.games_completed
-import catantimer.composeapp.generated.resources.games_in_progress
-import catantimer.composeapp.generated.resources.games_winner
+import catantimer.composeapp.generated.resources.config_cities_knights
+import catantimer.composeapp.generated.resources.config_seafarers
+import catantimer.composeapp.generated.resources.games_abandoned
+import catantimer.composeapp.generated.resources.games_badge_active
+import catantimer.composeapp.generated.resources.games_badge_done
+import catantimer.composeapp.generated.resources.ic_dice
+import catantimer.composeapp.generated.resources.ic_winner
 import org.example.project.catan_companion_feature.domain.dataclass.Game
+import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.core.designsystem.CatanSpacing
+import org.example.project.core.designsystem.catanColors
 import org.example.project.core.util.formatEpochMillis
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -27,52 +49,167 @@ fun GameListItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val playerNames = game.players
-        .sortedBy { it.orderIndex }
-        .joinToString(", ") { it.playerName }
+    val isInProgress = game.status == GameStatus.IN_PROGRESS
+    val hasWinner = game.status == GameStatus.COMPLETED && game.winnerId != null
+    val catanColors = MaterialTheme.catanColors
+    val playerNames = game.players.sortedBy { it.orderIndex }.joinToString(", ") { it.playerName }
+    val subtitle = buildSubtitle(game)
 
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = CatanSpacing.md, vertical = CatanSpacing.sm),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top,
+            .height(IntrinsicSize.Min)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(CatanSpacing.xs),
+        if (isInProgress) {
+            Spacer(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(3.dp)
+                    .background(catanColors.infoIcon)
+            )
+        }
+
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .padding(
+                    start = if (isInProgress) 13.dp else CatanSpacing.md,
+                    end = CatanSpacing.md,
+                    top = CatanSpacing.sm + 4.dp,
+                    bottom = CatanSpacing.sm + 4.dp
+                ),
+            horizontalArrangement = Arrangement.spacedBy(CatanSpacing.sm + 4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = playerNames,
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-            )
-            val statusLabel = when (game.status) {
-                GameStatus.IN_PROGRESS -> stringResource(Res.string.games_in_progress)
-                GameStatus.COMPLETED -> stringResource(Res.string.games_completed)
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(
+                        when {
+                            isInProgress -> catanColors.infoContainer
+                            hasWinner -> catanColors.successContainer
+                            else -> MaterialTheme.colorScheme.surfaceVariant
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(if (isInProgress) Res.drawable.ic_dice else Res.drawable.ic_winner),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp),
+                    tint = when {
+                        isInProgress -> catanColors.infoIcon
+                        hasWinner -> catanColors.successIcon
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
+                    }
+                )
             }
-            Text(
-                text = statusLabel,
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.primary,
-            )
-            if (game.status == GameStatus.COMPLETED) {
-                val winnerName = game.players.find { it.playerId == game.winnerId }?.playerName
-                if (winnerName != null) {
-                    Text(
-                        text = stringResource(Res.string.games_winner, winnerName),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = playerNames,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+
+            GameStatusBadge(isInProgress = isInProgress, hasWinner = hasWinner)
+        }
+    }
+}
+
+@Composable
+private fun buildSubtitle(game: Game): String {
+    return when (game.status) {
+        GameStatus.IN_PROGRESS -> {
+            val date = formatEpochMillis(game.startedAt)
+            val expansionParts = game.expansions.map { expansion ->
+                when (expansion) {
+                    GameExpansion.SEAFARERS -> stringResource(Res.string.config_seafarers)
+                    GameExpansion.CITIES_AND_KNIGHTS -> stringResource(Res.string.config_cities_knights)
                 }
             }
+            if (expansionParts.isEmpty()) date
+            else "$date · ${expansionParts.joinToString(", ")}"
         }
-        Text(
-            text = formatEpochMillis(game.startedAt),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.align(Alignment.Top).padding(start = CatanSpacing.sm),
-        )
+        GameStatus.COMPLETED -> {
+            val endDate = formatEpochMillis(game.finishedAt ?: game.startedAt)
+            val winner = game.players.find { it.playerId == game.winnerId }?.playerName
+            if (winner != null) {
+                val duration = game.finishedAt?.let { formatDuration(game.startedAt, it) }
+                buildString {
+                    append("🏆 $winner")
+                    if (duration != null) append(" · $duration")
+                    append(" · $endDate")
+                }
+            } else {
+                "${stringResource(Res.string.games_abandoned)} · $endDate"
+            }
+        }
     }
+}
+
+@Composable
+private fun GameStatusBadge(isInProgress: Boolean, hasWinner: Boolean) {
+    val catanColors = MaterialTheme.catanColors
+    when {
+        isInProgress -> {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(999.dp))
+                    .background(catanColors.infoContainer)
+                    .padding(horizontal = CatanSpacing.sm, vertical = CatanSpacing.xs)
+            ) {
+                Text(
+                    text = stringResource(Res.string.games_badge_active),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Medium,
+                    color = catanColors.infoIcon,
+                    letterSpacing = 0.5.sp,
+                )
+            }
+        }
+        hasWinner -> {
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(999.dp))
+                    .background(catanColors.successContainer)
+                    .padding(horizontal = CatanSpacing.sm, vertical = CatanSpacing.xs)
+            ) {
+                Text(
+                    text = stringResource(Res.string.games_badge_done),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Medium,
+                    color = catanColors.successIcon,
+                    letterSpacing = 0.5.sp,
+                )
+            }
+        }
+        else -> {
+            Text(
+                text = "++—",
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+private fun formatDuration(startMillis: Long, endMillis: Long): String {
+    val totalMinutes = ((endMillis - startMillis) / 60_000).coerceAtLeast(0)
+    val hours = totalMinutes / 60
+    val minutes = totalMinutes % 60
+    return if (hours > 0L) "${hours}h ${minutes}m" else "${minutes}m"
 }
