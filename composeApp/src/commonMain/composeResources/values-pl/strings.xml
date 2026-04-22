@@ -84,6 +84,10 @@
     <string name="games_completed">Zakończone</string>
     <string name="games_turn_count">Tura %1$d</string>
     <string name="games_winner">Zwycięzca: %1$s</string>
+    <string name="games_badge_active">W toku</string>
+    <string name="games_badge_done">Zakończona</string>
+    <string name="games_abandoned">Opuszczona</string>
+    <string name="games_empty">Nie ma jeszcze żadnych gier</string>
 
     <!-- Confirm End Game -->
     <string name="confirm_end_game_message">Czy na pewno chcesz zakończyć grę? Tej operacji nie można cofnąć.</string>

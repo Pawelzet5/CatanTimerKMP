@@ -14,10 +14,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import org.example.project.core.presentation.components.DraggableItemsLazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -149,11 +150,24 @@ fun GameConfigScreen(
                 PlayersHeader(onAddPlayer = { onAction(GameConfigAction.AddPlayerClick) })
             }
 
-            itemsIndexed(state.selectedPlayers, key = { _, player -> player.id }) { index, player ->
-                SelectedPlayerRow(
-                    player = player,
-                    index = index,
-                    onRemove = { onAction(GameConfigAction.PlayerToggled(player)) }
+            item {
+                val playerRowHeight = 48.dp
+                val playersListHeight = playerRowHeight * state.selectedPlayers.size +
+                    CatanSpacing.sm * (state.selectedPlayers.size - 1).coerceAtLeast(0)
+                DraggableItemsLazyColumn(
+                    items = state.selectedPlayers,
+                    key = { it.id },
+                    onOrderChanged = { onAction(GameConfigAction.PlayersReordered(it)) },
+                    itemContent = { index, player, modifier ->
+                        SelectedPlayerRow(
+                            player = player,
+                            index = index,
+                            onRemove = { onAction(GameConfigAction.PlayerToggled(player)) },
+                            modifier = modifier
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth().height(playersListHeight),
+                    verticalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
                 )
             }
 
@@ -372,10 +386,11 @@ private fun PlayersHeader(onAddPlayer: () -> Unit) {
 private fun SelectedPlayerRow(
     player: Player,
     index: Int,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
