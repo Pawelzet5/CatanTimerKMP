@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,6 +61,7 @@ fun GameListItem(
             .fillMaxWidth()
             .height(IntrinsicSize.Min)
             .background(MaterialTheme.colorScheme.surfaceVariant)
+            .semantics(mergeDescendants = true) {}
             .clickable(onClick = onClick),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -97,9 +99,14 @@ fun GameListItem(
                     ),
                 contentAlignment = Alignment.Center
             ) {
+                val statusIconDescription = when {
+                    isInProgress -> stringResource(Res.string.games_badge_active)
+                    hasWinner -> stringResource(Res.string.games_badge_done)
+                    else -> stringResource(Res.string.games_abandoned)
+                }
                 Icon(
                     painter = painterResource(if (isInProgress) Res.drawable.ic_dice else Res.drawable.ic_winner),
-                    contentDescription = null,
+                    contentDescription = statusIconDescription,
                     modifier = Modifier.size(20.dp),
                     tint = when {
                         isInProgress -> catanColors.infoIcon
@@ -168,7 +175,7 @@ private fun GameStatusBadge(isInProgress: Boolean, hasWinner: Boolean) {
         isInProgress -> {
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(999.dp))
+                    .clip(RoundedCornerShape(percent = 50))
                     .background(catanColors.infoContainer)
                     .padding(horizontal = CatanSpacing.sm, vertical = CatanSpacing.xs)
             ) {
@@ -184,7 +191,7 @@ private fun GameStatusBadge(isInProgress: Boolean, hasWinner: Boolean) {
         hasWinner -> {
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(999.dp))
+                    .clip(RoundedCornerShape(percent = 50))
                     .background(catanColors.successContainer)
                     .padding(horizontal = CatanSpacing.sm, vertical = CatanSpacing.xs)
             ) {
@@ -198,11 +205,20 @@ private fun GameStatusBadge(isInProgress: Boolean, hasWinner: Boolean) {
             }
         }
         else -> {
-            Text(
-                text = "++—",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(percent = 50))
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(horizontal = CatanSpacing.sm, vertical = CatanSpacing.xs)
+            ) {
+                Text(
+                    text = stringResource(Res.string.games_abandoned),
+                    style = MaterialTheme.typography.labelSmall,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    letterSpacing = 0.5.sp,
+                )
+            }
         }
     }
 }
