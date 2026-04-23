@@ -13,9 +13,11 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
+import org.example.project.catan_companion_feature.presentation.service.HapticService
 
 class GamesListViewModel(
-    private val gameRepository: GameRepository
+    private val gameRepository: GameRepository,
+    private val hapticService: HapticService
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GamesListState())
@@ -51,6 +53,7 @@ class GamesListViewModel(
             GamesListAction.ConfirmDeleteGame -> {
                 val gameId = _uiState.value.gameToDelete?.id ?: return
                 _uiState.value = _uiState.value.copy(gameToDelete = null)
+                hapticService.vibrateOnce()
                 viewModelScope.launch { gameRepository.deleteGame(gameId) }
             }
             GamesListAction.DismissDeleteGame -> _uiState.value = _uiState.value.copy(gameToDelete = null)

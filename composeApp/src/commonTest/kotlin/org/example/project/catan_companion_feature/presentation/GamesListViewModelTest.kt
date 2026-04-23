@@ -12,6 +12,7 @@ import org.example.project.catan_companion_feature.domain.enums.GameStatus
 import org.example.project.catan_companion_feature.presentation.gameslist.GamesListAction
 import org.example.project.catan_companion_feature.presentation.gameslist.GamesListEvent
 import org.example.project.catan_companion_feature.presentation.gameslist.GamesListViewModel
+import org.example.project.catan_companion_feature.presentation.service.HapticService
 import org.example.project.catan_companion_feature.testGame
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -36,7 +37,7 @@ class GamesListViewModelTest {
     }
 
     private fun makeViewModel(repo: FakeGameRepository = FakeGameRepository()) =
-        GamesListViewModel(repo)
+        GamesListViewModel(repo, HapticService)
 
     @Test
     fun `ViewModel init, in-progress and completed games exist, state populated with both lists`() =
