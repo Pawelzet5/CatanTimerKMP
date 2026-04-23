@@ -40,6 +40,7 @@ import org.example.project.catan_companion_feature.domain.dataclass.Game
 import org.example.project.catan_companion_feature.domain.dataclass.Turn
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
+import org.example.project.catan_companion_feature.presentation.gameplay.EventStep
 import org.example.project.catan_companion_feature.presentation.components.dice.Dice
 import org.example.project.catan_companion_feature.presentation.components.dice.EventDice
 import org.example.project.core.designsystem.CatanDiceRedBackground
@@ -57,13 +58,13 @@ import org.jetbrains.compose.resources.stringResource
 fun EventPhaseContent(
     turn: Turn,
     game: Game,
+    eventStep: EventStep,
     barbarianState: BarbarianState?,
     onContinue: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val isCitiesAndKnights = GameExpansion.CITIES_AND_KNIGHTS in game.expansions
     val isSeafarers = GameExpansion.SEAFARERS in game.expansions
-    val isBarbarianArrival = turn.eventDice == EventDiceType.BARBARIANS && barbarianState?.position == 7
 
     Column(
         modifier = modifier
@@ -76,9 +77,9 @@ fun EventPhaseContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            when {
-                isBarbarianArrival -> BarbarianEventContent(turn = turn, barbarianState = barbarianState)
-                turn.isRobberRoll -> RobberEventContent(
+            when (eventStep) {
+                EventStep.BARBARIANS -> BarbarianEventContent(barbarianState = barbarianState)
+                EventStep.ROBBER -> RobberEventContent(
                     turn = turn,
                     isSeafarers = isSeafarers,
                     isCitiesAndKnights = isCitiesAndKnights,
@@ -143,7 +144,7 @@ private fun RobberEventContent(
 }
 
 @Composable
-private fun BarbarianEventContent(turn: Turn, barbarianState: BarbarianState?) {
+private fun BarbarianEventContent(barbarianState: BarbarianState?) {
     EventIllustration {
         Icon(
             painter = painterResource(Res.drawable.ic_barbarians),

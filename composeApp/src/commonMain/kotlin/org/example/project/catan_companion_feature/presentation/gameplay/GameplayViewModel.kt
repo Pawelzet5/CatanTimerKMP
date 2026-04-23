@@ -12,9 +12,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.example.project.catan_companion_feature.domain.dataclass.BarbarianState
 import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution
 import org.example.project.catan_companion_feature.domain.dataclass.DiceRoll
 import org.example.project.catan_companion_feature.domain.dataclass.toBarbarianState
+import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.domain.repository.GameRepository
 import org.example.project.catan_companion_feature.domain.repository.TurnRepository
@@ -142,19 +144,46 @@ class GameplayViewModel(
 
     private fun onContinueFromDice() {
         val dice = _uiState.value.pendingDiceEdit ?: return
+        val previousEventDice = _uiState.value.currentTurn?.eventDice
+        val barbarianState = _uiState.value.barbarianState
+        val expansions = _uiState.value.game?.expansions ?: emptySet()
         viewModelScope.launch {
             sessionCoordinator.updateSelectedTurnDice(dice.red, dice.yellow, dice.event)
-            val phase = if (dice.sum == 7) GameplayPhase.EVENT else GameplayPhase.MAIN_TIMER
-            if (phase == GameplayPhase.MAIN_TIMER) {
+            if (dice.sum != 7) {
                 timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
+                _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER, pendingDiceEdit = null) }
+                return@launch
             }
-            _uiState.update { it.copy(phase = phase, pendingDiceEdit = null) }
+            val firstStep = computeFirstEventStep(dice.event, previousEventDice, barbarianState, expansions)
+            _uiState.update { it.copy(phase = GameplayPhase.EVENT, eventStep = firstStep, pendingDiceEdit = null) }
         }
     }
 
     private fun onContinueFromEvent() {
+        val currentStep = _uiState.value.eventStep
+        val isRobberRoll = _uiState.value.currentTurn?.isRobberRoll == true
+        if (currentStep == EventStep.BARBARIANS && isRobberRoll) {
+            _uiState.update { it.copy(eventStep = EventStep.ROBBER) }
+            return
+        }
         timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
-        _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER) }
+        _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER, eventStep = null) }
+    }
+
+    private fun computeFirstEventStep(
+        newEventDice: EventDiceType?,
+        previousEventDice: EventDiceType?,
+        barbarianState: BarbarianState?,
+        expansions: Set<GameExpansion>
+    ): EventStep {
+        if (GameExpansion.CITIES_AND_KNIGHTS !in expansions) return EventStep.ROBBER
+        if (newEventDice != EventDiceType.BARBARIANS) return EventStep.ROBBER
+        val currentPosition = barbarianState?.position ?: 0
+        // If the current turn previously had BARBARIANS, it was already counted in barbarianState.
+        // Otherwise, adding this roll increments the position by 1.
+        val newPosition = if (previousEventDice == EventDiceType.BARBARIANS) currentPosition
+                          else (currentPosition + 1) % 8
+        return if (newPosition == 7) EventStep.BARBARIANS else EventStep.ROBBER
     }
 
     private var primaryElapsedMillis: Long = 0L
@@ -234,27 +263,6 @@ class GameplayViewModel(
         viewModelScope.launch {
             gameRepository.updateGameSettings(gameId, expansions, specialTurnRuleEnabled)
             _uiState.update { it.copy(showSettingsSheet = false) }
-        }
-    }
-
-    fun onSaveEdit() {
-        val dice = _uiState.value.pendingDiceEdit ?: return
-        viewModelScope.launch {
-            sessionCoordinator.updateSelectedTurnDice(dice.red, dice.yellow, dice.event)
-            _uiState.update { it.copy(isEditing = false, pendingDiceEdit = null) }
-        }
-    }
-
-    fun onCancelEdit() {
-        _uiState.update { it.copy(isEditing = false, pendingDiceEdit = null) }
-    }
-
-    fun onFinishSession(winnerId: Long?) {
-        viewModelScope.launch {
-            sessionCoordinator.finishSession(
-                finishedAt = System.currentTimeMillis(),
-                winnerId = winnerId
-            )
         }
     }
 }

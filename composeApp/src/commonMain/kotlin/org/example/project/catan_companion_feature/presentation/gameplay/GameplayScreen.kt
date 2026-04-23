@@ -204,9 +204,11 @@ fun GameplayScreen(
                     GameplayPhase.EVENT -> {
                         val turn = uiState.displayedTurn ?: return@Column
                         val game = uiState.game ?: return@Column
+                        val eventStep = uiState.eventStep ?: return@Column
                         EventPhaseContent(
                             turn = turn,
                             game = game,
+                            eventStep = eventStep,
                             barbarianState = uiState.barbarianState,
                             onContinue = { onAction(GameplayAction.ContinueFromEventClick) },
                             modifier = Modifier.fillMaxSize()
