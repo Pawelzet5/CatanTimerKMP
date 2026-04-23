@@ -47,7 +47,6 @@ import catantimer.composeapp.generated.resources.config_seafarers
 import catantimer.composeapp.generated.resources.confirm_end_game_message
 import catantimer.composeapp.generated.resources.gameplay_active_player
 import catantimer.composeapp.generated.resources.gameplay_continue
-import catantimer.composeapp.generated.resources.gameplay_in_between
 import catantimer.composeapp.generated.resources.gameplay_next_turn
 import catantimer.composeapp.generated.resources.gameplay_player_turn
 import catantimer.composeapp.generated.resources.gameplay_turn
@@ -199,7 +198,8 @@ fun GameplayScreen(
                             val dice = uiState.pendingDiceEdit
                             onAction(GameplayAction.DiceSelected(dice?.red ?: 0, dice?.yellow ?: 0, event))
                         },
-                        onContinue = { onAction(GameplayAction.ContinueFromDiceClick) }
+                        onContinue = { onAction(GameplayAction.ContinueFromDiceClick) },
+                        onMenuClick = { onAction(GameplayAction.MenuClick) },
                     )
                     GameplayPhase.EVENT -> {
                         val turn = uiState.displayedTurn ?: return@Column
@@ -336,7 +336,8 @@ private fun DiceSelectionContent(
     uiState: GameplayState,
     onDiceSelected: (Int, Int, EventDiceType?) -> Unit,
     onEventDiceSelected: (EventDiceType) -> Unit,
-    onContinue: () -> Unit
+    onContinue: () -> Unit,
+    onMenuClick: () -> Unit,
 ) {
     val hasCitiesAndKnights = uiState.game?.expansions?.contains(GameExpansion.CITIES_AND_KNIGHTS) == true
     val pendingDice = uiState.pendingDiceEdit
@@ -383,6 +384,22 @@ private fun DiceSelectionContent(
         }
 
         Spacer(modifier = Modifier.weight(1f))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            TextButton(onClick = onMenuClick) {
+                Icon(
+                    painter = painterResource(Res.drawable.ic_menu),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                )
+                Spacer(Modifier.width(CatanSpacing.xs))
+                Text(stringResource(Res.string.menu_open), style = MaterialTheme.typography.labelMedium)
+            }
+        }
 
         CatanButton(
             text = stringResource(Res.string.gameplay_continue),
@@ -626,12 +643,9 @@ private fun TimerPhaseContent(
         TimerBottomActions(
             hasCitiesAndKnights = hasCitiesAndKnights,
             barbarianState = uiState.barbarianState,
-            showInBetweenButton = showInBetweenButton,
-            secondaryPlayerName = turn.secondaryPlayerName.orEmpty(),
             isViewingLatest = uiState.isViewingLatest,
             onMenuClick = onMenuClick,
-            onInBetweenTurn = onInBetweenTurn,
-            onNextTurn = onNextTurn,
+            onNextTurn = if (showInBetweenButton) onInBetweenTurn else onNextTurn,
         )
     }
 }
@@ -692,11 +706,8 @@ private fun TimerDiceRollBadge(redValue: Int, yellowValue: Int) {
 private fun TimerBottomActions(
     hasCitiesAndKnights: Boolean,
     barbarianState: BarbarianState?,
-    showInBetweenButton: Boolean,
-    secondaryPlayerName: String,
     isViewingLatest: Boolean,
     onMenuClick: () -> Unit,
-    onInBetweenTurn: () -> Unit,
     onNextTurn: () -> Unit,
 ) {
     Column(
@@ -723,13 +734,6 @@ private fun TimerBottomActions(
                 Spacer(Modifier.width(CatanSpacing.xs))
                 Text(stringResource(Res.string.menu_open), style = MaterialTheme.typography.labelMedium)
             }
-        }
-        if (showInBetweenButton) {
-            CatanOutlinedButton(
-                text = stringResource(Res.string.gameplay_in_between, secondaryPlayerName),
-                onClick = onInBetweenTurn,
-                modifier = Modifier.fillMaxWidth(),
-            )
         }
         CatanButton(
             text = stringResource(Res.string.gameplay_next_turn),
