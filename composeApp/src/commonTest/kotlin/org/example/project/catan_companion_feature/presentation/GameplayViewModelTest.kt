@@ -13,6 +13,7 @@ import org.example.project.catan_companion_feature.data.fakes.repository.FakeTur
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayAction
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayPhase
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayViewModel
+import org.example.project.catan_companion_feature.presentation.service.HapticService
 import org.example.project.catan_companion_feature.testSessionWithMultipleTurns
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -104,6 +105,7 @@ class GameplayViewModelTest {
         gameId = 1L,
         sessionCoordinator = coordinator,
         turnRepository = FakeTurnRepository(),
-        gameRepository = FakeGameRepository()
+        gameRepository = FakeGameRepository(),
+        hapticService = HapticService
     )
 }

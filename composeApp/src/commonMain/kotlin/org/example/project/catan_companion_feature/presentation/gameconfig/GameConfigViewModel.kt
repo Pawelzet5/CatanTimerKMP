@@ -62,6 +62,9 @@ class GameConfigViewModel(
             }
             GameConfigAction.StartGameClick -> startGame()
             GameConfigAction.AddPlayerClick -> _events.trySend(GameConfigEvent.NavigateToPlayerSelection)
+            is GameConfigAction.PlayersReordered -> {
+                _uiState.update { it.copy(selectedPlayers = action.players) }
+            }
         }
     }
 

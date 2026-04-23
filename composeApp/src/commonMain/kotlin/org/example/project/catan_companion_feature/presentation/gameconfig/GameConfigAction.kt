@@ -13,4 +13,5 @@ sealed interface GameConfigAction {
     data class PlayerCountSelected(val count: Int) : GameConfigAction
     data object StartGameClick : GameConfigAction
     data object AddPlayerClick : GameConfigAction
+    data class PlayersReordered(val players: List<Player>) : GameConfigAction
 }

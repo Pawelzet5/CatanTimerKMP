@@ -10,6 +10,7 @@ import org.example.project.catan_companion_feature.presentation.gameconfig.GameC
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
 import org.example.project.catan_companion_feature.presentation.gameslist.GamesListScreenRoot
 import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryScreenRoot
+import org.example.project.catan_companion_feature.presentation.winnerselection.WinnerSelectionScreenRoot
 import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreenRoot
 import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListScreenRoot
 
@@ -61,19 +62,33 @@ fun NavGraphBuilder.catanCompanionGraph(
         composable<GamesListRoute> {
             GamesListScreenRoot(
                 onNavigateBack = { navController.popBackStack() },
-                onGameClick = { gameId -> navController.navigate(GameSummaryRoute(gameId)) }
+                onResumeGame = { gameId -> navController.navigate(GameplayRoute(gameId)) },
+                onGameSummary = { gameId -> navController.navigate(GameSummaryRoute(gameId)) }
+            )
+        }
+        composable<WinnerSelectionRoute> { backStackEntry ->
+            val route: WinnerSelectionRoute = backStackEntry.toRoute()
+            WinnerSelectionScreenRoot(
+                gameId = route.gameId,
+                onGameFinished = { gameId ->
+                    navController.navigate(GameSummaryRoute(gameId)) {
+                        popUpTo<DashboardRoute>()
+                    }
+                },
+                onNavigateBack = { navController.popBackStack() }
             )
         }
         composable<GameSummaryRoute> { backStackEntry ->
             val route: GameSummaryRoute = backStackEntry.toRoute()
             GameSummaryScreenRoot(
                 gameId = route.gameId,
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateHome = {
+                    navController.navigate(DashboardRoute) {
+                        popUpTo<DashboardRoute> { inclusive = true }
+                    }
+                }
             )
-        }
-        composable<WinnerSelectionRoute> { backStackEntry ->
-            val route: WinnerSelectionRoute = backStackEntry.toRoute()
-            // WinnerSelectionScreenRoot(gameId = route.gameId, ...)
         }
     }
 }

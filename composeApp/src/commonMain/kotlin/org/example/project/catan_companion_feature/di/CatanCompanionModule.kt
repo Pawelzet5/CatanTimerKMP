@@ -18,9 +18,9 @@ val catanCompanionModule = module {
     viewModelOf(::DashboardViewModel)
     viewModelOf(::GameConfigViewModel)
     viewModelOf(::PlayersSelectionViewModel)
-    viewModel { params -> GameplayViewModel(params.get(), get(), get(), get()) }
+    viewModel { params -> GameplayViewModel(params.get(), get(), get(), get(), get()) }
     viewModelOf(::PlayersListViewModel)
     viewModel { params -> PlayerDetailsViewModel(params.get(), get()) }
-    viewModelOf(::GamesListViewModel)
+    viewModel { GamesListViewModel(get(), get()) }
     viewModel { params -> GameSummaryViewModel(params.get(), get(), get()) }
 }

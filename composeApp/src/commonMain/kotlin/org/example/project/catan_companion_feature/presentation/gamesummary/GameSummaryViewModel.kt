@@ -33,6 +33,7 @@ class GameSummaryViewModel(
     fun onAction(action: GameSummaryAction) {
         when (action) {
             GameSummaryAction.BackClick -> _events.trySend(GameSummaryEvent.NavigateBack)
+            GameSummaryAction.HomeClick -> _events.trySend(GameSummaryEvent.NavigateHome)
         }
     }
 

@@ -50,19 +50,26 @@
     <string name="event_barbarians_arrived_header">Barbarzyńcy przybyli!</string>
 
     <!-- Statistics -->
-    <string name="stats_title">Statystyki</string>
+    <string name="stats_title">Statystyki graczy</string>
     <string name="stats_dice_distribution">Rozkład wyników kości</string>
     <string name="stats_event_dice">Kostka zdarzeń</string>
     <string name="stats_total_turns">Łączna liczba tur</string>
     <string name="stats_avg_turn_time">Średni czas tury</string>
+    <string name="stats_game_stats">Statystyki gry</string>
+    <string name="stats_thief_rolled">Złodziej wylosowany</string>
+    <string name="stats_barbarian_attacks">Ataki barbarzyńców</string>
 
     <!-- End Game -->
     <string name="end_game_select_winner">Wybierz zwycięzcę</string>
+    <string name="end_game_who_won">Kto wygrał tę grę w Catana?</string>
     <string name="end_game_no_winner">Bez zwycięzcy (gra przerwana)</string>
-    <string name="end_game_confirm">Potwierdź</string>
+    <string name="end_game_confirm">Potwierdź zwycięzcę</string>
     <string name="end_game_summary">Podsumowanie gry</string>
+    <string name="end_game_winner_label">Zwycięzca</string>
     <string name="end_game_winner">Zwycięzca: %1$s</string>
     <string name="end_game_duration">Czas trwania</string>
+    <string name="end_game_started">Początek: %1$s</string>
+    <string name="end_game_ended">Koniec: %1$s</string>
     <string name="end_game_back_home">Wróć do menu</string>
 
     <!-- Players -->
@@ -91,6 +98,10 @@
     <string name="games_completed">Zakończone</string>
     <string name="games_turn_count">Tura %1$d</string>
     <string name="games_winner">Zwycięzca: %1$s</string>
+    <string name="games_badge_active">W toku</string>
+    <string name="games_badge_done">Zakończona</string>
+    <string name="games_abandoned">Opuszczona</string>
+    <string name="games_empty">Nie ma jeszcze żadnych gier</string>
 
     <!-- Confirm End Game -->
     <string name="confirm_end_game_message">Czy na pewno chcesz zakończyć grę? Tej operacji nie można cofnąć.</string>

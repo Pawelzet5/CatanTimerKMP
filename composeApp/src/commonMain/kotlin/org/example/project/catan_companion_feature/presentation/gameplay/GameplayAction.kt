@@ -36,4 +36,7 @@ sealed interface GameplayAction {
     // Historical edit confirmation dialog
     data object ConfirmHistoricalEditClick : GameplayAction
     data object DismissHistoricalEditConfirmClick : GameplayAction
+
+    // Winner selection
+    data class ConfirmWinnerClick(val winnerId: Long?) : GameplayAction
 }
