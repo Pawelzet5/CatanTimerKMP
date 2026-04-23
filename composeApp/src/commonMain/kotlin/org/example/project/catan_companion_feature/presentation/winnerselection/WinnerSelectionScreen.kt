@@ -170,46 +170,24 @@ private fun PlayerRadioItem(
     selected: Boolean,
     onSelect: () -> Unit
 ) {
-    val shape = RoundedCornerShape(12.dp)
-    val backgroundColor = if (selected) {
-        MaterialTheme.colorScheme.primaryContainer
-    } else {
-        MaterialTheme.colorScheme.surfaceVariant
-    }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(shape)
-            .background(color = backgroundColor, shape = shape)
-            .then(
-                if (selected) Modifier.border(
-                    width = 1.5.dp,
-                    color = MaterialTheme.colorScheme.outline,
-                    shape = shape
-                ) else Modifier
-            )
-            .clickable(onClick = onSelect)
-            .padding(horizontal = CatanSpacing.sm, vertical = CatanSpacing.sm),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
-    ) {
-        RadioButton(
-            selected = selected,
-            onClick = onSelect
-        )
-        Text(
-            text = player.playerName,
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface,
-            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-            modifier = Modifier.weight(1f)
-        )
-    }
+    RadioItem(text = player.playerName, selected = selected, onSelect = onSelect)
 }
 
 @Composable
 private fun NoWinnerRadioItem(
+    selected: Boolean,
+    onSelect: () -> Unit
+) {
+    RadioItem(
+        text = stringResource(Res.string.end_game_no_winner),
+        selected = selected,
+        onSelect = onSelect
+    )
+}
+
+@Composable
+private fun RadioItem(
+    text: String,
     selected: Boolean,
     onSelect: () -> Unit
 ) {
@@ -242,9 +220,10 @@ private fun NoWinnerRadioItem(
             onClick = onSelect
         )
         Text(
-            text = stringResource(Res.string.end_game_no_winner),
+            text = text,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = MaterialTheme.colorScheme.onSurface,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
             modifier = Modifier.weight(1f)
         )
     }
