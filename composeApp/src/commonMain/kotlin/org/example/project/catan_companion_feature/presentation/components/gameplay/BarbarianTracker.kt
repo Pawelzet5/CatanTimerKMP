@@ -40,7 +40,7 @@ fun BarbarianTracker(
         Icon(
             painter = painterResource(Res.drawable.ic_barbarians),
             contentDescription = null,
-            modifier = Modifier.size(16.dp),
+            modifier = Modifier.size(24.dp),
             tint = MaterialTheme.colorScheme.secondary,
         )
         Text(
