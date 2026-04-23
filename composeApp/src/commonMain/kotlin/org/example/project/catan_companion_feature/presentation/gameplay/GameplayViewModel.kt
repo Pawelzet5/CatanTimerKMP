@@ -149,13 +149,13 @@ class GameplayViewModel(
         val expansions = _uiState.value.game?.expansions ?: emptySet()
         viewModelScope.launch {
             sessionCoordinator.updateSelectedTurnDice(dice.red, dice.yellow, dice.event)
-            if (dice.sum != 7) {
+            val firstStep = computeFirstEventStep(dice.event, dice.sum == 7, previousEventDice, barbarianState, expansions)
+            if (firstStep == null) {
                 timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
                 _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER, pendingDiceEdit = null) }
-                return@launch
+            } else {
+                _uiState.update { it.copy(phase = GameplayPhase.EVENT, eventStep = firstStep, pendingDiceEdit = null) }
             }
-            val firstStep = computeFirstEventStep(dice.event, previousEventDice, barbarianState, expansions)
-            _uiState.update { it.copy(phase = GameplayPhase.EVENT, eventStep = firstStep, pendingDiceEdit = null) }
         }
     }
 
@@ -172,18 +172,25 @@ class GameplayViewModel(
 
     private fun computeFirstEventStep(
         newEventDice: EventDiceType?,
+        isRobberRoll: Boolean,
         previousEventDice: EventDiceType?,
         barbarianState: BarbarianState?,
         expansions: Set<GameExpansion>
-    ): EventStep {
-        if (GameExpansion.CITIES_AND_KNIGHTS !in expansions) return EventStep.ROBBER
-        if (newEventDice != EventDiceType.BARBARIANS) return EventStep.ROBBER
-        val currentPosition = barbarianState?.position ?: 0
-        // If the current turn previously had BARBARIANS, it was already counted in barbarianState.
-        // Otherwise, adding this roll increments the position by 1.
-        val newPosition = if (previousEventDice == EventDiceType.BARBARIANS) currentPosition
-                          else (currentPosition + 1) % 8
-        return if (newPosition == 7) EventStep.BARBARIANS else EventStep.ROBBER
+    ): EventStep? {
+        val isCitiesAndKnights = GameExpansion.CITIES_AND_KNIGHTS in expansions
+        val barbariansArrive = isCitiesAndKnights && newEventDice == EventDiceType.BARBARIANS && run {
+            val currentPosition = barbarianState?.position ?: 0
+            // If the current turn previously had BARBARIANS, it was already counted in barbarianState.
+            // Otherwise, adding this roll increments the position by 1.
+            val newPosition = if (previousEventDice == EventDiceType.BARBARIANS) currentPosition
+                              else (currentPosition + 1) % 8
+            newPosition == 7
+        }
+        return when {
+            barbariansArrive -> EventStep.BARBARIANS
+            isRobberRoll -> EventStep.ROBBER
+            else -> null
+        }
     }
 
     private var primaryElapsedMillis: Long = 0L
