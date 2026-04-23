@@ -84,6 +84,7 @@ fun GameplayScreenRoot(
     ObserveAsEvents(viewModel.events) { event ->
         when (event) {
             is GameplayEvent.NavigateToWinnerSelection -> onNavigateToWinnerSelection(event.gameId)
+            is GameplayEvent.NavigateToGameSummary -> onNavigateToSummary(event.gameId)
             GameplayEvent.NavigateToGameConfig -> onNavigateToGameConfig()
         }
     }

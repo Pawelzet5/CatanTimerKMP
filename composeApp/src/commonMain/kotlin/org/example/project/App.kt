@@ -17,6 +17,7 @@ import org.example.project.catan_companion_feature.presentation.gameconfig.GameC
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
 import org.example.project.catan_companion_feature.presentation.gameslist.GamesListScreenRoot
 import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryScreenRoot
+import org.example.project.catan_companion_feature.presentation.winnerselection.WinnerSelectionScreenRoot
 import org.example.project.catan_companion_feature.presentation.navigation.DashboardRoute
 import org.example.project.catan_companion_feature.presentation.navigation.GameConfigRoute
 import org.example.project.catan_companion_feature.presentation.navigation.GameSummaryRoute
@@ -123,11 +124,28 @@ fun App() {
                     onGameSummary = { gameId -> navController.navigate(GameSummaryRoute(gameId)) }
                 )
             }
+            composable<WinnerSelectionRoute> { backStackEntry ->
+                val route = backStackEntry.toRoute<WinnerSelectionRoute>()
+                WinnerSelectionScreenRoot(
+                    gameId = route.gameId,
+                    onGameFinished = { gameId ->
+                        navController.navigate(GameSummaryRoute(gameId)) {
+                            popUpTo<DashboardRoute>()
+                        }
+                    },
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
             composable<GameSummaryRoute> { backStackEntry ->
                 val route = backStackEntry.toRoute<GameSummaryRoute>()
                 GameSummaryScreenRoot(
                     gameId = route.gameId,
-                    onNavigateBack = { navController.popBackStack() }
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateHome = {
+                        navController.navigate(DashboardRoute) {
+                            popUpTo<DashboardRoute> { inclusive = true }
+                        }
+                    }
                 )
             }
         }

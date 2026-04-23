@@ -130,6 +130,13 @@ class GameplayViewModel(
             GameplayAction.DismissEndGameConfirmClick -> _uiState.update { it.copy(showEndGameConfirm = false) }
             GameplayAction.ConfirmHistoricalEditClick -> onConfirmHistoricalDiceEdit()
             GameplayAction.DismissHistoricalEditConfirmClick -> _uiState.update { it.copy(showHistoricalEditConfirm = false) }
+            is GameplayAction.ConfirmWinnerClick -> viewModelScope.launch {
+                sessionCoordinator.finishSession(
+                    finishedAt = System.currentTimeMillis(),
+                    winnerId = action.winnerId
+                )
+                _events.trySend(GameplayEvent.NavigateToGameSummary(gameId))
+            }
         }
     }
 

@@ -45,19 +45,26 @@
     <string name="event_barbarians_arrived">The barbarians have arrived!\nResolve the attack now.</string>
 
     <!-- Statistics -->
-    <string name="stats_title">Statistics</string>
+    <string name="stats_title">Player Stats</string>
     <string name="stats_dice_distribution">Dice Distribution</string>
     <string name="stats_event_dice">Event Dice</string>
-    <string name="stats_total_turns">Total Turns</string>
-    <string name="stats_avg_turn_time">Average Turn Time</string>
+    <string name="stats_total_turns">Total turns</string>
+    <string name="stats_avg_turn_time">Average turn time</string>
+    <string name="stats_game_stats">Game Stats</string>
+    <string name="stats_thief_rolled">Thief rolled</string>
+    <string name="stats_barbarian_attacks">Barbarian attacks</string>
 
     <!-- End Game -->
     <string name="end_game_select_winner">Select Winner</string>
+    <string name="end_game_who_won">Who won this game of Catan?</string>
     <string name="end_game_no_winner">No winner (game abandoned)</string>
-    <string name="end_game_confirm">Confirm</string>
+    <string name="end_game_confirm">Confirm Winner</string>
     <string name="end_game_summary">Game Summary</string>
+    <string name="end_game_winner_label">Winner</string>
     <string name="end_game_winner">Winner: %1$s</string>
     <string name="end_game_duration">Duration</string>
+    <string name="end_game_started">Started: %1$s</string>
+    <string name="end_game_ended">Ended: %1$s</string>
     <string name="end_game_back_home">Back to Home</string>
 
     <!-- Players -->
@@ -78,7 +85,7 @@
     <string name="player_details_win_rate">Win Rate</string>
     <string name="player_details_statistics">Statistics</string>
     <string name="player_details_since">Player since %1$s</string>
-    <string name="player_details_games_stats">%1$d games · %2$d wins · %3$d%%</string>
+==    <string name="player_details_games_stats">%1$d games · %2$d wins · %3$d%%</string>
 
     <!-- Players Selection Mode -->
     <string name="players_add_title">Add Players</string>
@@ -97,6 +104,10 @@
     <string name="games_completed">Completed</string>
     <string name="games_turn_count">Turn %1$d</string>
     <string name="games_winner">Winner: %1$s</string>
+    <string name="games_badge_active">Active</string>
+    <string name="games_badge_done">Done</string>
+    <string name="games_abandoned">Abandoned</string>
+    <string name="games_empty">No games yet</string>
 
     <!-- Confirm End Game -->
     <string name="confirm_end_game_message">Are you sure you want to end the game? This action cannot be undone.</string>

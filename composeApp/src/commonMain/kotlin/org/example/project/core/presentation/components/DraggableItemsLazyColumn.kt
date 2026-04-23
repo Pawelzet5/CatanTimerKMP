@@ -1,4 +1,4 @@
-package org.example.project.core.presentation
+package org.example.project.core.presentation.components
 
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
