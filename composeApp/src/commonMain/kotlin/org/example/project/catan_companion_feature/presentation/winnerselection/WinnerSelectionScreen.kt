@@ -143,8 +143,8 @@ fun WinnerSelectionScreen(
             }
 
             items(players, key = { it.playerId }) { player ->
-                PlayerRadioItem(
-                    player = player,
+                RadioItem(
+                    text = player.playerName,
                     selected = selectedWinnerId == player.playerId,
                     onSelect = { selectedWinnerId = player.playerId }
                 )
@@ -162,15 +162,6 @@ fun WinnerSelectionScreen(
             }
         }
     }
-}
-
-@Composable
-private fun PlayerRadioItem(
-    player: GamePlayer,
-    selected: Boolean,
-    onSelect: () -> Unit
-) {
-    RadioItem(text = player.playerName, selected = selected, onSelect = onSelect)
 }
 
 @Composable
