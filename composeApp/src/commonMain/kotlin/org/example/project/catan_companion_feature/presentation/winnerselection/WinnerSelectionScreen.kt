@@ -1,17 +1,18 @@
 package org.example.project.catan_companion_feature.presentation.winnerselection
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -29,11 +30,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.common_back
 import catantimer.composeapp.generated.resources.end_game_confirm
 import catantimer.composeapp.generated.resources.end_game_no_winner
 import catantimer.composeapp.generated.resources.end_game_select_winner
+import catantimer.composeapp.generated.resources.end_game_who_won
 import catantimer.composeapp.generated.resources.ic_close
 import org.example.project.catan_companion_feature.domain.dataclass.GamePlayer
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayAction
@@ -41,6 +47,7 @@ import org.example.project.catan_companion_feature.presentation.gameplay.Gamepla
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayState
 import org.example.project.catan_companion_feature.presentation.gameplay.GameplayViewModel
 import org.example.project.core.designsystem.CatanSpacing
+import org.example.project.core.designsystem.components.CatanButton
 import org.example.project.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -105,15 +112,11 @@ fun WinnerSelectionScreen(
                     .fillMaxWidth()
                     .padding(CatanSpacing.md)
             ) {
-                Button(
+                CatanButton(
+                    text = stringResource(Res.string.end_game_confirm),
                     onClick = { onAction(GameplayAction.ConfirmWinnerClick(selectedWinnerId)) },
                     modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(Res.string.end_game_confirm),
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                }
+                )
             }
         }
     ) { innerPadding ->
@@ -121,8 +124,24 @@ fun WinnerSelectionScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
-            contentPadding = PaddingValues(vertical = CatanSpacing.sm)
+            contentPadding = PaddingValues(
+                horizontal = CatanSpacing.md,
+                vertical = CatanSpacing.md
+            ),
+            verticalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
         ) {
+            item {
+                Text(
+                    text = stringResource(Res.string.end_game_who_won),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = CatanSpacing.xs)
+                )
+            }
+
             items(players, key = { it.playerId }) { player ->
                 PlayerRadioItem(
                     player = player,
@@ -130,9 +149,11 @@ fun WinnerSelectionScreen(
                     onSelect = { selectedWinnerId = player.playerId }
                 )
             }
+
             item {
-                HorizontalDivider(modifier = Modifier.padding(vertical = CatanSpacing.sm))
+                HorizontalDivider(modifier = Modifier.padding(vertical = CatanSpacing.xs))
             }
+
             item {
                 NoWinnerRadioItem(
                     selected = selectedWinnerId == null,
@@ -149,12 +170,29 @@ private fun PlayerRadioItem(
     selected: Boolean,
     onSelect: () -> Unit
 ) {
+    val shape = RoundedCornerShape(12.dp)
+    val backgroundColor = if (selected) {
+        MaterialTheme.colorScheme.primaryContainer
+    } else {
+        MaterialTheme.colorScheme.surfaceVariant
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = CatanSpacing.md, vertical = CatanSpacing.sm),
+            .clip(shape)
+            .background(color = backgroundColor, shape = shape)
+            .then(
+                if (selected) Modifier.border(
+                    width = 1.5.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = shape
+                ) else Modifier
+            )
+            .clickable(onClick = onSelect)
+            .padding(horizontal = CatanSpacing.sm, vertical = CatanSpacing.sm),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.md)
+        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
     ) {
         RadioButton(
             selected = selected,
@@ -163,7 +201,9 @@ private fun PlayerRadioItem(
         Text(
             text = player.playerName,
             style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onSurface
+            color = MaterialTheme.colorScheme.onSurface,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+            modifier = Modifier.weight(1f)
         )
     }
 }
@@ -173,24 +213,39 @@ private fun NoWinnerRadioItem(
     selected: Boolean,
     onSelect: () -> Unit
 ) {
+    val shape = RoundedCornerShape(12.dp)
+    val backgroundColor = if (selected) {
+        MaterialTheme.colorScheme.primaryContainer
+    } else {
+        MaterialTheme.colorScheme.surfaceVariant
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = CatanSpacing.md, vertical = CatanSpacing.sm),
+            .clip(shape)
+            .background(color = backgroundColor, shape = shape)
+            .then(
+                if (selected) Modifier.border(
+                    width = 1.5.dp,
+                    color = MaterialTheme.colorScheme.outline,
+                    shape = shape
+                ) else Modifier
+            )
+            .clickable(onClick = onSelect)
+            .padding(horizontal = CatanSpacing.sm, vertical = CatanSpacing.sm),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.md)
+        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.sm)
     ) {
         RadioButton(
             selected = selected,
             onClick = onSelect
         )
-        Column {
-            Text(
-                text = stringResource(Res.string.end_game_no_winner),
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.height(CatanSpacing.xs))
-        }
+        Text(
+            text = stringResource(Res.string.end_game_no_winner),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.weight(1f)
+        )
     }
 }
