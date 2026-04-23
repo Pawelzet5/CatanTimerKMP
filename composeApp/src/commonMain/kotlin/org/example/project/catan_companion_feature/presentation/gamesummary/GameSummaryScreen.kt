@@ -42,9 +42,9 @@ import catantimer.composeapp.generated.resources.end_game_started
 import catantimer.composeapp.generated.resources.end_game_summary
 import catantimer.composeapp.generated.resources.end_game_winner_label
 import catantimer.composeapp.generated.resources.ic_dice
-import catantimer.composeapp.generated.resources.ic_more_time
 import catantimer.composeapp.generated.resources.ic_person
 import catantimer.composeapp.generated.resources.ic_statistics
+import catantimer.composeapp.generated.resources.ic_timer
 import catantimer.composeapp.generated.resources.ic_winner
 import catantimer.composeapp.generated.resources.stats_avg_turn_time
 import catantimer.composeapp.generated.resources.stats_barbarian_attacks
@@ -208,7 +208,7 @@ private fun DurationCard(game: Game) {
     ElevatedSectionCard {
         SectionLabel(
             text = stringResource(Res.string.end_game_duration),
-            icon = painterResource(Res.drawable.ic_more_time)
+            icon = painterResource(Res.drawable.ic_timer)
         )
         Spacer(modifier = Modifier.height(CatanSpacing.sm))
 
@@ -332,12 +332,25 @@ private fun PlayerStatsCard(game: Game, statistics: GameStatistics) {
                     )
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = if (isWinner) "${player.playerName} 🏆" else player.playerName,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.SemiBold
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.xs)
+                    ) {
+                        Text(
+                            text = player.playerName,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        if (isWinner) {
+                            Icon(
+                                painter = painterResource(Res.drawable.ic_winner),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(14.dp)
+                            )
+                        }
+                    }
                     Text(
                         text = "avg ${formatDurationMillis(avgMillis)}",
                         style = MaterialTheme.typography.bodySmall,
