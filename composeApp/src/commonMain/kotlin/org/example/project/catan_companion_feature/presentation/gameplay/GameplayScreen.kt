@@ -180,6 +180,10 @@ fun GameplayScreen(
                 onJumpToCurrent = { onAction(GameplayAction.JumpToCurrentClick) }
             )
 
+            uiState.displayedTurn?.let { turn ->
+                TimerPlayerIndicator(turn = turn, uiState = uiState)
+            }
+
             if (!uiState.isViewingLatest) {
                 val turn = uiState.displayedTurn ?: return@Column
                 HistoricalDiceContent(
@@ -249,7 +253,6 @@ private fun TurnNavigatorBar(
     val turnNumber = turn?.number ?: 1
     val playerName = turn?.playerName.orEmpty()
     val canGoBack = turnNumber > 1
-    val canGoForward = !uiState.isViewingLatest
 
     Column {
         Row(
@@ -267,7 +270,11 @@ private fun TurnNavigatorBar(
                 isViewingLatest = uiState.isViewingLatest,
                 onJumpToCurrent = onJumpToCurrent,
             )
-            TurnNavButton(icon = Icons.AutoMirrored.Filled.ArrowForward, enabled = canGoForward, onClick = onNext)
+            if (!uiState.isViewingLatest) {
+                TurnNavButton(icon = Icons.AutoMirrored.Filled.ArrowForward, enabled = true, onClick = onNext)
+            } else {
+                Spacer(Modifier.size(36.dp))
+            }
         }
         HorizontalDivider(color = MaterialTheme.catanColors.borderAccent)
     }
@@ -611,14 +618,12 @@ private fun TimerPhaseContent(
     onInBetweenTurn: () -> Unit,
     onMenuClick: () -> Unit,
 ) {
-    val turn = uiState.displayedTurn ?: return
     val showInBetweenButton = uiState.phase == GameplayPhase.MAIN_TIMER
         && uiState.game?.specialTurnRuleEnabled == true
         && uiState.isViewingLatest
     val hasCitiesAndKnights = uiState.game?.expansions?.contains(GameExpansion.CITIES_AND_KNIGHTS) == true
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TimerPlayerIndicator(turn = turn, uiState = uiState)
         Column(
             modifier = Modifier
                 .weight(1f)
