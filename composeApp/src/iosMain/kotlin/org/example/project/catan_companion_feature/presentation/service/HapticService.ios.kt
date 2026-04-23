@@ -5,7 +5,7 @@ import platform.UIKit.UIImpactFeedbackStyle
 import platform.UIKit.UINotificationFeedbackGenerator
 import platform.UIKit.UINotificationFeedbackType
 
-actual class HapticService {
+actual object HapticService {
     actual fun vibrateOnce() {
         UIImpactFeedbackGenerator(UIImpactFeedbackStyle.UIImpactFeedbackStyleLight)
             .impactOccurred()

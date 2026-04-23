@@ -10,5 +10,5 @@ import org.koin.dsl.module
 actual val platformModule: Module
     get() = module {
         single { DatabaseFactory(androidApplication()) }
-        single { HapticService(androidContext()) }
+        single { HapticService.also { it.initialize(androidContext()) } }
     }
