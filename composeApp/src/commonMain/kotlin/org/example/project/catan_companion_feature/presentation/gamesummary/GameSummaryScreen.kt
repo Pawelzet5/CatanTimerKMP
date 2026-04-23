@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,6 +41,11 @@ import catantimer.composeapp.generated.resources.end_game_ended
 import catantimer.composeapp.generated.resources.end_game_started
 import catantimer.composeapp.generated.resources.end_game_summary
 import catantimer.composeapp.generated.resources.end_game_winner_label
+import catantimer.composeapp.generated.resources.ic_dice
+import catantimer.composeapp.generated.resources.ic_more_time
+import catantimer.composeapp.generated.resources.ic_person
+import catantimer.composeapp.generated.resources.ic_statistics
+import catantimer.composeapp.generated.resources.ic_winner
 import catantimer.composeapp.generated.resources.stats_avg_turn_time
 import catantimer.composeapp.generated.resources.stats_barbarian_attacks
 import catantimer.composeapp.generated.resources.stats_dice_distribution
@@ -57,6 +64,7 @@ import org.example.project.core.designsystem.CatanSpacing
 import org.example.project.core.designsystem.components.CatanButton
 import org.example.project.core.presentation.ObserveAsEvents
 import org.example.project.core.util.formatEpochMillis
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -170,9 +178,11 @@ private fun TrophyBanner(winnerName: String) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(CatanSpacing.xs)
         ) {
-            Text(
-                text = "🏆",
-                fontSize = 40.sp
+            Icon(
+                painter = painterResource(Res.drawable.ic_winner),
+                contentDescription = null,
+                tint = Color(0xFFFFF7ED),
+                modifier = Modifier.size(40.dp)
             )
             Text(
                 text = stringResource(Res.string.end_game_winner_label).uppercase(),
@@ -196,7 +206,10 @@ private fun DurationCard(game: Game) {
     val finishedAt = game.finishedAt
 
     ElevatedSectionCard {
-        SectionLabel("⏱ " + stringResource(Res.string.end_game_duration))
+        SectionLabel(
+            text = stringResource(Res.string.end_game_duration),
+            icon = painterResource(Res.drawable.ic_more_time)
+        )
         Spacer(modifier = Modifier.height(CatanSpacing.sm))
 
         if (finishedAt != null) {
@@ -226,7 +239,10 @@ private fun GameStatsCard(game: Game, statistics: GameStatistics) {
     val hasCitiesAndKnights = GameExpansion.CITIES_AND_KNIGHTS in game.expansions
 
     ElevatedSectionCard {
-        SectionLabel("📊 " + stringResource(Res.string.stats_game_stats))
+        SectionLabel(
+            text = stringResource(Res.string.stats_game_stats),
+            icon = painterResource(Res.drawable.ic_statistics)
+        )
         Spacer(modifier = Modifier.height(CatanSpacing.sm))
 
         StatRow(
@@ -256,7 +272,10 @@ private fun GameStatsCard(game: Game, statistics: GameStatistics) {
 @Composable
 private fun DiceChartCard(statistics: GameStatistics) {
     ElevatedSectionCard {
-        SectionLabel(stringResource(Res.string.stats_dice_distribution))
+        SectionLabel(
+            text = stringResource(Res.string.stats_dice_distribution),
+            icon = painterResource(Res.drawable.ic_dice)
+        )
         Spacer(modifier = Modifier.height(CatanSpacing.md))
         DiceStatisticsChart(
             distribution = statistics.diceDistribution,
@@ -270,7 +289,10 @@ private fun PlayerStatsCard(game: Game, statistics: GameStatistics) {
     val players = game.players.sortedBy { it.orderIndex }
 
     ElevatedSectionCard {
-        SectionLabel("👥 " + stringResource(Res.string.stats_title))
+        SectionLabel(
+            text = stringResource(Res.string.stats_title),
+            icon = painterResource(Res.drawable.ic_person)
+        )
         Spacer(modifier = Modifier.height(CatanSpacing.sm))
 
         players.forEachIndexed { index, player ->
@@ -349,14 +371,25 @@ private fun ElevatedSectionCard(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun SectionLabel(text: String) {
-    Text(
-        text = text.uppercase(),
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        fontWeight = FontWeight.Bold,
-        letterSpacing = 1.sp
-    )
+private fun SectionLabel(text: String, icon: Painter) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(CatanSpacing.xs)
+    ) {
+        Icon(
+            painter = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(14.dp)
+        )
+        Text(
+            text = text.uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp
+        )
+    }
 }
 
 @Composable

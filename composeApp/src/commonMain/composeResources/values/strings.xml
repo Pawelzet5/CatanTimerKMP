@@ -58,7 +58,7 @@
     <string name="end_game_select_winner">Select Winner</string>
     <string name="end_game_who_won">Who won this game of Catan?</string>
     <string name="end_game_no_winner">No winner (game abandoned)</string>
-    <string name="end_game_confirm">🏆 Confirm Winner</string>
+    <string name="end_game_confirm">Confirm Winner</string>
     <string name="end_game_summary">Game Summary</string>
     <string name="end_game_winner_label">Winner</string>
     <string name="end_game_winner">Winner: %1$s</string>

@@ -56,7 +56,7 @@
     <string name="end_game_select_winner">Wybierz zwycięzcę</string>
     <string name="end_game_who_won">Kto wygrał tę grę w Catana?</string>
     <string name="end_game_no_winner">Bez zwycięzcy (gra przerwana)</string>
-    <string name="end_game_confirm">🏆 Potwierdź zwycięzcę</string>
+    <string name="end_game_confirm">Potwierdź zwycięzcę</string>
     <string name="end_game_summary">Podsumowanie gry</string>
     <string name="end_game_winner_label">Zwycięzca</string>
     <string name="end_game_winner">Zwycięzca: %1$s</string>
