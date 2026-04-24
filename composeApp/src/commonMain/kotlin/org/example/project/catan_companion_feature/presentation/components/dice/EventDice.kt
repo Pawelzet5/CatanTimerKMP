@@ -20,6 +20,7 @@ import catantimer.composeapp.generated.resources.ic_science
 import catantimer.composeapp.generated.resources.ic_trade
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.core.designsystem.CatanDiceEventBackground
+import org.example.project.core.designsystem.CatanDiceEventIcon
 import org.example.project.core.designsystem.CatanDiceSelectedBorder
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
@@ -29,6 +30,13 @@ private fun EventDiceType.icon(): DrawableResource = when (this) {
     EventDiceType.SCIENCE -> Res.drawable.ic_science
     EventDiceType.TRADE -> Res.drawable.ic_trade
     EventDiceType.BARBARIANS -> Res.drawable.ic_barbarians
+}
+
+private fun EventDiceType.contentDescription(): String = when (this) {
+    EventDiceType.POLITICS -> "Politics event die"
+    EventDiceType.SCIENCE -> "Science event die"
+    EventDiceType.TRADE -> "Trade event die"
+    EventDiceType.BARBARIANS -> "Barbarians event die"
 }
 
 @Composable
@@ -54,8 +62,8 @@ fun EventDice(
     ) {
         Icon(
             painter = painterResource(type.icon()),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.onSurface,
+            contentDescription = type.contentDescription(),
+            tint = CatanDiceEventIcon,
             modifier = Modifier.size(40.dp),
         )
     }
