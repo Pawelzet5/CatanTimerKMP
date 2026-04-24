@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +23,7 @@ import org.example.project.catan_companion_feature.domain.enums.GameExpansion
 import org.example.project.catan_companion_feature.presentation.components.dice.DiceRow
 import org.example.project.catan_companion_feature.presentation.components.dice.EventDiceRow
 import org.example.project.core.designsystem.CatanSpacing
+import org.example.project.core.designsystem.components.CatanButton
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -87,12 +87,11 @@ fun HistoricalDiceContent(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Button(
+        CatanButton(
+            text = stringResource(Res.string.settings_save),
             onClick = onSaveChanges,
             enabled = isSaveEnabled,
             modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(Res.string.settings_save))
-        }
+        )
     }
 }

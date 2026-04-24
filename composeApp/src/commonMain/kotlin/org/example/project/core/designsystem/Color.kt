@@ -75,6 +75,9 @@ val CatanDiceEventIcon = Color(0xFF1C1917)
 val CatanDiceSelectedBorder = Color(0xFF059669)
 val CatanDiceSelectedBorderDark = Color(0xFF34D399)
 
+val CatanBorderAccent = Color(0xFFE8B87A)
+val CatanBorderAccentDark = Color(0xFF78350F)
+
 // ── Semantic color schemes ────────────────────────────────────────────────────
 
 internal val LightColorScheme = lightColorScheme(

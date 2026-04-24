@@ -25,22 +25,29 @@
     <string name="gameplay_turn">Tura %1$d</string>
     <string name="gameplay_player_turn">Tura gracza %1$s</string>
     <string name="gameplay_continue">Dalej</string>
+    <string name="gameplay_continue_to_timer">Przejdź do timera tury</string>
     <string name="gameplay_next_turn">Następna tura</string>
     <string name="gameplay_in_between">Tura pośrednia (%1$s)</string>
+    <string name="gameplay_active_player">Aktywny gracz</string>
 
     <!-- Timer -->
     <string name="timer_start">Start</string>
     <string name="timer_stop">Stop</string>
     <string name="timer_add_10">+10 sek</string>
     <string name="timer_reset">Reset</string>
+    <string name="timer_warning_low">Kończy się czas</string>
 
     <!-- Events -->
     <string name="event_robber_title">Policz karty!</string>
     <string name="event_robber_message">Wszyscy gracze muszą policzyć karty.\nJeśli masz więcej niż 7, odrzuć połowę.</string>
-    <string name="event_move_robber">Przesuń złodzieja na inne pole.</string>
-    <string name="event_move_robber_or_pirate">Przesuń złodzieja lub pirata na inne pole.</string>
+    <string name="event_move_robber">Przesuń złodzieja na inne pole i ukradnij jeden surowiec.</string>
+    <string name="event_move_robber_or_pirate">Przesuń złodzieja lub pirata na inne pole i ukradnij jeden surowiec.</string>
     <string name="event_robber_not_active">Złodziej nie może być jeszcze przesunięty.\n(Pierwszy najazd barbarzyńców jeszcze nie nastąpił)</string>
     <string name="event_barbarians_arrived">Barbarzyńcy przybyli!\nRozstrzygnij atak.</string>
+    <string name="event_thief_title">Złodziej!</string>
+    <string name="event_barbarians_title">Barbarzyńcy!</string>
+    <string name="event_barbarians_description">Rozstrzygnij atak barbarzyńców.\nPorównaj liczbę rycerzy z liczbą miast.</string>
+    <string name="event_barbarians_arrived_header">Barbarzyńcy przybyli!</string>
 
     <!-- Statistics -->
     <string name="stats_title">Statystyki graczy</string>
@@ -103,7 +110,14 @@
     <string name="historical_edit_title">Zmienić historyczne rzuty?</string>
     <string name="historical_edit_message">Edytujesz kości dla tury %1$d. Aktualna tura to %2$d. Spowoduje to aktualizację statystyk gry i pozycji barbarzyńców.</string>
 
+    <!-- Event Dice content descriptions -->
+    <string name="event_dice_cd_politics">Kość zdarzeń: polityka</string>
+    <string name="event_dice_cd_science">Kość zdarzeń: nauka</string>
+    <string name="event_dice_cd_trade">Kość zdarzeń: handel</string>
+    <string name="event_dice_cd_barbarians">Kość zdarzeń: barbarzyńcy</string>
+
     <!-- Menu -->
+    <string name="menu_open">Menu</string>
     <string name="menu_statistics">Pokaż statystyki</string>
     <string name="menu_settings">Zmień ustawienia gry</string>
     <string name="menu_end_game">Zakończ grę</string>

@@ -3,15 +3,19 @@ package org.example.project.catan_companion_feature.domain.dataclass
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 
 data class BarbarianState(
-    val position: Int,                  // 0–7 (0 = start, 7 = island)
+    val position: Int,                  // 0–MAX_POSITION (0 = start, MAX_POSITION = island)
     val raidsCompleted: Int,
     val hasFirstRaidOccurred: Boolean
-)
+) {
+    companion object {
+        const val MAX_POSITION = 7
+    }
+}
 
 fun List<Turn>.toBarbarianState(): BarbarianState {
     val barbarianRolls = count { it.eventDice == EventDiceType.BARBARIANS }
-    val position = barbarianRolls % 8
-    val raidsCompleted = barbarianRolls / 8
+    val position = barbarianRolls % (BarbarianState.MAX_POSITION + 1)
+    val raidsCompleted = barbarianRolls / (BarbarianState.MAX_POSITION + 1)
     return BarbarianState(
         position = position,
         raidsCompleted = raidsCompleted,

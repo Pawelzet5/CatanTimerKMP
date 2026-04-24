@@ -12,6 +12,7 @@ data class GameplayState(
     val displayedTurn: Turn? = null,
     val isViewingLatest: Boolean = true,
     val phase: GameplayPhase = GameplayPhase.DICE_SELECTION,
+    val eventStep: EventStep? = null,
     val timerState: TimerState = TimerState(),
     val barbarianState: BarbarianState? = null,
     val diceDistribution: DiceDistribution? = null,
@@ -30,4 +31,9 @@ enum class GameplayPhase {
     EVENT,
     MAIN_TIMER,
     IN_BETWEEN_TIMER
+}
+
+enum class EventStep {
+    BARBARIANS,
+    ROBBER
 }

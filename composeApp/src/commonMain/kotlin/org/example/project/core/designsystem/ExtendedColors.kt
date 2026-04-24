@@ -18,6 +18,7 @@ data class CatanExtendedColors(
     val gamesContainer: Color,
     val infoIcon: Color,
     val infoContainer: Color,
+    val borderAccent: Color,
 )
 
 internal val LocalCatanColors = staticCompositionLocalOf { LightExtendedColors }
@@ -29,6 +30,7 @@ internal val LightExtendedColors = CatanExtendedColors(
     gamesContainer   = CatanCategoryGamesSubtle,
     infoIcon         = CatanInfo,
     infoContainer    = CatanInfoSubtle,
+    borderAccent     = CatanBorderAccent,
 )
 
 internal val DarkExtendedColors = CatanExtendedColors(
@@ -38,6 +40,7 @@ internal val DarkExtendedColors = CatanExtendedColors(
     gamesContainer   = CatanCategoryGamesSubtleDark,
     infoIcon         = CatanInfoDark,
     infoContainer    = CatanInfoSubtleDark,
+    borderAccent     = CatanBorderAccentDark,
 )
 
 val MaterialTheme.catanColors: CatanExtendedColors
