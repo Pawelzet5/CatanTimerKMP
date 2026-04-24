@@ -110,6 +110,12 @@
     <string name="historical_edit_title">Zmienić historyczne rzuty?</string>
     <string name="historical_edit_message">Edytujesz kości dla tury %1$d. Aktualna tura to %2$d. Spowoduje to aktualizację statystyk gry i pozycji barbarzyńców.</string>
 
+    <!-- Event Dice content descriptions -->
+    <string name="event_dice_cd_politics">Kość zdarzeń: polityka</string>
+    <string name="event_dice_cd_science">Kość zdarzeń: nauka</string>
+    <string name="event_dice_cd_trade">Kość zdarzeń: handel</string>
+    <string name="event_dice_cd_barbarians">Kość zdarzeń: barbarzyńcy</string>
+
     <!-- Menu -->
     <string name="menu_open">Menu</string>
     <string name="menu_statistics">Pokaż statystyki</string>

@@ -14,6 +14,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.unit.dp
 import catantimer.composeapp.generated.resources.Res
+import catantimer.composeapp.generated.resources.event_dice_cd_barbarians
+import catantimer.composeapp.generated.resources.event_dice_cd_politics
+import catantimer.composeapp.generated.resources.event_dice_cd_science
+import catantimer.composeapp.generated.resources.event_dice_cd_trade
 import catantimer.composeapp.generated.resources.ic_barbarians
 import catantimer.composeapp.generated.resources.ic_politics
 import catantimer.composeapp.generated.resources.ic_science
@@ -24,6 +28,7 @@ import org.example.project.core.designsystem.CatanDiceEventIcon
 import org.example.project.core.designsystem.CatanDiceSelectedBorder
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 private fun EventDiceType.icon(): DrawableResource = when (this) {
     EventDiceType.POLITICS -> Res.drawable.ic_politics
@@ -32,11 +37,12 @@ private fun EventDiceType.icon(): DrawableResource = when (this) {
     EventDiceType.BARBARIANS -> Res.drawable.ic_barbarians
 }
 
+@Composable
 private fun EventDiceType.contentDescription(): String = when (this) {
-    EventDiceType.POLITICS -> "Politics event die"
-    EventDiceType.SCIENCE -> "Science event die"
-    EventDiceType.TRADE -> "Trade event die"
-    EventDiceType.BARBARIANS -> "Barbarians event die"
+    EventDiceType.POLITICS -> stringResource(Res.string.event_dice_cd_politics)
+    EventDiceType.SCIENCE -> stringResource(Res.string.event_dice_cd_science)
+    EventDiceType.TRADE -> stringResource(Res.string.event_dice_cd_trade)
+    EventDiceType.BARBARIANS -> stringResource(Res.string.event_dice_cd_barbarians)
 }
 
 @Composable
