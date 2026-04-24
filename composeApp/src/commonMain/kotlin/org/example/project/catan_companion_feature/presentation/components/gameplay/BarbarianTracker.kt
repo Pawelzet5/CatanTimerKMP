@@ -44,7 +44,7 @@ fun BarbarianTracker(
             tint = MaterialTheme.colorScheme.secondary,
         )
         Text(
-            text = "${state.position} / 7",
+            text = "${state.position} / ${BarbarianState.MAX_POSITION}",
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSecondaryContainer,
         )
