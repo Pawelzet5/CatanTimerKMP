@@ -225,7 +225,7 @@ private fun TurnDurationSection(
     onIncrement: () -> Unit
 ) {
     val totalSeconds = (durationMillis / MILLIS_PER_SECOND).toInt()
-    val displayText = "%02d:%02d".format(totalSeconds / 60, totalSeconds % 60)
+    val displayText = "${(totalSeconds / 60).toString().padStart(2, '0')}:${(totalSeconds % 60).toString().padStart(2, '0')}"
 
     Column(verticalArrangement = Arrangement.spacedBy(CatanSpacing.sm)) {
         FormLabel(stringResource(Res.string.config_turn_duration))

@@ -9,3 +9,5 @@ actual fun formatEpochMillis(epochMillis: Long): String =
 
 actual fun formatEpochMillisToMonthYear(epochMillis: Long): String =
     SimpleDateFormat(MONTH_YEAR_PATTERN, Locale.getDefault()).format(Date(epochMillis))
+
+actual fun currentTimeMillis(): Long = System.currentTimeMillis()
