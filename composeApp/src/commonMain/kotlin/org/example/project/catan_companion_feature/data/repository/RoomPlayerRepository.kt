@@ -2,6 +2,7 @@ package org.example.project.catan_companion_feature.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.example.project.core.util.currentTimeMillis
 import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
 import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
 import org.example.project.catan_companion_feature.data.local.mapper.toDomain
@@ -39,7 +40,7 @@ class RoomPlayerRepository(
 
     override suspend fun createPlayer(name: String): Result<Long, DataError.Local> =
         tryLocalWrite {
-            val id = playerDao.insert(PlayerEntity(name = name, createdAt = System.currentTimeMillis()))
+            val id = playerDao.insert(PlayerEntity(name = name, createdAt = currentTimeMillis()))
             Result.Success(id)
         }
 

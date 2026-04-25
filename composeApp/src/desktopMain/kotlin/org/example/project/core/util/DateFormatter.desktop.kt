@@ -22,3 +22,5 @@ actual fun formatEpochMillisToMonthYear(epochMillis: Long): String {
     return DateTimeFormatter.ofPattern(MONTH_YEAR_PATTERN, Locale.getDefault())
         .format(localDateTime)
 }
+
+actual fun currentTimeMillis(): Long = System.currentTimeMillis()

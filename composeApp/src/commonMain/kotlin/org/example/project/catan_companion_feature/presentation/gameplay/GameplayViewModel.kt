@@ -3,6 +3,7 @@ package org.example.project.catan_companion_feature.presentation.gameplay
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
+import org.example.project.core.util.currentTimeMillis
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -134,7 +135,7 @@ class GameplayViewModel(
             GameplayAction.DismissHistoricalEditConfirmClick -> _uiState.update { it.copy(showHistoricalEditConfirm = false) }
             is GameplayAction.ConfirmWinnerClick -> viewModelScope.launch {
                 sessionCoordinator.finishSession(
-                    finishedAt = System.currentTimeMillis(),
+                    finishedAt = currentTimeMillis(),
                     winnerId = action.winnerId
                 )
                 _events.trySend(GameplayEvent.NavigateToGameSummary(gameId))
