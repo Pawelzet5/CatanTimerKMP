@@ -5,5 +5,6 @@ data class Player(
     val name: String,
     val isHidden: Boolean = false,
     val gamesPlayed: Int = 0,   // derived — populated by repository
-    val gamesWon: Int = 0       // derived — populated by repository
+    val gamesWon: Int = 0,      // derived — populated by repository
+    val createdAt: Long? = null
 )

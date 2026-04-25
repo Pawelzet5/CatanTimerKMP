@@ -5,25 +5,44 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import catantimer.composeapp.generated.resources.Res
+import catantimer.composeapp.generated.resources.event_dice_cd_barbarians
+import catantimer.composeapp.generated.resources.event_dice_cd_politics
+import catantimer.composeapp.generated.resources.event_dice_cd_science
+import catantimer.composeapp.generated.resources.event_dice_cd_trade
+import catantimer.composeapp.generated.resources.ic_barbarians
+import catantimer.composeapp.generated.resources.ic_politics
+import catantimer.composeapp.generated.resources.ic_science
+import catantimer.composeapp.generated.resources.ic_trade
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.core.designsystem.CatanDiceEventBackground
+import org.example.project.core.designsystem.CatanDiceEventIcon
 import org.example.project.core.designsystem.CatanDiceSelectedBorder
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
-private fun EventDiceType.symbol(): String = when (this) {
-    EventDiceType.POLITICS -> "⚔"
-    EventDiceType.SCIENCE -> "🔬"
-    EventDiceType.TRADE -> "💰"
-    EventDiceType.BARBARIANS -> "🚢"
+private fun EventDiceType.icon(): DrawableResource = when (this) {
+    EventDiceType.POLITICS -> Res.drawable.ic_politics
+    EventDiceType.SCIENCE -> Res.drawable.ic_science
+    EventDiceType.TRADE -> Res.drawable.ic_trade
+    EventDiceType.BARBARIANS -> Res.drawable.ic_barbarians
+}
+
+@Composable
+private fun EventDiceType.contentDescription(): String = when (this) {
+    EventDiceType.POLITICS -> stringResource(Res.string.event_dice_cd_politics)
+    EventDiceType.SCIENCE -> stringResource(Res.string.event_dice_cd_science)
+    EventDiceType.TRADE -> stringResource(Res.string.event_dice_cd_trade)
+    EventDiceType.BARBARIANS -> stringResource(Res.string.event_dice_cd_barbarians)
 }
 
 @Composable
@@ -34,7 +53,8 @@ fun EventDice(
     modifier: Modifier = Modifier
 ) {
     val shape = RoundedCornerShape(8.dp)
-    val borderColor = if (isSelected) CatanDiceSelectedBorder else Color.Transparent
+    val borderColor = if (isSelected) CatanDiceSelectedBorder else MaterialTheme.colorScheme.outline
+    val borderWidth = if (isSelected) 3.dp else 1.5.dp
     val bgColor = CatanDiceEventBackground
 
     Box(
@@ -42,14 +62,15 @@ fun EventDice(
             .size(50.dp)
             .clip(shape)
             .drawBehind { drawRect(bgColor) }
-            .border(width = 3.dp, color = borderColor, shape = shape)
+            .border(width = borderWidth, color = borderColor, shape = shape)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = type.symbol(),
-            fontSize = 22.sp,
-            color = MaterialTheme.colorScheme.onSurface,
+        Icon(
+            painter = painterResource(type.icon()),
+            contentDescription = type.contentDescription(),
+            tint = CatanDiceEventIcon,
+            modifier = Modifier.size(40.dp),
         )
     }
 }

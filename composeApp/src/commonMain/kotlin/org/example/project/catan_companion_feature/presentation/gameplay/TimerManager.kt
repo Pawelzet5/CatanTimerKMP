@@ -20,11 +20,11 @@ class TimerManager(private val scope: CoroutineScope) {
         timerJob?.cancel()
         _state.update { it.copy(remainingMillis = fromMillis, isRunning = true) }
         timerJob = scope.launch {
-            var remaining = fromMillis
-            while (remaining > 0) {
+            while (_state.value.remainingMillis > 0) {
                 delay(100L)
-                remaining = (remaining - 100L).coerceAtLeast(0L)
-                _state.update { it.copy(remainingMillis = remaining) }
+                _state.update { current ->
+                    current.copy(remainingMillis = (current.remainingMillis - 100L).coerceAtLeast(0L))
+                }
             }
             _state.update { it.copy(isRunning = false) }
             // Timer reached zero — ViewModel observes state and triggers HapticService

@@ -1,8 +1,6 @@
 package org.example.project.catan_companion_feature.data.fakes.dao
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
 import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
 
@@ -32,10 +30,16 @@ class FakePlayerDao : PlayerDao {
         _playersState.map { it.sortedBy(PlayerEntity::name) }
 
     override fun getVisible(): Flow<List<PlayerEntity>> =
-        _playersState.map { players -> players.filter { !it.isHidden }.sortedBy(PlayerEntity::name) }
+        _playersState.map { players ->
+            players.filter { !it.isHidden }.sortedBy(PlayerEntity::name)
+        }
 
     override fun getById(id: Long): Flow<PlayerEntity?> =
         _playersState.map { players -> players.find { it.id == id } }
+
+    override suspend fun getByIdOnce(id: Long): PlayerEntity? =
+        _playersState.first().firstOrNull { it.id == id }
+
 
     override suspend fun insert(player: PlayerEntity): Long {
         val id = nextId++

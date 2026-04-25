@@ -3,6 +3,7 @@ package org.example.project.catan_companion_feature.data.fakes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import org.example.project.catan_companion_feature.domain.dataclass.Turn
 import org.example.project.catan_companion_feature.domain.enums.EventDiceType
 import org.example.project.catan_companion_feature.domain.session.GameSession
 import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
@@ -37,4 +38,12 @@ class FakeGameSessionCoordinator : GameSessionCoordinator {
 
     override suspend fun updateSelectedTurnDuration(durationMillis: Long): EmptyResult<DataError.Local> =
         Result.Success(Unit)
+
+    override suspend fun updateTurnDice(
+        turn: Turn,
+        redDice: Int?,
+        yellowDice: Int?,
+        eventDice: EventDiceType?
+    ): EmptyResult<DataError.Local> = Result.Success(Unit)
+
 }

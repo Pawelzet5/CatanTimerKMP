@@ -41,6 +41,7 @@ val CatanBorderSecondaryDark = Color(0xFF44403C)
 
 val CatanSuccess = Color(0xFF059669)
 val CatanSuccessSubtle = Color(0xFFD1FAE5)
+val CatanSuccessSubtleDark = Color(0xFF064E3B)
 val CatanSuccessDark = Color(0xFF34D399)
 
 val CatanError = Color(0xFFDC2626)
@@ -52,7 +53,16 @@ val CatanWarningSubtle = Color(0xFFFEF3C7)
 
 val CatanInfo = Color(0xFF2563EB)
 val CatanInfoSubtle = Color(0xFFDBEAFE)
+val CatanInfoSubtleDark = Color(0xFF1E3A5F)
 val CatanInfoDark = Color(0xFF60A5FA)
+
+// Dashboard category colors
+val CatanCategoryGames = Color(0xFF7C3AED)
+val CatanCategoryGamesSubtle = Color(0xFFEDE9FE)
+val CatanCategoryGamesDark = Color(0xFFA78BFA)
+val CatanCategoryGamesSubtleDark = Color(0xFF2E1065)
+
+val CatanHeaderGradientEnd = Color(0xFF7B2010)
 
 // Dice-specific palette (used via extension functions in presentation layer)
 val CatanDiceRedBackground = Color(0xFFDC2626)
@@ -64,6 +74,9 @@ val CatanDiceEventBackgroundDark = Color(0xFFF5F5F4)
 val CatanDiceEventIcon = Color(0xFF1C1917)
 val CatanDiceSelectedBorder = Color(0xFF059669)
 val CatanDiceSelectedBorderDark = Color(0xFF34D399)
+
+val CatanBorderAccent = Color(0xFFE8B87A)
+val CatanBorderAccentDark = Color(0xFF78350F)
 
 // ── Semantic color schemes ────────────────────────────────────────────────────
 

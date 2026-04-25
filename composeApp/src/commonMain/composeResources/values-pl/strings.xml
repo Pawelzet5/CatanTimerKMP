@@ -25,37 +25,51 @@
     <string name="gameplay_turn">Tura %1$d</string>
     <string name="gameplay_player_turn">Tura gracza %1$s</string>
     <string name="gameplay_continue">Dalej</string>
+    <string name="gameplay_continue_to_timer">Przejdź do timera tury</string>
     <string name="gameplay_next_turn">Następna tura</string>
     <string name="gameplay_in_between">Tura pośrednia (%1$s)</string>
+    <string name="gameplay_active_player">Aktywny gracz</string>
 
     <!-- Timer -->
     <string name="timer_start">Start</string>
     <string name="timer_stop">Stop</string>
     <string name="timer_add_10">+10 sek</string>
     <string name="timer_reset">Reset</string>
+    <string name="timer_warning_low">Kończy się czas</string>
 
     <!-- Events -->
     <string name="event_robber_title">Policz karty!</string>
     <string name="event_robber_message">Wszyscy gracze muszą policzyć karty.\nJeśli masz więcej niż 7, odrzuć połowę.</string>
-    <string name="event_move_robber">Przesuń złodzieja na inne pole.</string>
-    <string name="event_move_robber_or_pirate">Przesuń złodzieja lub pirata na inne pole.</string>
+    <string name="event_move_robber">Przesuń złodzieja na inne pole i ukradnij jeden surowiec.</string>
+    <string name="event_move_robber_or_pirate">Przesuń złodzieja lub pirata na inne pole i ukradnij jeden surowiec.</string>
     <string name="event_robber_not_active">Złodziej nie może być jeszcze przesunięty.\n(Pierwszy najazd barbarzyńców jeszcze nie nastąpił)</string>
     <string name="event_barbarians_arrived">Barbarzyńcy przybyli!\nRozstrzygnij atak.</string>
+    <string name="event_thief_title">Złodziej!</string>
+    <string name="event_barbarians_title">Barbarzyńcy!</string>
+    <string name="event_barbarians_description">Rozstrzygnij atak barbarzyńców.\nPorównaj liczbę rycerzy z liczbą miast.</string>
+    <string name="event_barbarians_arrived_header">Barbarzyńcy przybyli!</string>
 
     <!-- Statistics -->
-    <string name="stats_title">Statystyki</string>
+    <string name="stats_title">Statystyki graczy</string>
     <string name="stats_dice_distribution">Rozkład wyników kości</string>
     <string name="stats_event_dice">Kostka zdarzeń</string>
     <string name="stats_total_turns">Łączna liczba tur</string>
     <string name="stats_avg_turn_time">Średni czas tury</string>
+    <string name="stats_game_stats">Statystyki gry</string>
+    <string name="stats_thief_rolled">Złodziej wylosowany</string>
+    <string name="stats_barbarian_attacks">Ataki barbarzyńców</string>
 
     <!-- End Game -->
     <string name="end_game_select_winner">Wybierz zwycięzcę</string>
+    <string name="end_game_who_won">Kto wygrał tę grę w Catana?</string>
     <string name="end_game_no_winner">Bez zwycięzcy (gra przerwana)</string>
-    <string name="end_game_confirm">Potwierdź</string>
+    <string name="end_game_confirm">Potwierdź zwycięzcę</string>
     <string name="end_game_summary">Podsumowanie gry</string>
+    <string name="end_game_winner_label">Zwycięzca</string>
     <string name="end_game_winner">Zwycięzca: %1$s</string>
     <string name="end_game_duration">Czas trwania</string>
+    <string name="end_game_started">Początek: %1$s</string>
+    <string name="end_game_ended">Koniec: %1$s</string>
     <string name="end_game_back_home">Wróć do menu</string>
 
     <!-- Players -->
@@ -64,6 +78,19 @@
     <string name="players_games_count">%1$d gier</string>
     <string name="players_hide">Ukryj gracza</string>
     <string name="players_delete">Usuń gracza</string>
+    <string name="players_add_dialog_title">Dodaj gracza</string>
+    <string name="players_name_hint">Nazwa gracza</string>
+    <string name="players_delete_confirm_message">Trwale usunąć %1$s?</string>
+    <string name="players_hide_confirm_message">Ukryć %1$s z listy graczy?</string>
+
+    <!-- Player Details -->
+    <string name="player_details_games_played">Rozegrane gry</string>
+    <string name="player_details_wins">Wygrane</string>
+
+    <string name="config_remove_player">Usuń gracza</string>
+
+    <!-- Config -->
+    <string name="config_turn_duration_minutes">%1$d min</string>
 
     <!-- Games -->
     <string name="games_title">Gry</string>
@@ -71,8 +98,26 @@
     <string name="games_completed">Zakończone</string>
     <string name="games_turn_count">Tura %1$d</string>
     <string name="games_winner">Zwycięzca: %1$s</string>
+    <string name="games_badge_active">W toku</string>
+    <string name="games_badge_done">Zakończona</string>
+    <string name="games_abandoned">Opuszczona</string>
+    <string name="games_empty">Nie ma jeszcze żadnych gier</string>
+
+    <!-- Confirm End Game -->
+    <string name="confirm_end_game_message">Czy na pewno chcesz zakończyć grę? Tej operacji nie można cofnąć.</string>
+
+    <!-- Historical Edit -->
+    <string name="historical_edit_title">Zmienić historyczne rzuty?</string>
+    <string name="historical_edit_message">Edytujesz kości dla tury %1$d. Aktualna tura to %2$d. Spowoduje to aktualizację statystyk gry i pozycji barbarzyńców.</string>
+
+    <!-- Event Dice content descriptions -->
+    <string name="event_dice_cd_politics">Kość zdarzeń: polityka</string>
+    <string name="event_dice_cd_science">Kość zdarzeń: nauka</string>
+    <string name="event_dice_cd_trade">Kość zdarzeń: handel</string>
+    <string name="event_dice_cd_barbarians">Kość zdarzeń: barbarzyńcy</string>
 
     <!-- Menu -->
+    <string name="menu_open">Menu</string>
     <string name="menu_statistics">Pokaż statystyki</string>
     <string name="menu_settings">Zmień ustawienia gry</string>
     <string name="menu_end_game">Zakończ grę</string>
@@ -90,6 +135,7 @@
     <string name="validation_in_between_requires_5">Tury pośrednie wymagają min. 5 graczy</string>
 
     <!-- Common -->
+    <string name="coming_soon">Wkrótce dostępne</string>
     <string name="common_confirm">Potwierdź</string>
     <string name="common_cancel">Anuluj</string>
     <string name="common_save">Zapisz</string>

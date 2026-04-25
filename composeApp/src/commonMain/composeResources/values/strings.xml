@@ -27,8 +27,10 @@
     <string name="gameplay_turn">Turn %1$d</string>
     <string name="gameplay_player_turn">%1$s\'s Turn</string>
     <string name="gameplay_continue">Continue</string>
+    <string name="gameplay_continue_to_timer">Continue to Turn Timer</string>
     <string name="gameplay_next_turn">Next Turn</string>
     <string name="gameplay_in_between">In-Between Turn (%1$s)</string>
+    <string name="gameplay_active_player">Active player</string>
 
     <!-- Timer -->
     <string name="timer_start">Start</string>
@@ -43,21 +45,32 @@
     <string name="event_move_robber_or_pirate">Move the thief or pirate to a different tile.</string>
     <string name="event_robber_not_active">The thief cannot be moved yet.\n(First barbarian raid has not occurred)</string>
     <string name="event_barbarians_arrived">The barbarians have arrived!\nResolve the attack now.</string>
+    <string name="event_thief_title">The Thief!</string>
+    <string name="event_barbarians_title">The Barbarians!</string>
+    <string name="event_barbarians_description">Resolve the barbarian attack now.\nCompare knights to cities.</string>
+    <string name="event_barbarians_arrived_header">The Barbarians have arrived!</string>
 
     <!-- Statistics -->
-    <string name="stats_title">Statistics</string>
+    <string name="stats_title">Player Stats</string>
     <string name="stats_dice_distribution">Dice Distribution</string>
     <string name="stats_event_dice">Event Dice</string>
-    <string name="stats_total_turns">Total Turns</string>
-    <string name="stats_avg_turn_time">Average Turn Time</string>
+    <string name="stats_total_turns">Total turns</string>
+    <string name="stats_avg_turn_time">Average turn time</string>
+    <string name="stats_game_stats">Game Stats</string>
+    <string name="stats_thief_rolled">Thief rolled</string>
+    <string name="stats_barbarian_attacks">Barbarian attacks</string>
 
     <!-- End Game -->
     <string name="end_game_select_winner">Select Winner</string>
+    <string name="end_game_who_won">Who won this game of Catan?</string>
     <string name="end_game_no_winner">No winner (game abandoned)</string>
-    <string name="end_game_confirm">Confirm</string>
+    <string name="end_game_confirm">Confirm Winner</string>
     <string name="end_game_summary">Game Summary</string>
+    <string name="end_game_winner_label">Winner</string>
     <string name="end_game_winner">Winner: %1$s</string>
     <string name="end_game_duration">Duration</string>
+    <string name="end_game_started">Started: %1$s</string>
+    <string name="end_game_ended">Ended: %1$s</string>
     <string name="end_game_back_home">Back to Home</string>
 
     <!-- Players -->
@@ -66,6 +79,30 @@
     <string name="players_games_count">%1$d games</string>
     <string name="players_hide">Hide Player</string>
     <string name="players_delete">Delete Player</string>
+    <string name="players_add_dialog_title">Add Player</string>
+    <string name="players_name_hint">Player name</string>
+    <string name="players_delete_confirm_message">Permanently delete %1$s?</string>
+    <string name="players_hide_confirm_message">Hide %1$s from the players list?</string>
+
+    <!-- Player Details -->
+    <string name="player_details_title">Player Details</string>
+    <string name="player_details_games_played">Games Played</string>
+    <string name="player_details_wins">Wins</string>
+    <string name="player_details_win_rate">Win Rate</string>
+    <string name="player_details_statistics">Statistics</string>
+    <string name="player_details_since">Player since %1$s</string>
+==    <string name="player_details_games_stats">%1$d games · %2$d wins · %3$d%%</string>
+
+    <!-- Players Selection Mode -->
+    <string name="players_add_title">Add Players</string>
+    <string name="players_selection_hint">Select players to add to the game</string>
+    <string name="players_done_count">Done (%1$d)</string>
+    <string name="players_overflow_cd">More options</string>
+
+    <string name="config_remove_player">Remove player</string>
+
+    <!-- Config -->
+    <string name="config_turn_duration_minutes">%1$d min</string>
 
     <!-- Games -->
     <string name="games_title">Games</string>
@@ -73,11 +110,31 @@
     <string name="games_completed">Completed</string>
     <string name="games_turn_count">Turn %1$d</string>
     <string name="games_winner">Winner: %1$s</string>
+    <string name="games_badge_active">Active</string>
+    <string name="games_badge_done">Done</string>
+    <string name="games_abandoned">Abandoned</string>
+    <string name="games_empty">No games yet</string>
+
+    <!-- Confirm End Game -->
+    <string name="confirm_end_game_message">Are you sure you want to end the game? This action cannot be undone.</string>
+
+    <!-- Historical Edit -->
+    <string name="historical_edit_title">Change Historical Rolls?</string>
+    <string name="historical_edit_message">You are editing dice for turn %1$d. The current turn is %2$d. This will update game statistics and the barbarian position.</string>
+
+    <!-- Event Dice content descriptions -->
+    <string name="event_dice_cd_politics">Politics event die</string>
+    <string name="event_dice_cd_science">Science event die</string>
+    <string name="event_dice_cd_trade">Trade event die</string>
+    <string name="event_dice_cd_barbarians">Barbarians event die</string>
 
     <!-- Menu -->
+    <string name="menu_open">Menu</string>
     <string name="menu_statistics">View Statistics</string>
     <string name="menu_settings">Change Game Settings</string>
     <string name="menu_end_game">End Game</string>
+    <!-- Timer warning -->
+    <string name="timer_warning_low">Time running low</string>
 
     <!-- Settings Warning -->
     <string name="settings_warning_title">Warning</string>
@@ -92,6 +149,7 @@
     <string name="validation_in_between_requires_5">In-between turns requires 5+ players</string>
 
     <!-- Common -->
+    <string name="coming_soon">Coming soon</string>
     <string name="common_confirm">Confirm</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_save">Save</string>

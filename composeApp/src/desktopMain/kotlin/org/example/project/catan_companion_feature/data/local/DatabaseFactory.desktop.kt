@@ -3,7 +3,6 @@ package org.example.project.catan_companion_feature.data.local
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import org.example.project.catan_companion_feature.AppConstants
-import org.example.project.catan_companion_feature.data.local.migrations.MIGRATION_1_2
 import java.io.File
 
 actual class DatabaseFactory {
@@ -21,6 +20,5 @@ actual class DatabaseFactory {
 
         val dbFile = File(appDataDir, DatabaseConstants.DB_NAME)
         return Room.databaseBuilder<CatanCompanionDatabase>(dbFile.absolutePath)
-            .addMigrations(MIGRATION_1_2)
     }
 }
