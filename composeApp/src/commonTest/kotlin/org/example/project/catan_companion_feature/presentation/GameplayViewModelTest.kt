@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -7,14 +7,14 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.example.project.catan_companion_feature.data.fakes.FakeGameSessionCoordinator
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeTurnRepository
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayAction
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayPhase
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayViewModel
-import org.example.project.catan_companion_feature.presentation.service.HapticService
-import org.example.project.catan_companion_feature.testSessionWithMultipleTurns
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.FakeGameSessionCoordinator
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeGameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeTurnRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayAction
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayPhase
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.service.HapticService
+import io.github.pawelzielinski.catantimer.catan_companion_feature.testSessionWithMultipleTurns
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

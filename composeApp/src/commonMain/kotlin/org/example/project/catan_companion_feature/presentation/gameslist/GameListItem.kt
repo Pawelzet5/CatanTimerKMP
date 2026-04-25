@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gameslist
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,13 +35,13 @@ import catantimer.composeapp.generated.resources.games_badge_active
 import catantimer.composeapp.generated.resources.games_badge_done
 import catantimer.composeapp.generated.resources.ic_dice
 import catantimer.composeapp.generated.resources.ic_winner
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.catanColors
-import org.example.project.core.util.formatDuration
-import org.example.project.core.util.formatEpochMillis
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.catanColors
+import io.github.pawelzielinski.catantimer.core.util.formatDuration
+import io.github.pawelzielinski.catantimer.core.util.formatEpochMillis
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

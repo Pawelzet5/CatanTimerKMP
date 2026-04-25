@@ -1,3 +1,3 @@
-package org.example.project.core.domain
+package io.github.pawelzielinski.catantimer.core.domain
 
 data object IllegalOperationError: Error

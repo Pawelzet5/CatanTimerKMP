@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gamesummary
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gamesummary
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -53,17 +53,17 @@ import catantimer.composeapp.generated.resources.stats_game_stats
 import catantimer.composeapp.generated.resources.stats_thief_rolled
 import catantimer.composeapp.generated.resources.stats_title
 import catantimer.composeapp.generated.resources.stats_total_turns
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.GameStatistics
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.presentation.components.charts.DiceStatisticsChart
-import org.example.project.core.designsystem.CatanBrown
-import org.example.project.core.designsystem.CatanOrange
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.components.CatanButton
-import org.example.project.core.presentation.ObserveAsEvents
-import org.example.project.core.util.formatEpochMillis
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.GameStatistics
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.charts.DiceStatisticsChart
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanBrown
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanOrange
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.components.CatanButton
+import io.github.pawelzielinski.catantimer.core.presentation.ObserveAsEvents
+import io.github.pawelzielinski.catantimer.core.util.formatEpochMillis
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

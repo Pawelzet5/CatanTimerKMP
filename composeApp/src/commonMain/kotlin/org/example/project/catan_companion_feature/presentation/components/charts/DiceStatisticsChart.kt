@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components.charts
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.charts
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -22,8 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution
-import org.example.project.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.DiceDistribution
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
 
 private const val MAX_BAR_HEIGHT_DP = 80
 private const val ANIMATION_DURATION_MS = 600

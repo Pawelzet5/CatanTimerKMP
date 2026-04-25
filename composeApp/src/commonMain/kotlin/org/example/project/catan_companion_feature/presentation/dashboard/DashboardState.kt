@@ -1,6 +1,6 @@
-package org.example.project.catan_companion_feature.presentation.dashboard
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.dashboard
 
-import org.example.project.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
 
 data class DashboardState(
     val resumableGame: Game? = null,

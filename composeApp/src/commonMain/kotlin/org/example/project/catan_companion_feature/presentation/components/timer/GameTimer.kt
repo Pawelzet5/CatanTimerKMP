@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components.timer
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.timer
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.timer_warning_low
-import org.example.project.core.designsystem.CatanSuccess
-import org.example.project.core.designsystem.CatanWarning
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSuccess
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanWarning
 import org.jetbrains.compose.resources.stringResource
 
 private const val WARNING_THRESHOLD_MILLIS = 30_000L

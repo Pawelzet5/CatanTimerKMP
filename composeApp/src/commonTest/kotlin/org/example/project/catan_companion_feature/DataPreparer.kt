@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature
+package io.github.pawelzielinski.catantimer.catan_companion_feature
 
-import org.example.project.catan_companion_feature.domain.dataclass.*
-import org.example.project.catan_companion_feature.domain.enums.*
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.*
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.*
 
 fun makeTestPlayers(count: Int = 3): List<Player> =
     (1..count).map { makeTestPlayer(id = it.toLong(), name = "Player $it") }

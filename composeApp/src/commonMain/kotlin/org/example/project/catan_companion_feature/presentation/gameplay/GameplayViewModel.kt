@@ -1,9 +1,9 @@
-package org.example.project.catan_companion_feature.presentation.gameplay
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
-import org.example.project.core.util.currentTimeMillis
+import io.github.pawelzielinski.catantimer.core.util.currentTimeMillis
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,16 +13,16 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.example.project.catan_companion_feature.domain.dataclass.BarbarianState
-import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution
-import org.example.project.catan_companion_feature.domain.dataclass.DiceRoll
-import org.example.project.catan_companion_feature.domain.dataclass.toBarbarianState
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.catan_companion_feature.domain.repository.TurnRepository
-import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
-import org.example.project.catan_companion_feature.presentation.service.HapticService
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.BarbarianState
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.DiceDistribution
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.DiceRoll
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.toBarbarianState
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.TurnRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.session.GameSessionCoordinator
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.service.HapticService
 
 class GameplayViewModel(
     private val gameId: Long,

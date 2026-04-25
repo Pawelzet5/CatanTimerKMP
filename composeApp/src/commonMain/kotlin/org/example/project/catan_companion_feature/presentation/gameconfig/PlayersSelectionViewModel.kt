@@ -1,10 +1,10 @@
-package org.example.project.catan_companion_feature.presentation.gameconfig
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import org.example.project.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
 
 class PlayersSelectionViewModel : ViewModel() {
 

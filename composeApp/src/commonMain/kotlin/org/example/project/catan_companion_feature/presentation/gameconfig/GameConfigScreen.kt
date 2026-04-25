@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gameconfig
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import org.example.project.core.presentation.components.DraggableItemsLazyColumn
+import io.github.pawelzielinski.catantimer.core.presentation.components.DraggableItemsLazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -48,14 +48,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.*
-import org.example.project.catan_companion_feature.domain.dataclass.Player
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.components.CatanCheckbox
-import org.example.project.core.presentation.ObserveAsEvents
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.components.CatanCheckbox
+import io.github.pawelzielinski.catantimer.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.example.project.catan_companion_feature.presentation.service.HapticService
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.service.HapticService
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 

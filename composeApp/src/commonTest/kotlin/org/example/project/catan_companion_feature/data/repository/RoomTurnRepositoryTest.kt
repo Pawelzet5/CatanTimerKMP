@@ -1,13 +1,13 @@
-package org.example.project.catan_companion_feature.data.repository
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.repository
 
 import app.cash.turbine.test
 import kotlinx.coroutines.test.runTest
-import org.example.project.catan_companion_feature.data.fakes.dao.FakePlayerDao
-import org.example.project.catan_companion_feature.data.fakes.dao.FakeTurnDao
-import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
-import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.dao.FakePlayerDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.dao.FakeTurnDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.PlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.TurnEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.core.domain.Result
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

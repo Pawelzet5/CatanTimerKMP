@@ -1,8 +1,8 @@
-package org.example.project.catan_companion_feature.presentation.gameconfig
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig
 
-import org.example.project.catan_companion_feature.domain.dataclass.Player
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.core.util.UiText
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.core.util.UiText
 
 data class GameConfigState(
     val turnDurationMillis: Long = 120_000L,

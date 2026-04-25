@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation
 
 import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers
@@ -7,13 +7,13 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
-import org.example.project.catan_companion_feature.presentation.gameslist.GamesListAction
-import org.example.project.catan_companion_feature.presentation.gameslist.GamesListEvent
-import org.example.project.catan_companion_feature.presentation.gameslist.GamesListViewModel
-import org.example.project.catan_companion_feature.presentation.service.HapticService
-import org.example.project.catan_companion_feature.testGame
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeGameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist.GamesListAction
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist.GamesListEvent
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist.GamesListViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.service.HapticService
+import io.github.pawelzielinski.catantimer.catan_companion_feature.testGame
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

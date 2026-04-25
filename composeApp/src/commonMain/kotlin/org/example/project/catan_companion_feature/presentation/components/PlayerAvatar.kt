@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.example.project.core.designsystem.catanColors
+import io.github.pawelzielinski.catantimer.core.designsystem.catanColors
 
 enum class PlayerAvatarSize(val dp: Dp) {
     Small(32.dp),

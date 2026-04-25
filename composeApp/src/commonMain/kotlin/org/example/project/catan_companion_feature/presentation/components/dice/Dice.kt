@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components.dice
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.dice
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import org.example.project.core.designsystem.CatanDiceSelectedBorder
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceSelectedBorder
 
 @Composable
 fun Dice(

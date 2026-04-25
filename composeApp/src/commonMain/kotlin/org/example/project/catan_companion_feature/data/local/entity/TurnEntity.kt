@@ -1,10 +1,10 @@
-package org.example.project.catan_companion_feature.data.local.entity
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
 
 @Entity(
     tableName = "turns",

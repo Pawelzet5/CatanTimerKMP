@@ -1,22 +1,22 @@
-package org.example.project.catan_companion_feature.domain.session
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.session
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.catan_companion_feature.domain.factory.TurnFactory
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.catan_companion_feature.domain.repository.TurnRepository
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.EmptyResult
-import org.example.project.core.domain.Error
-import org.example.project.core.domain.IllegalOperationError
-import org.example.project.core.domain.Result
-import org.example.project.core.domain.onFailure
-import org.example.project.core.domain.onSuccess
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.factory.TurnFactory
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.TurnRepository
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.EmptyResult
+import io.github.pawelzielinski.catantimer.core.domain.Error
+import io.github.pawelzielinski.catantimer.core.domain.IllegalOperationError
+import io.github.pawelzielinski.catantimer.core.domain.Result
+import io.github.pawelzielinski.catantimer.core.domain.onFailure
+import io.github.pawelzielinski.catantimer.core.domain.onSuccess
 
 interface GameSessionCoordinator {
     val currentSession: StateFlow<GameSession?>

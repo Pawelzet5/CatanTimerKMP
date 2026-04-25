@@ -1,13 +1,13 @@
-package org.example.project.catan_companion_feature.domain.usecase
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase
 
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution
-import org.example.project.catan_companion_feature.domain.dataclass.GameStatistics
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.catan_companion_feature.domain.repository.TurnRepository
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.DiceDistribution
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.GameStatistics
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.TurnRepository
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.Result
 
 class GetGameStatisticsUseCase(
     private val gameRepository: GameRepository,

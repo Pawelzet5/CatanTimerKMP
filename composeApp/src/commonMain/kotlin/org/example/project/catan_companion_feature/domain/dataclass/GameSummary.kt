@@ -1,6 +1,6 @@
-package org.example.project.catan_companion_feature.domain.dataclass
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass
 
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
 
 data class GameSummary(
     val id: Long,

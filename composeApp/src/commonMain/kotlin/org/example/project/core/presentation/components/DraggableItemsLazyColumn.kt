@@ -1,4 +1,4 @@
-package org.example.project.core.presentation.components
+package io.github.pawelzielinski.catantimer.core.presentation.components
 
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy

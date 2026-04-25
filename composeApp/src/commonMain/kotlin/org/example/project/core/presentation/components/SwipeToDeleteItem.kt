@@ -1,4 +1,4 @@
-package org.example.project.core.presentation.components
+package io.github.pawelzielinski.catantimer.core.presentation.components
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.ic_close
 import kotlinx.coroutines.launch
-import org.example.project.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
 import org.jetbrains.compose.resources.painterResource
 import kotlin.math.roundToInt
 

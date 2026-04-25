@@ -1,7 +1,7 @@
-package org.example.project
+package io.github.pawelzielinski.catantimer
 
 import android.app.Application
-import org.example.project.di.initKoin
+import io.github.pawelzielinski.catantimer.di.initKoin
 import org.koin.android.ext.koin.androidContext
 
 class CatanTimerApplication: Application() {

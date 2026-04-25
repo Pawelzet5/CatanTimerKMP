@@ -1,18 +1,18 @@
-package org.example.project.catan_companion_feature.presentation.navigation
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
-import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreenRoot
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigScreenRoot
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
-import org.example.project.catan_companion_feature.presentation.gameslist.GamesListScreenRoot
-import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryScreenRoot
-import org.example.project.catan_companion_feature.presentation.winnerselection.WinnerSelectionScreenRoot
-import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreenRoot
-import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.dashboard.DashboardScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist.GamesListScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gamesummary.GameSummaryScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.winnerselection.WinnerSelectionScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerslist.PlayersListScreenRoot
 
 fun NavGraphBuilder.catanCompanionGraph(
     navController: NavController,

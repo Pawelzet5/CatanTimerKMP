@@ -1,9 +1,9 @@
-package org.example.project.core.data
+package io.github.pawelzielinski.catantimer.core.data
 
 import androidx.sqlite.SQLiteException
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.Result
-import org.example.project.core.util.LogUtils
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.Result
+import io.github.pawelzielinski.catantimer.core.util.LogUtils
 
 private const val TAG = "Repository"
 

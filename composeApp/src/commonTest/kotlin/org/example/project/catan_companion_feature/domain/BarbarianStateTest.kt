@@ -1,9 +1,9 @@
-package org.example.project.catan_companion_feature.domain
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain
 
-import org.example.project.catan_companion_feature.domain.dataclass.BarbarianState
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.domain.dataclass.toBarbarianState
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.BarbarianState
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.toBarbarianState
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

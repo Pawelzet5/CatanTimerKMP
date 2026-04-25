@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components.timer
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.timer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -24,7 +24,7 @@ import catantimer.composeapp.generated.resources.ic_play
 import catantimer.composeapp.generated.resources.ic_restart
 import catantimer.composeapp.generated.resources.timer_add_10
 import catantimer.composeapp.generated.resources.timer_reset
-import org.example.project.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

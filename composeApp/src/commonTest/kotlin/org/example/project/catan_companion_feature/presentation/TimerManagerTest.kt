@@ -1,9 +1,9 @@
-package org.example.project.catan_companion_feature.presentation
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
-import org.example.project.catan_companion_feature.presentation.gameplay.TimerManager
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.TimerManager
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

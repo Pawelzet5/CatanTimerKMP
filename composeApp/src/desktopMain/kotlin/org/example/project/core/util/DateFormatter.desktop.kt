@@ -1,4 +1,4 @@
-package org.example.project.core.util
+package io.github.pawelzielinski.catantimer.core.util
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone

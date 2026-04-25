@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gameslist
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,10 +43,10 @@ import catantimer.composeapp.generated.resources.games_completed
 import catantimer.composeapp.generated.resources.games_empty
 import catantimer.composeapp.generated.resources.games_in_progress
 import catantimer.composeapp.generated.resources.games_title
-import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.presentation.ObserveAsEvents
-import org.example.project.core.presentation.components.SwipeToDeleteItem
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.ConfirmationDialog
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.presentation.ObserveAsEvents
+import io.github.pawelzielinski.catantimer.core.presentation.components.SwipeToDeleteItem
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 

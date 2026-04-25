@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gameslist
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist
 
 sealed interface GamesListEvent {
     data object NavigateBack : GamesListEvent

@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.data.local.mapper
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper
 
-import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
-import org.example.project.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.PlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

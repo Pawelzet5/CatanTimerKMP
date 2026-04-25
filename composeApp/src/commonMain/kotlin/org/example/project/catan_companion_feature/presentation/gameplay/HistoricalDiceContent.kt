@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gameplay
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,16 +14,16 @@ import androidx.compose.ui.Modifier
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.gameplay_turn
 import catantimer.composeapp.generated.resources.settings_save
-import org.example.project.catan_companion_feature.domain.dataclass.DiceRoll
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.domain.enums.DiceType
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.presentation.components.dice.DiceRow
-import org.example.project.catan_companion_feature.presentation.components.dice.EventDiceRow
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.components.CatanButton
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.DiceRoll
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.DiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.dice.DiceRow
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.dice.EventDiceRow
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.components.CatanButton
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

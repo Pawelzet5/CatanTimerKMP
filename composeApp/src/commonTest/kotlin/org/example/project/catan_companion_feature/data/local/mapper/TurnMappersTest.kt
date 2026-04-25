@@ -1,8 +1,8 @@
-package org.example.project.catan_companion_feature.data.local.mapper
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper
 
-import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.TurnEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

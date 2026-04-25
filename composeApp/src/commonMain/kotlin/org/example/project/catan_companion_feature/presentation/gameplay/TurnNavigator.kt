@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.presentation.gameplay
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay
 
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.domain.session.GameSession
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.session.GameSession
 
 class TurnNavigator(
     private val turns: List<Turn>,

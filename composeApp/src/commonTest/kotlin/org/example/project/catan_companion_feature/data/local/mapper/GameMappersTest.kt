@@ -1,10 +1,10 @@
-package org.example.project.catan_companion_feature.data.local.mapper
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper
 
-import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.GamePlayer
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GameEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.GamePlayer
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature
+package io.github.pawelzielinski.catantimer.catan_companion_feature
 
 object AppConstants {
     const val APP_NAME = "CatanTimer"

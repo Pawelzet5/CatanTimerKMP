@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gamesummary
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gamesummary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.catan_companion_feature.domain.usecase.GetGameStatisticsUseCase
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase.GetGameStatisticsUseCase
+import io.github.pawelzielinski.catantimer.core.domain.Result
 
 class GameSummaryViewModel(
     private val gameId: Long,

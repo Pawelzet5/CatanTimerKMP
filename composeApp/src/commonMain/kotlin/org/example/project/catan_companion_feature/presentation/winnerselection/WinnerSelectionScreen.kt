@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.winnerselection
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.winnerselection
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -41,14 +41,14 @@ import catantimer.composeapp.generated.resources.end_game_no_winner
 import catantimer.composeapp.generated.resources.end_game_select_winner
 import catantimer.composeapp.generated.resources.end_game_who_won
 import catantimer.composeapp.generated.resources.ic_close
-import org.example.project.catan_companion_feature.domain.dataclass.GamePlayer
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayAction
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayEvent
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayState
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayViewModel
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.components.CatanButton
-import org.example.project.core.presentation.ObserveAsEvents
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.GamePlayer
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayAction
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayEvent
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayState
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayViewModel
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.components.CatanButton
+import io.github.pawelzielinski.catantimer.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel

@@ -1,15 +1,15 @@
-package org.example.project.catan_companion_feature.domain.usecase
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase
 
 import kotlinx.coroutines.test.runTest
-import org.example.project.catan_companion_feature.makeTestGame
-import org.example.project.catan_companion_feature.makeTestGamePlayers
-import org.example.project.catan_companion_feature.makeTestTurn
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeTurnRepository
-import org.example.project.catan_companion_feature.domain.dataclass.GameStatistics
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.makeTestGame
+import io.github.pawelzielinski.catantimer.catan_companion_feature.makeTestGamePlayers
+import io.github.pawelzielinski.catantimer.catan_companion_feature.makeTestTurn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeGameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeTurnRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.GameStatistics
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.Result
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

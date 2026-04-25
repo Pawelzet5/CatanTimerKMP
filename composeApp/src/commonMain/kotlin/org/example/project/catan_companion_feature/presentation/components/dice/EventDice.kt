@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components.dice
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.dice
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,10 +22,10 @@ import catantimer.composeapp.generated.resources.ic_barbarians
 import catantimer.composeapp.generated.resources.ic_politics
 import catantimer.composeapp.generated.resources.ic_science
 import catantimer.composeapp.generated.resources.ic_trade
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.core.designsystem.CatanDiceEventBackground
-import org.example.project.core.designsystem.CatanDiceEventIcon
-import org.example.project.core.designsystem.CatanDiceSelectedBorder
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceEventBackground
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceEventIcon
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceSelectedBorder
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

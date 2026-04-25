@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.playerdetails
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerdetails
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -57,14 +57,14 @@ import catantimer.composeapp.generated.resources.players_hide
 import catantimer.composeapp.generated.resources.players_hide_confirm_message
 import catantimer.composeapp.generated.resources.players_name_hint
 import catantimer.composeapp.generated.resources.players_overflow_cd
-import org.example.project.catan_companion_feature.domain.dataclass.Player
-import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
-import org.example.project.catan_companion_feature.presentation.components.PlayerAvatar
-import org.example.project.catan_companion_feature.presentation.components.PlayerAvatarSize
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.util.formatEpochMillisToMonthYear
-import org.example.project.core.designsystem.catanColors
-import org.example.project.core.presentation.ObserveAsEvents
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.ConfirmationDialog
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.PlayerAvatar
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.PlayerAvatarSize
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.util.formatEpochMillisToMonthYear
+import io.github.pawelzielinski.catantimer.core.designsystem.catanColors
+import io.github.pawelzielinski.catantimer.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf

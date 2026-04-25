@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.di
+package io.github.pawelzielinski.catantimer.catan_companion_feature.di
 
-import org.example.project.catan_companion_feature.domain.usecase.CreateGameUseCase
-import org.example.project.catan_companion_feature.domain.usecase.GetGameStatisticsUseCase
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase.CreateGameUseCase
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase.GetGameStatisticsUseCase
 import org.koin.dsl.module
 
 val useCaseModule = module {

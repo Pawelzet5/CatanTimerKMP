@@ -1,4 +1,4 @@
-package org.example.project.core.designsystem.components
+package io.github.pawelzielinski.catantimer.core.designsystem.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn

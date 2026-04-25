@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.data.local.converter
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.converter
 
 import androidx.room.TypeConverter
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
 
 class EventDiceTypeConverter {
     @TypeConverter

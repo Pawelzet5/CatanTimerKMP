@@ -1,11 +1,11 @@
-package org.example.project.catan_companion_feature.presentation.components.dice
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.dice
 
 import androidx.compose.ui.graphics.Color
-import org.example.project.catan_companion_feature.domain.enums.DiceType
-import org.example.project.core.designsystem.CatanDiceRedBackground
-import org.example.project.core.designsystem.CatanDiceRedDot
-import org.example.project.core.designsystem.CatanDiceYellowBackground
-import org.example.project.core.designsystem.CatanDiceYellowDot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.DiceType
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceRedBackground
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceRedDot
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceYellowBackground
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceYellowDot
 
 fun DiceType.backgroundColor(): Color = when (this) {
     DiceType.RedDice -> CatanDiceRedBackground

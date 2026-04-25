@@ -1,9 +1,9 @@
-package org.example.project.catan_companion_feature.data.local.entity
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
 
 @Entity(tableName = "games")
 data class GameEntity(

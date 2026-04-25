@@ -1,19 +1,19 @@
-package org.example.project.catan_companion_feature.data.repository
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.example.project.core.util.currentTimeMillis
-import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
-import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
-import org.example.project.catan_companion_feature.data.local.mapper.toDomain
-import org.example.project.catan_companion_feature.data.local.mapper.toEntity
-import org.example.project.catan_companion_feature.domain.dataclass.Player
-import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
-import org.example.project.core.data.tryLocalRead
-import org.example.project.core.data.tryLocalWrite
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.EmptyResult
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.core.util.currentTimeMillis
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.PlayerDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.PlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper.toDomain
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper.toEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.PlayerRepository
+import io.github.pawelzielinski.catantimer.core.data.tryLocalRead
+import io.github.pawelzielinski.catantimer.core.data.tryLocalWrite
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.EmptyResult
+import io.github.pawelzielinski.catantimer.core.domain.Result
 
 class RoomPlayerRepository(
     private val playerDao: PlayerDao

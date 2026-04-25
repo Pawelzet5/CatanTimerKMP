@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.domain.session
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.session
 
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
 
 data class GameSession(
     val game: Game,

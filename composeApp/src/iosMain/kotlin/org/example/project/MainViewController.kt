@@ -1,7 +1,7 @@
-package org.example.project
+package io.github.pawelzielinski.catantimer
 
 import androidx.compose.ui.window.ComposeUIViewController
-import org.example.project.di.initKoin
+import io.github.pawelzielinski.catantimer.di.initKoin
 
 fun MainViewController() = ComposeUIViewController(
     configure = {

@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.dashboard
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.dashboard
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -15,9 +15,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import catantimer.composeapp.generated.resources.*
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.core.designsystem.*
-import org.example.project.core.presentation.ObserveAsEvents
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.core.designsystem.*
+import io.github.pawelzielinski.catantimer.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.*
 import org.koin.compose.viewmodel.koinViewModel
 

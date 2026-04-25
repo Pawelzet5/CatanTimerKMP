@@ -1,17 +1,17 @@
-package org.example.project.catan_companion_feature.data.fakes.repository
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.GamePlayer
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.EmptyResult
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.GamePlayer
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.EmptyResult
+import io.github.pawelzielinski.catantimer.core.domain.Result
 
 class FakeGameRepository : GameRepository {
 

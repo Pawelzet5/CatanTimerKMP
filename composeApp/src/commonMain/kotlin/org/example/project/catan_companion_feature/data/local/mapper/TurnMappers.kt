@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.data.local.mapper
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper
 
-import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.TurnEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
 
 fun TurnEntity.toDomain(playerName: String, secondaryPlayerName: String? = null): Turn = Turn(
     id = id,

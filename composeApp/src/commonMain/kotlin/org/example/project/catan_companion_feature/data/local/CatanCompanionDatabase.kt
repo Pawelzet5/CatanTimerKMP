@@ -1,20 +1,20 @@
-package org.example.project.catan_companion_feature.data.local
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local
 
 import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import org.example.project.catan_companion_feature.data.local.converter.EventDiceTypeConverter
-import org.example.project.catan_companion_feature.data.local.converter.GameExpansionConverter
-import org.example.project.catan_companion_feature.data.local.converter.GameStatusConverter
-import org.example.project.catan_companion_feature.data.local.dao.GameDao
-import org.example.project.catan_companion_feature.data.local.dao.GamePlayerDao
-import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
-import org.example.project.catan_companion_feature.data.local.dao.TurnDao
-import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerEntity
-import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
-import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.converter.EventDiceTypeConverter
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.converter.GameExpansionConverter
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.converter.GameStatusConverter
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.GameDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.GamePlayerDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.PlayerDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.TurnDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GameEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GamePlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.PlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.TurnEntity
 
 @Database(
     entities = [

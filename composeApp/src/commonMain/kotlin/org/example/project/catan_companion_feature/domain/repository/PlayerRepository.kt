@@ -1,10 +1,10 @@
-package org.example.project.catan_companion_feature.domain.repository
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository
 
 import kotlinx.coroutines.flow.Flow
-import org.example.project.catan_companion_feature.domain.dataclass.Player
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.EmptyResult
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.EmptyResult
+import io.github.pawelzielinski.catantimer.core.domain.Result
 
 interface PlayerRepository {
     fun getAllPlayers(): Flow<List<Player>>

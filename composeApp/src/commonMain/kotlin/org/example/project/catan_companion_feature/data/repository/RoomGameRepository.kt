@@ -1,19 +1,19 @@
-package org.example.project.catan_companion_feature.data.repository
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.repository
 
 import androidx.room.immediateTransaction
 import androidx.room.useWriterConnection
 import kotlinx.coroutines.flow.*
-import org.example.project.catan_companion_feature.data.local.CatanCompanionDatabase
-import org.example.project.catan_companion_feature.data.local.dao.*
-import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerEntity
-import org.example.project.catan_companion_feature.data.local.mapper.toDomain
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.core.data.tryLocalWrite
-import org.example.project.core.domain.*
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.CatanCompanionDatabase
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.*
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GameEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GamePlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper.toDomain
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.core.data.tryLocalWrite
+import io.github.pawelzielinski.catantimer.core.domain.*
 import kotlin.time.Clock
 
 class RoomGameRepository(

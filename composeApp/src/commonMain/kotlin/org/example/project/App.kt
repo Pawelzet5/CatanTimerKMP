@@ -1,4 +1,4 @@
-package org.example.project
+package io.github.pawelzielinski.catantimer
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -8,27 +8,27 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigAction
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
-import org.example.project.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigAction
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
 import org.koin.compose.viewmodel.koinViewModel
-import org.example.project.catan_companion_feature.presentation.dashboard.DashboardScreenRoot
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigScreenRoot
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
-import org.example.project.catan_companion_feature.presentation.gameslist.GamesListScreenRoot
-import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryScreenRoot
-import org.example.project.catan_companion_feature.presentation.winnerselection.WinnerSelectionScreenRoot
-import org.example.project.catan_companion_feature.presentation.navigation.DashboardRoute
-import org.example.project.catan_companion_feature.presentation.navigation.GameConfigRoute
-import org.example.project.catan_companion_feature.presentation.navigation.GameSummaryRoute
-import org.example.project.catan_companion_feature.presentation.navigation.GameplayRoute
-import org.example.project.catan_companion_feature.presentation.navigation.GamesListRoute
-import org.example.project.catan_companion_feature.presentation.navigation.PlayerDetailsRoute
-import org.example.project.catan_companion_feature.presentation.navigation.PlayersListRoute
-import org.example.project.catan_companion_feature.presentation.navigation.WinnerSelectionRoute
-import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreenRoot
-import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListScreenRoot
-import org.example.project.core.designsystem.CatanTimerTheme
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.dashboard.DashboardScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist.GamesListScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gamesummary.GameSummaryScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.winnerselection.WinnerSelectionScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation.DashboardRoute
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation.GameConfigRoute
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation.GameSummaryRoute
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation.GameplayRoute
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation.GamesListRoute
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation.PlayerDetailsRoute
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation.PlayersListRoute
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation.WinnerSelectionRoute
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerslist.PlayersListScreenRoot
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanTimerTheme
 
 @Composable
 fun App() {

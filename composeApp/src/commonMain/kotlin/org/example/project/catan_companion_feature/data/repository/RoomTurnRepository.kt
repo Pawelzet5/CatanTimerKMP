@@ -1,21 +1,21 @@
-package org.example.project.catan_companion_feature.data.repository
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.repository
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
-import org.example.project.catan_companion_feature.data.local.dao.TurnDao
-import org.example.project.catan_companion_feature.data.local.entity.TurnEntity
-import org.example.project.catan_companion_feature.data.local.mapper.toDomain
-import org.example.project.catan_companion_feature.data.local.mapper.toEntity
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.catan_companion_feature.domain.repository.TurnRepository
-import org.example.project.core.data.tryLocalRead
-import org.example.project.core.data.tryLocalWrite
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.EmptyResult
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.PlayerDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.TurnDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.TurnEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper.toDomain
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper.toEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.TurnRepository
+import io.github.pawelzielinski.catantimer.core.data.tryLocalRead
+import io.github.pawelzielinski.catantimer.core.data.tryLocalWrite
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.EmptyResult
+import io.github.pawelzielinski.catantimer.core.domain.Result
 
 class RoomTurnRepository(
     private val turnDao: TurnDao,
