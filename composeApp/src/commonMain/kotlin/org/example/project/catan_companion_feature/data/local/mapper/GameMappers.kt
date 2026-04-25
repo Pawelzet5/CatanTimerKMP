@@ -1,9 +1,9 @@
-package org.example.project.catan_companion_feature.data.local.mapper
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.mapper
 
-import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerEntity
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.GamePlayer
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GameEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GamePlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.GamePlayer
 
 fun GameEntity.toDomain(players: List<GamePlayer> = emptyList()): Game = Game(
     id = id,

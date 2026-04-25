@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,8 +21,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.player_details_games_stats
-import org.example.project.catan_companion_feature.domain.dataclass.Player
-import org.example.project.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

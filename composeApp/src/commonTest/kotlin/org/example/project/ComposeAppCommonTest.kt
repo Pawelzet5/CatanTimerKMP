@@ -1,3 +1,3 @@
-package org.example.project
+package io.github.pawelzielinski.catantimer
 
 class ComposeAppCommonTest

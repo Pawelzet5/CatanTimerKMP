@@ -1,10 +1,10 @@
-package org.example.project.catan_companion_feature.presentation.gameplay
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay
 
-import org.example.project.catan_companion_feature.domain.dataclass.BarbarianState
-import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution
-import org.example.project.catan_companion_feature.domain.dataclass.DiceRoll
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.BarbarianState
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.DiceDistribution
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.DiceRoll
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
 
 data class GameplayState(
     val game: Game? = null,

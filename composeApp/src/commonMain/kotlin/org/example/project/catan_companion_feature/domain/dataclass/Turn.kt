@@ -1,6 +1,6 @@
-package org.example.project.catan_companion_feature.domain.dataclass
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass
 
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
 
 data class Turn(
     val id: Long = 0L,

@@ -1,13 +1,13 @@
-package org.example.project.catan_companion_feature.di
+package io.github.pawelzielinski.catantimer.catan_companion_feature.di
 
-import org.example.project.catan_companion_feature.presentation.dashboard.DashboardViewModel
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
-import org.example.project.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
-import org.example.project.catan_companion_feature.presentation.gameplay.GameplayViewModel
-import org.example.project.catan_companion_feature.presentation.gameslist.GamesListViewModel
-import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryViewModel
-import org.example.project.catan_companion_feature.presentation.playerdetails.PlayerDetailsViewModel
-import org.example.project.catan_companion_feature.presentation.playerslist.PlayersListViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.dashboard.DashboardViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist.GamesListViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gamesummary.GameSummaryViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerdetails.PlayerDetailsViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerslist.PlayersListViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module

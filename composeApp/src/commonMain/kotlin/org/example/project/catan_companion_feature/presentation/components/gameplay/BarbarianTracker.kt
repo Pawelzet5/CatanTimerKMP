@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components.gameplay
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.gameplay
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,9 +17,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.ic_barbarians
-import org.example.project.catan_companion_feature.domain.dataclass.BarbarianState
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.catanColors
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.BarbarianState
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.catanColors
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

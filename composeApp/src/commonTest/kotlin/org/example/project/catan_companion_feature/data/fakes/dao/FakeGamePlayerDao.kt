@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.data.fakes.dao
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.dao
 
-import org.example.project.catan_companion_feature.data.local.dao.GamePlayerDao
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.GamePlayerDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GamePlayerEntity
 
 class FakeGamePlayerDao : GamePlayerDao {
 

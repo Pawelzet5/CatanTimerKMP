@@ -1,6 +1,6 @@
-package org.example.project.catan_companion_feature.di
+package io.github.pawelzielinski.catantimer.catan_companion_feature.di
 
-import org.example.project.catan_companion_feature.data.local.CatanCompanionDatabase
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.CatanCompanionDatabase
 import org.koin.dsl.module
 
 val databaseModule = module {

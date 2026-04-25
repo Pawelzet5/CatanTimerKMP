@@ -1,9 +1,9 @@
-package org.example.project.core.data
+package io.github.pawelzielinski.catantimer.core.data
 
 import androidx.sqlite.SQLiteException
 import kotlinx.coroutines.test.runTest
-import org.example.project.core.domain.DataError
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.domain.Result
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

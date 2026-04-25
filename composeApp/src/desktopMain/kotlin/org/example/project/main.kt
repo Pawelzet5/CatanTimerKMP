@@ -1,8 +1,8 @@
-package org.example.project
+package io.github.pawelzielinski.catantimer
 
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import org.example.project.di.initKoin
+import io.github.pawelzielinski.catantimer.di.initKoin
 
 fun main() {
     initKoin()

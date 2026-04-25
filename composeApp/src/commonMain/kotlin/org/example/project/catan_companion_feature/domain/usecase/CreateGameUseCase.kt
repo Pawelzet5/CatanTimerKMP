@@ -1,9 +1,9 @@
-package org.example.project.catan_companion_feature.domain.usecase
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase
 
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.domain.error.GameValidationError
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.error.GameValidationError
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.core.domain.Result
 
 class CreateGameUseCase(
     private val gameRepository: GameRepository

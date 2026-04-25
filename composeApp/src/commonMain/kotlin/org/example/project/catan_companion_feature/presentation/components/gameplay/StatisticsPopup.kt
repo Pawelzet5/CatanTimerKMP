@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components.gameplay
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.gameplay
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,10 +12,10 @@ import androidx.compose.ui.window.Dialog
 import catantimer.composeapp.generated.resources.Res
 import catantimer.composeapp.generated.resources.common_cancel
 import catantimer.composeapp.generated.resources.stats_title
-import org.example.project.catan_companion_feature.domain.dataclass.DiceDistribution
-import org.example.project.catan_companion_feature.presentation.components.charts.DiceStatisticsChart
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.components.CatanButton
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.DiceDistribution
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.charts.DiceStatisticsChart
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.components.CatanButton
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

@@ -1,8 +1,8 @@
-package org.example.project.core.presentation
+package io.github.pawelzielinski.catantimer.core.presentation
 
 import catantimer.composeapp.generated.resources.Res
-import org.example.project.core.domain.DataError
-import org.example.project.core.util.UiText
+import io.github.pawelzielinski.catantimer.core.domain.DataError
+import io.github.pawelzielinski.catantimer.core.util.UiText
 import catantimer.composeapp.generated.resources.error_bad_request
 import catantimer.composeapp.generated.resources.error_conflict
 import catantimer.composeapp.generated.resources.error_disk_full

@@ -1,4 +1,4 @@
-package org.example.project.core.designsystem
+package io.github.pawelzielinski.catantimer.core.designsystem
 
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme

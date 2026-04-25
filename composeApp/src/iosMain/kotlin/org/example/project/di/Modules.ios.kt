@@ -1,7 +1,7 @@
-package org.example.project.di
+package io.github.pawelzielinski.catantimer.di
 
-import org.example.project.catan_companion_feature.data.local.DatabaseFactory
-import org.example.project.catan_companion_feature.presentation.service.HapticService
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.DatabaseFactory
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.service.HapticService
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.presentation.gameplay
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay
 
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
 
 sealed interface GameplayAction {
     // Screen

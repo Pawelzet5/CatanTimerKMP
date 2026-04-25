@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -7,12 +7,12 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeTurnRepository
-import org.example.project.catan_companion_feature.domain.usecase.GetGameStatisticsUseCase
-import org.example.project.catan_companion_feature.presentation.gamesummary.GameSummaryViewModel
-import org.example.project.catan_companion_feature.testGame
-import org.example.project.catan_companion_feature.testTurnWithDice
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeGameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeTurnRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase.GetGameStatisticsUseCase
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gamesummary.GameSummaryViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.testGame
+import io.github.pawelzielinski.catantimer.catan_companion_feature.testTurnWithDice
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

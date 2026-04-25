@@ -1,9 +1,9 @@
-package org.example.project.catan_companion_feature.data.local.dao
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import org.example.project.catan_companion_feature.data.local.entity.GamePlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GamePlayerEntity
 
 @Dao
 interface GamePlayerDao {

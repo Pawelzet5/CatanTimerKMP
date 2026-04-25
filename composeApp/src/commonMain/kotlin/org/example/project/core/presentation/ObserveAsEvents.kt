@@ -1,4 +1,4 @@
-package org.example.project.core.presentation
+package io.github.pawelzielinski.catantimer.core.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

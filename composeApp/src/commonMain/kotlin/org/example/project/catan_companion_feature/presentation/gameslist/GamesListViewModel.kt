@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gameslist
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.catan_companion_feature.presentation.service.HapticService
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.service.HapticService
 
 class GamesListViewModel(
     private val gameRepository: GameRepository,

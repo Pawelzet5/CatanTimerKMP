@@ -1,8 +1,8 @@
-package org.example.project.catan_companion_feature.data.fakes.dao
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.dao
 
 import kotlinx.coroutines.flow.*
-import org.example.project.catan_companion_feature.data.local.dao.PlayerDao
-import org.example.project.catan_companion_feature.data.local.entity.PlayerEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.PlayerDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.PlayerEntity
 
 class FakePlayerDao : PlayerDao {
 

@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.domain.dataclass
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass
 
 data class GamePlayer(
     val gameId: Long,

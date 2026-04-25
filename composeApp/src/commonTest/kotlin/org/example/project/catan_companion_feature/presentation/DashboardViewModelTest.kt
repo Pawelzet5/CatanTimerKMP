@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -7,10 +7,10 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
-import org.example.project.catan_companion_feature.data.fakes.repository.FakePlayerRepository
-import org.example.project.catan_companion_feature.presentation.dashboard.DashboardViewModel
-import org.example.project.catan_companion_feature.testGame
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeGameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakePlayerRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.dashboard.DashboardViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.testGame
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test

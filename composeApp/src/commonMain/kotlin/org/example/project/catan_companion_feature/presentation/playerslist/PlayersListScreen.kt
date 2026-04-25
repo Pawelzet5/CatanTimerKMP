@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.playerslist
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerslist
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -57,14 +57,14 @@ import catantimer.composeapp.generated.resources.players_hide
 import catantimer.composeapp.generated.resources.players_name_hint
 import catantimer.composeapp.generated.resources.players_selection_hint
 import catantimer.composeapp.generated.resources.players_title
-import org.example.project.catan_companion_feature.domain.dataclass.Player
-import org.example.project.catan_companion_feature.presentation.components.ConfirmationDialog
-import org.example.project.catan_companion_feature.presentation.components.PlayerAvatar
-import org.example.project.catan_companion_feature.presentation.components.PlayerAvatarSize
-import org.example.project.catan_companion_feature.presentation.components.PlayerListItem
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.components.CatanCheckbox
-import org.example.project.core.presentation.ObserveAsEvents
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Player
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.ConfirmationDialog
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.PlayerAvatar
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.PlayerAvatarSize
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.PlayerListItem
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.components.CatanCheckbox
+import io.github.pawelzielinski.catantimer.core.presentation.ObserveAsEvents
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.resources.vectorResource
 import org.koin.compose.viewmodel.koinViewModel

@@ -1,9 +1,9 @@
-package org.example.project.catan_companion_feature.domain.usecase
+package io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase
 
 import kotlinx.coroutines.test.runTest
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
-import org.example.project.core.domain.IllegalOperationError
-import org.example.project.core.domain.Result
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeGameRepository
+import io.github.pawelzielinski.catantimer.core.domain.IllegalOperationError
+import io.github.pawelzielinski.catantimer.core.domain.Result
 import kotlin.test.Test
 import kotlin.test.assertIs
 import kotlin.test.assertTrue

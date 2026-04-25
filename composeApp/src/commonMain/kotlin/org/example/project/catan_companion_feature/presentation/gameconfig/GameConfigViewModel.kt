@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gameconfig
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
-import org.example.project.catan_companion_feature.domain.usecase.CreateGameUseCase
-import org.example.project.core.domain.Result
-import org.example.project.core.presentation.toUiText
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.PlayerRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase.CreateGameUseCase
+import io.github.pawelzielinski.catantimer.core.domain.Result
+import io.github.pawelzielinski.catantimer.core.presentation.toUiText
 
 class GameConfigViewModel(
     private val playerRepository: PlayerRepository,

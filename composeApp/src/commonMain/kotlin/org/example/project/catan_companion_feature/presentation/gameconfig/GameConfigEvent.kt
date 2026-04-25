@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.gameconfig
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig
 
 sealed interface GameConfigEvent {
     data object NavigateBack : GameConfigEvent

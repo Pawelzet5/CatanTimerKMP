@@ -1,8 +1,8 @@
-package org.example.project.catan_companion_feature.data.local.entity
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import org.example.project.core.util.currentTimeMillis
+import io.github.pawelzielinski.catantimer.core.util.currentTimeMillis
 
 @Entity(tableName = "players")
 data class PlayerEntity(

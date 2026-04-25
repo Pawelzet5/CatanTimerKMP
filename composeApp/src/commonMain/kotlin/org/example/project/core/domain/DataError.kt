@@ -1,4 +1,4 @@
-package org.example.project.core.domain
+package io.github.pawelzielinski.catantimer.core.domain
 
 sealed interface DataError : Error {
     enum class Remote : DataError {

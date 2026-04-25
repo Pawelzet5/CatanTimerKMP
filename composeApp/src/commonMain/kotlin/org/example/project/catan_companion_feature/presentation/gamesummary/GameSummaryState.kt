@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.presentation.gamesummary
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gamesummary
 
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.GameStatistics
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.GameStatistics
 
 data class GameSummaryState(
     val game: Game? = null,

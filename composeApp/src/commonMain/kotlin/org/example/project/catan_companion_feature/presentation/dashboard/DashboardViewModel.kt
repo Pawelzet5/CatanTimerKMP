@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.dashboard
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import org.example.project.catan_companion_feature.domain.repository.GameRepository
-import org.example.project.catan_companion_feature.domain.repository.PlayerRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.repository.PlayerRepository
 
 class DashboardViewModel(
     private val gameRepository: GameRepository,

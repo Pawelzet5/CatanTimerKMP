@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.components.gameplay
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.gameplay
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,22 +35,22 @@ import catantimer.composeapp.generated.resources.event_robber_not_active
 import catantimer.composeapp.generated.resources.event_thief_title
 import catantimer.composeapp.generated.resources.gameplay_continue_to_timer
 import catantimer.composeapp.generated.resources.ic_barbarians
-import org.example.project.catan_companion_feature.domain.dataclass.BarbarianState
-import org.example.project.catan_companion_feature.domain.dataclass.Game
-import org.example.project.catan_companion_feature.domain.dataclass.Turn
-import org.example.project.catan_companion_feature.domain.enums.EventDiceType
-import org.example.project.catan_companion_feature.domain.enums.GameExpansion
-import org.example.project.catan_companion_feature.presentation.gameplay.EventStep
-import org.example.project.catan_companion_feature.presentation.components.dice.Dice
-import org.example.project.catan_companion_feature.presentation.components.dice.EventDice
-import org.example.project.core.designsystem.CatanDiceRedBackground
-import org.example.project.core.designsystem.CatanDiceRedDot
-import org.example.project.core.designsystem.CatanDiceYellowBackground
-import org.example.project.core.designsystem.CatanDiceYellowDot
-import org.example.project.core.designsystem.CatanSpacing
-import org.example.project.core.designsystem.CatanWarning
-import org.example.project.core.designsystem.catanColors
-import org.example.project.core.designsystem.components.CatanButton
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.BarbarianState
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Game
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.dataclass.Turn
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.EventStep
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.dice.Dice
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.dice.EventDice
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceRedBackground
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceRedDot
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceYellowBackground
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanDiceYellowDot
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanWarning
+import io.github.pawelzielinski.catantimer.core.designsystem.catanColors
+import io.github.pawelzielinski.catantimer.core.designsystem.components.CatanButton
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

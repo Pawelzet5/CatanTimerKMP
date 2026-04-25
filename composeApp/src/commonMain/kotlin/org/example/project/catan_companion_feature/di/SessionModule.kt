@@ -1,7 +1,7 @@
-package org.example.project.catan_companion_feature.di
+package io.github.pawelzielinski.catantimer.catan_companion_feature.di
 
-import org.example.project.catan_companion_feature.domain.session.DefaultGameSessionCoordinator
-import org.example.project.catan_companion_feature.domain.session.GameSessionCoordinator
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.session.DefaultGameSessionCoordinator
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.session.GameSessionCoordinator
 import org.koin.dsl.module
 
 val sessionModule = module {

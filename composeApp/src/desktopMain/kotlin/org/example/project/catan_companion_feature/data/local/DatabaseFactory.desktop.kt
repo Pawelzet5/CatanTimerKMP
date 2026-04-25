@@ -1,8 +1,8 @@
-package org.example.project.catan_companion_feature.data.local
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.local
 
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import org.example.project.catan_companion_feature.AppConstants
+import io.github.pawelzielinski.catantimer.catan_companion_feature.AppConstants
 import java.io.File
 
 actual class DatabaseFactory {

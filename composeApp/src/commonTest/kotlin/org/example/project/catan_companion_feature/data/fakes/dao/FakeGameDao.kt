@@ -1,11 +1,11 @@
-package org.example.project.catan_companion_feature.data.fakes.dao
+package io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.dao
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-import org.example.project.catan_companion_feature.data.local.dao.GameDao
-import org.example.project.catan_companion_feature.data.local.entity.GameEntity
-import org.example.project.catan_companion_feature.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.GameDao
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.entity.GameEntity
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameStatus
 
 class FakeGameDao : GameDao {
 

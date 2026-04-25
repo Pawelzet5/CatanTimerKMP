@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation.service
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.service
 
 import android.content.Context
 import android.os.Build

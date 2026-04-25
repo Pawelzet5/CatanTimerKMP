@@ -1,4 +1,4 @@
-package org.example.project.catan_companion_feature.presentation
+package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -8,13 +8,13 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
-import org.example.project.catan_companion_feature.data.fakes.repository.FakeGameRepository
-import org.example.project.catan_companion_feature.data.fakes.repository.FakePlayerRepository
-import org.example.project.catan_companion_feature.domain.usecase.CreateGameUseCase
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigAction
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigEvent
-import org.example.project.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
-import org.example.project.catan_companion_feature.testPlayer
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakeGameRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.data.fakes.repository.FakePlayerRepository
+import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.usecase.CreateGameUseCase
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigAction
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigEvent
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.testPlayer
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
