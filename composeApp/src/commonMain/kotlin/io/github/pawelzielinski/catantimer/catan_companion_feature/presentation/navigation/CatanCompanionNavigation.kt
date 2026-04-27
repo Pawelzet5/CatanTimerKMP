@@ -2,6 +2,7 @@ package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation
 
 import kotlinx.serialization.Serializable
 
+@Serializable data object CatanCompanionNavGraph
 @Serializable data object DashboardRoute
 @Serializable data object GameConfigRoute
 @Serializable data class GameplayRoute(val gameId: Long)

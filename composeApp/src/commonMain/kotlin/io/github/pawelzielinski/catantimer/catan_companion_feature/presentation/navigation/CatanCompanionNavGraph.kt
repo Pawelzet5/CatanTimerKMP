@@ -1,23 +1,28 @@
 package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.navigation
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import androidx.navigation.toRoute
 import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.dashboard.DashboardScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigAction
 import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.GameConfigViewModel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameconfig.PlayersSelectionViewModel
 import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameplay.GameplayScreenRoot
 import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gameslist.GamesListScreenRoot
 import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.gamesummary.GameSummaryScreenRoot
-import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.winnerselection.WinnerSelectionScreenRoot
 import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerdetails.PlayerDetailsScreenRoot
 import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.playerslist.PlayersListScreenRoot
+import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.winnerselection.WinnerSelectionScreenRoot
+import org.koin.compose.viewmodel.koinViewModel
 
-fun NavGraphBuilder.catanCompanionGraph(
-    navController: NavController,
-) {
-    navigation<DashboardRoute>(startDestination = DashboardRoute) {
+fun NavGraphBuilder.catanCompanionGraph(navController: NavController) {
+    navigation<CatanCompanionNavGraph>(startDestination = DashboardRoute) {
         composable<DashboardRoute> {
             DashboardScreenRoot(
                 onNewGame = { navController.navigate(GameConfigRoute) },
@@ -26,11 +31,25 @@ fun NavGraphBuilder.catanCompanionGraph(
                 onPlayersList = { navController.navigate(PlayersListRoute()) }
             )
         }
-        composable<GameConfigRoute> {
+        composable<GameConfigRoute> { backStackEntry ->
+            val viewModel = koinViewModel<GameConfigViewModel>(viewModelStoreOwner = backStackEntry)
+            val selectionViewModel = koinViewModel<PlayersSelectionViewModel>(viewModelStoreOwner = backStackEntry)
+            val pendingSelection by selectionViewModel.pendingSelection.collectAsState()
+            LaunchedEffect(pendingSelection) {
+                pendingSelection?.let { players ->
+                    viewModel.onAction(GameConfigAction.PlayersSelected(players))
+                    selectionViewModel.clearSelection()
+                }
+            }
             GameConfigScreenRoot(
                 onNavigateBack = { navController.popBackStack() },
-                onGameCreated = { gameId -> navController.navigate(GameplayRoute(gameId)) },
-                onAddPlayer = { navController.navigate(PlayersListRoute(selectionMode = true)) }
+                onGameCreated = { gameId ->
+                    navController.navigate(GameplayRoute(gameId)) {
+                        popUpTo<DashboardRoute>()
+                    }
+                },
+                onAddPlayer = { navController.navigate(PlayersListRoute(selectionMode = true)) },
+                viewModel = viewModel
             )
         }
         composable<GameplayRoute> { backStackEntry ->
@@ -45,11 +64,21 @@ fun NavGraphBuilder.catanCompanionGraph(
         }
         composable<PlayersListRoute> { backStackEntry ->
             val route: PlayersListRoute = backStackEntry.toRoute()
+            val selectionViewModel = koinViewModel<PlayersSelectionViewModel>(
+                viewModelStoreOwner = if (route.selectionMode) {
+                    navController.getBackStackEntry(GameConfigRoute)
+                } else {
+                    backStackEntry
+                }
+            )
             PlayersListScreenRoot(
                 isSelectionMode = route.selectionMode,
                 onNavigateBack = { navController.popBackStack() },
                 onPlayerClick = { playerId -> navController.navigate(PlayerDetailsRoute(playerId)) },
-                onPlayersSelected = { navController.popBackStack() }
+                onPlayersSelected = { players ->
+                    selectionViewModel.setSelectedPlayers(players)
+                    navController.popBackStack()
+                }
             )
         }
         composable<PlayerDetailsRoute> { backStackEntry ->
