@@ -5,7 +5,7 @@ import catantimer.composeapp.generated.resources.error_unknown
 import catantimer.composeapp.generated.resources.validation_duplicate_players
 import catantimer.composeapp.generated.resources.validation_in_between_requires_5
 import catantimer.composeapp.generated.resources.validation_player_count
-import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.error.GameValidationError
+import io.github.pawelzielinski.catantimer.catanCompanion.domain.error.GameValidationError
 import io.github.pawelzielinski.catantimer.core.util.UiText
 
 fun GameValidationError.toUiText(): UiText = UiText.StringResourceId(

@@ -1,6 +1,6 @@
 package io.github.pawelzielinski.catantimer.di
 
-import io.github.pawelzielinski.catantimer.catan_companion_feature.di.catanCompanionModule
+import io.github.pawelzielinski.catantimer.catanCompanion.di.catanCompanionModule
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 
