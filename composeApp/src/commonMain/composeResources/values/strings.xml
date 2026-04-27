@@ -56,6 +56,7 @@
     <string name="stats_event_dice">Event Dice</string>
     <string name="stats_total_turns">Total turns</string>
     <string name="stats_avg_turn_time">Average turn time</string>
+    <string name="stats_player_avg">avg %1$s</string>
     <string name="stats_game_stats">Game Stats</string>
     <string name="stats_thief_rolled">Thief rolled</string>
     <string name="stats_barbarian_attacks">Barbarian attacks</string>
@@ -91,7 +92,7 @@
     <string name="player_details_win_rate">Win Rate</string>
     <string name="player_details_statistics">Statistics</string>
     <string name="player_details_since">Player since %1$s</string>
-==    <string name="player_details_games_stats">%1$d games · %2$d wins · %3$d%%</string>
+    <string name="player_details_games_stats">%1$d games · %2$d wins · %3$d%%</string>
 
     <!-- Players Selection Mode -->
     <string name="players_add_title">Add Players</string>

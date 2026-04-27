@@ -29,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -48,6 +47,7 @@ import catantimer.composeapp.generated.resources.ic_timer
 import catantimer.composeapp.generated.resources.ic_winner
 import catantimer.composeapp.generated.resources.stats_avg_turn_time
 import catantimer.composeapp.generated.resources.stats_barbarian_attacks
+import catantimer.composeapp.generated.resources.stats_player_avg
 import catantimer.composeapp.generated.resources.stats_dice_distribution
 import catantimer.composeapp.generated.resources.stats_game_stats
 import catantimer.composeapp.generated.resources.stats_thief_rolled
@@ -58,8 +58,10 @@ import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.datacl
 import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.EventDiceType
 import io.github.pawelzielinski.catantimer.catan_companion_feature.domain.enums.GameExpansion
 import io.github.pawelzielinski.catantimer.catan_companion_feature.presentation.components.charts.DiceStatisticsChart
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanBgSecondary
 import io.github.pawelzielinski.catantimer.core.designsystem.CatanBrown
 import io.github.pawelzielinski.catantimer.core.designsystem.CatanOrange
+import io.github.pawelzielinski.catantimer.core.designsystem.CatanOrangeSubtle
 import io.github.pawelzielinski.catantimer.core.designsystem.CatanSpacing
 import io.github.pawelzielinski.catantimer.core.designsystem.components.CatanButton
 import io.github.pawelzielinski.catantimer.core.presentation.ObserveAsEvents
@@ -181,20 +183,20 @@ private fun TrophyBanner(winnerName: String) {
             Icon(
                 painter = painterResource(Res.drawable.ic_winner),
                 contentDescription = null,
-                tint = Color(0xFFFFF7ED),
+                tint = CatanBgSecondary,
                 modifier = Modifier.size(40.dp)
             )
             Text(
                 text = stringResource(Res.string.end_game_winner_label).uppercase(),
                 style = MaterialTheme.typography.labelSmall,
-                color = Color(0xFFFFEDD5).copy(alpha = 0.7f),
+                color = CatanOrangeSubtle.copy(alpha = 0.7f),
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 2.sp
             )
             Text(
                 text = winnerName,
                 style = MaterialTheme.typography.headlineSmall,
-                color = Color(0xFFFFF7ED),
+                color = CatanBgSecondary,
                 fontWeight = FontWeight.Bold
             )
         }
@@ -352,7 +354,7 @@ private fun PlayerStatsCard(game: Game, statistics: GameStatistics) {
                         }
                     }
                     Text(
-                        text = "avg ${formatDurationMillis(avgMillis)}",
+                        text = stringResource(Res.string.stats_player_avg, formatDurationMillis(avgMillis)),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

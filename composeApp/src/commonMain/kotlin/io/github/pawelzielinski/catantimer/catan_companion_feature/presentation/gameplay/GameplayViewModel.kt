@@ -3,6 +3,7 @@ package io.github.pawelzielinski.catantimer.catan_companion_feature.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.channels.Channel
+import io.github.pawelzielinski.catantimer.catan_companion_feature.AppConstants
 import io.github.pawelzielinski.catantimer.core.util.currentTimeMillis
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -113,7 +114,7 @@ class GameplayViewModel(
             GameplayAction.ContinueFromEventClick -> onContinueFromEvent()
             GameplayAction.TimerToggleClick -> if (_uiState.value.timerState.isRunning) timerManager.stop() else timerManager.start(_uiState.value.timerState.remainingMillis)
             GameplayAction.AddTimeClick -> timerManager.addTime(10_000L)
-            GameplayAction.ResetTimerClick -> timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
+            GameplayAction.ResetTimerClick -> timerManager.reset(_uiState.value.game?.turnDurationMillis ?: AppConstants.DEFAULT_TURN_DURATION_MS)
             GameplayAction.NextTurnClick -> onNextTurn()
             GameplayAction.InBetweenTurnClick -> onStartInBetweenTurn()
             GameplayAction.SaveHistoricalEditClick -> _uiState.update { it.copy(showHistoricalEditConfirm = true) }
@@ -152,7 +153,7 @@ class GameplayViewModel(
             sessionCoordinator.updateSelectedTurnDice(dice.red, dice.yellow, dice.event)
             val firstStep = computeFirstEventStep(dice.event, dice.sum == 7, previousEventDice, barbarianState, expansions)
             if (firstStep == null) {
-                timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
+                timerManager.reset(_uiState.value.game?.turnDurationMillis ?: AppConstants.DEFAULT_TURN_DURATION_MS)
                 _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER, pendingDiceEdit = null) }
             } else {
                 _uiState.update { it.copy(phase = GameplayPhase.EVENT, eventStep = firstStep, pendingDiceEdit = null) }
@@ -167,7 +168,7 @@ class GameplayViewModel(
             _uiState.update { it.copy(eventStep = EventStep.ROBBER) }
             return
         }
-        timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
+        timerManager.reset(_uiState.value.game?.turnDurationMillis ?: AppConstants.DEFAULT_TURN_DURATION_MS)
         _uiState.update { it.copy(phase = GameplayPhase.MAIN_TIMER, eventStep = null) }
     }
 
@@ -198,7 +199,7 @@ class GameplayViewModel(
 
     private fun onStartInBetweenTurn() {
         primaryElapsedMillis = timerManager.stop()
-        timerManager.reset(_uiState.value.game?.turnDurationMillis ?: 120_000L)
+        timerManager.reset(_uiState.value.game?.turnDurationMillis ?: AppConstants.DEFAULT_TURN_DURATION_MS)
         _uiState.update { it.copy(phase = GameplayPhase.IN_BETWEEN_TIMER) }
     }
 
