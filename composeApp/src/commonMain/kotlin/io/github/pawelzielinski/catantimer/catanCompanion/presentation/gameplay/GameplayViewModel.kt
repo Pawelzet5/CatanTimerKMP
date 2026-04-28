@@ -20,16 +20,16 @@ import io.github.pawelzielinski.catantimer.catanCompanion.domain.dataclass.DiceR
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.dataclass.toBarbarianState
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.enums.EventDiceType
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.enums.GameExpansion
-import io.github.pawelzielinski.catantimer.catanCompanion.domain.repository.GameRepository
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.repository.TurnRepository
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.session.GameSessionCoordinator
+import io.github.pawelzielinski.catantimer.catanCompanion.domain.usecase.UpdateGameSettingsUseCase
 import io.github.pawelzielinski.catantimer.catanCompanion.presentation.service.HapticService
 
 class GameplayViewModel(
     private val gameId: Long,
     private val sessionCoordinator: GameSessionCoordinator,
     private val turnRepository: TurnRepository,
-    private val gameRepository: GameRepository,
+    private val updateGameSettingsUseCase: UpdateGameSettingsUseCase,
     private val hapticService: HapticService
 ) : ViewModel() {
 
@@ -269,8 +269,14 @@ class GameplayViewModel(
     }
 
     private fun onUpdateGameSettings(expansions: Set<GameExpansion>, specialTurnRuleEnabled: Boolean) {
+        val playerCount = sessionCoordinator.currentSession.value?.game?.players?.size ?: return
         viewModelScope.launch {
-            gameRepository.updateGameSettings(gameId, expansions, specialTurnRuleEnabled)
+            updateGameSettingsUseCase(
+                gameId = gameId,
+                playerCount = playerCount,
+                expansions = expansions,
+                specialTurnRuleEnabled = specialTurnRuleEnabled
+            )
             _uiState.update { it.copy(showSettingsSheet = false) }
         }
     }

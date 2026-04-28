@@ -12,7 +12,7 @@ fun GameValidationError.toUiText(): UiText = UiText.StringResourceId(
     when (this) {
         GameValidationError.InvalidPlayerCount -> Res.string.validation_player_count
         GameValidationError.DuplicatePlayers -> Res.string.validation_duplicate_players
-        GameValidationError.SpecialTurnRuleRequiresFivePlayers -> Res.string.validation_in_between_requires_5
+        GameValidationError.InsufficientPlayersForSpecialTurnRule -> Res.string.validation_in_between_requires_5
         GameValidationError.StorageError -> Res.string.error_unknown
     }
 )

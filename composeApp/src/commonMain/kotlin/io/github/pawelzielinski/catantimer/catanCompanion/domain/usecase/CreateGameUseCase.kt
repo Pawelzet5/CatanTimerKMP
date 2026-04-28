@@ -3,6 +3,7 @@ package io.github.pawelzielinski.catantimer.catanCompanion.domain.usecase
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.enums.GameExpansion
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.error.GameValidationError
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.catanCompanion.domain.validation.validateSpecialTurnRule
 import io.github.pawelzielinski.catantimer.core.domain.Result
 
 class CreateGameUseCase(
@@ -24,9 +25,8 @@ class CreateGameUseCase(
         if (playerIds.distinct().size != playerIds.size) {
             return Result.Failure(GameValidationError.DuplicatePlayers)
         }
-        if (specialTurnRuleEnabled && playerIds.size < 5) {
-            return Result.Failure(GameValidationError.SpecialTurnRuleRequiresFivePlayers)
-        }
+        validateSpecialTurnRule(playerIds.size, specialTurnRuleEnabled)
+            ?.let { return Result.Failure(it) }
         return when (val result = gameRepository.createGame(
             turnDurationMillis = turnDurationMillis,
             expansions = expansions,
