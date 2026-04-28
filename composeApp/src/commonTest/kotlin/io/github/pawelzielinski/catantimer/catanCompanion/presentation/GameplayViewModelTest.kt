@@ -10,6 +10,7 @@ import kotlinx.coroutines.test.setMain
 import io.github.pawelzielinski.catantimer.catanCompanion.data.fakes.FakeGameSessionCoordinator
 import io.github.pawelzielinski.catantimer.catanCompanion.data.fakes.repository.FakeGameRepository
 import io.github.pawelzielinski.catantimer.catanCompanion.data.fakes.repository.FakeTurnRepository
+import io.github.pawelzielinski.catantimer.catanCompanion.domain.usecase.UpdateGameSettingsUseCase
 import io.github.pawelzielinski.catantimer.catanCompanion.presentation.gameplay.GameplayAction
 import io.github.pawelzielinski.catantimer.catanCompanion.presentation.gameplay.GameplayPhase
 import io.github.pawelzielinski.catantimer.catanCompanion.presentation.gameplay.GameplayViewModel
@@ -105,7 +106,7 @@ class GameplayViewModelTest {
         gameId = 1L,
         sessionCoordinator = coordinator,
         turnRepository = FakeTurnRepository(),
-        gameRepository = FakeGameRepository(),
+        updateGameSettingsUseCase = UpdateGameSettingsUseCase(FakeGameRepository()),
         hapticService = HapticService
     )
 }
