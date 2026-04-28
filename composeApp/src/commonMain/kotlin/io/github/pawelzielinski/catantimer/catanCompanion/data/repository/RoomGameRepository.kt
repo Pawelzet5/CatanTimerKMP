@@ -1,11 +1,8 @@
 package io.github.pawelzielinski.catantimer.catanCompanion.data.repository
 
-import androidx.room.immediateTransaction
-import androidx.room.useWriterConnection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import io.github.pawelzielinski.catantimer.catanCompanion.data.local.CatanCompanionDatabase
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.dao.GameDao
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.dao.GamePlayerDao
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.dao.PlayerDao
@@ -16,6 +13,7 @@ import io.github.pawelzielinski.catantimer.catanCompanion.domain.dataclass.Game
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.enums.GameExpansion
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.enums.GameStatus
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.repository.GameRepository
+import io.github.pawelzielinski.catantimer.core.data.TransactionRunner
 import io.github.pawelzielinski.catantimer.core.data.tryLocalWrite
 import io.github.pawelzielinski.catantimer.core.domain.DataError
 import io.github.pawelzielinski.catantimer.core.domain.EmptyResult
@@ -23,7 +21,7 @@ import io.github.pawelzielinski.catantimer.core.domain.Result
 import kotlin.time.Clock
 
 class RoomGameRepository(
-    private val database: CatanCompanionDatabase,
+    private val transactionRunner: TransactionRunner,
     private val gameDao: GameDao,
     private val gamePlayerDao: GamePlayerDao,
     private val playerDao: PlayerDao
@@ -50,27 +48,23 @@ class RoomGameRepository(
         specialTurnRuleEnabled: Boolean,
         playerIds: List<Long>
     ): Result<Long, DataError.Local> = tryLocalWrite {
-        val gameId = database.useWriterConnection {
-            it.immediateTransaction {
-                val id = gameDao.insert(
-                    GameEntity(
-                        turnDurationMillis = turnDurationMillis,
-                        expansions = expansions,
-                        specialTurnRuleEnabled = specialTurnRuleEnabled,
-                        status = GameStatus.IN_PROGRESS,
-                        startedAt = Clock.System.now().epochSeconds
-                    )
+        val gameId = transactionRunner.run {
+            val id = gameDao.insert(
+                GameEntity(
+                    turnDurationMillis = turnDurationMillis,
+                    expansions = expansions,
+                    specialTurnRuleEnabled = specialTurnRuleEnabled,
+                    status = GameStatus.IN_PROGRESS,
+                    startedAt = Clock.System.now().epochSeconds
                 )
-
-                gamePlayerDao.insertAll(
-                    playerIds.mapIndexed { index, playerId ->
-                        GamePlayerEntity(gameId = id, playerId = playerId, orderIndex = index)
-                    }
-                )
-                id
-            }
+            )
+            gamePlayerDao.insertAll(
+                playerIds.mapIndexed { index, playerId ->
+                    GamePlayerEntity(gameId = id, playerId = playerId, orderIndex = index)
+                }
+            )
+            id
         }
-
         Result.Success(gameId)
     }
 

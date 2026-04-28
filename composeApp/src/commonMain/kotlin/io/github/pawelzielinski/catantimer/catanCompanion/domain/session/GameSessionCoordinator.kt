@@ -19,12 +19,28 @@ import io.github.pawelzielinski.catantimer.core.domain.onFailure
 import io.github.pawelzielinski.catantimer.core.domain.onSuccess
 
 interface GameSessionCoordinator {
+    /** The currently active session, or null when no game is in progress. */
     val currentSession: StateFlow<GameSession?>
+
+    /** Initializes a session for [gameId], restoring existing turns or creating the first one. */
     suspend fun startSession(gameId: Long): EmptyResult<DataError.Local>
+
+    /** Marks the current game as finished and clears the session. */
     suspend fun finishSession(finishedAt: Long, winnerId: Long?): EmptyResult<DataError.Local>
+
+    /**
+     * Completes the active turn with the given duration and creates the next turn.
+     * Returns [IllegalOperationError] if called while a historical turn is selected.
+     */
     suspend fun completeTurn(durationMillis: Long): Result<Unit, Error>
+
+    /** Updates dice rolls for the currently selected turn and persists immediately. */
     suspend fun updateSelectedTurnDice(redDice: Int?, yellowDice: Int?, eventDice: EventDiceType?): EmptyResult<DataError.Local>
+
+    /** Updates duration for the currently selected turn and persists immediately. */
     suspend fun updateSelectedTurnDuration(durationMillis: Long): EmptyResult<DataError.Local>
+
+    /** Updates dice rolls for any turn (including historical ones) and syncs all in-memory copies. */
     suspend fun updateTurnDice(turn: Turn, redDice: Int?, yellowDice: Int?, eventDice: EventDiceType?): EmptyResult<DataError.Local>
 }
 
