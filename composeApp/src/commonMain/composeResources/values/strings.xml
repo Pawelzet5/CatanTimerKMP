@@ -56,6 +56,7 @@
     <string name="stats_event_dice">Event Dice</string>
     <string name="stats_total_turns">Total turns</string>
     <string name="stats_avg_turn_time">Average turn time</string>
+    <string name="stats_player_avg">avg %1$s</string>
     <string name="stats_game_stats">Game Stats</string>
     <string name="stats_thief_rolled">Thief rolled</string>
     <string name="stats_barbarian_attacks">Barbarian attacks</string>
@@ -91,7 +92,7 @@
     <string name="player_details_win_rate">Win Rate</string>
     <string name="player_details_statistics">Statistics</string>
     <string name="player_details_since">Player since %1$s</string>
-==    <string name="player_details_games_stats">%1$d games · %2$d wins · %3$d%%</string>
+    <string name="player_details_games_stats">%1$d games · %2$d wins · %3$d%%</string>
 
     <!-- Players Selection Mode -->
     <string name="players_add_title">Add Players</string>
@@ -156,18 +157,6 @@
     <string name="common_delete">Delete</string>
     <string name="common_edit">Edit</string>
     <string name="common_back">Back</string>
-
-
-    <!-- Remote Errors -->
-    <string name="error_bad_request">Invalid request. Please try again.</string>
-    <string name="error_request_timeout">The request timed out. Please check your connection.</string>
-    <string name="error_unauthorized">You are not authorized to perform this action.</string>
-    <string name="error_forbidden">Access denied.</string>
-    <string name="error_not_found">The requested resource was not found.</string>
-    <string name="error_conflict">A conflict occurred. Please update your data and try again.</string>
-    <string name="error_too_many_requests">Too many requests. Please wait a moment and try again.</string>
-    <string name="error_no_internet">No internet connection.</string>
-    <string name="error_server">A server error occurred. Please try again later.</string>
 
     <!-- Local Errors -->
     <string name="error_disk_full">Not enough storage space on device.</string>

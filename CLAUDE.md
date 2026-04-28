@@ -22,7 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ./gradlew :composeApp:testDebugUnitTest
 
 # Single test class
-./gradlew :composeApp:testDebugUnitTest --tests "org.example.project.catan_companion_feature.data.local.dao.RealTurnDaoContractTest"
+./gradlew :composeApp:testDebugUnitTest --tests "io.github.pawelzielinski.catantimer.catan_companion_feature.data.local.dao.RealTurnDaoContractTest"
 ```
 
 ---

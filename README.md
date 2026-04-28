@@ -1,48 +1,59 @@
-This is a Kotlin Multiplatform project targeting Android, iOS, Desktop (JVM).
+Catan Timer
 
-* [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./composeApp/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./composeApp/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./composeApp/src/jvmMain/kotlin)
-    folder is the appropriate location.
+A turn timer and game tracker for Catan and Cities & Knights, built with Kotlin Multiplatform and Compose Multiplatform — running natively on Android, iOS, and Desktop.
 
-* [/iosApp](./iosApp/iosApp) contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+Features
 
-### Build and Run Android Application
+- Turn timer — configurable per-game turn duration with haptic feedback when time runs out
+- Cities & Knights support — tracks the barbarian track, event die, and city gate phases per turn
+- Dice distribution — live histogram of dice rolls across the game
+- Game history — browse past games, review per-turn statistics and dice distributions
+- Player profiles — track win/loss records and turn-time averages per player
+- Winner selection — end-of-game flow with score entry
 
-To build and run the development version of the Android app, use the run configuration from the run widget
-in your IDE’s toolbar or build it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:assembleDebug
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:assembleDebug
-  ```
+Screenshots
 
-### Build and Run Desktop (JVM) Application
+Tech stack
 
-To build and run the development version of the desktop app, use the run configuration from the run widget
-in your IDE’s toolbar or run it directly from the terminal:
-- on macOS/Linux
-  ```shell
-  ./gradlew :composeApp:run
-  ```
-- on Windows
-  ```shell
-  .\gradlew.bat :composeApp:run
-  ```
+┌──────────────┬───────────────────────────────────────┐                                                                                                                                                        
+│    Layer     │              Technology               │
+├──────────────┼───────────────────────────────────────┤                                                                                                                                                        
+│ UI           │ Compose Multiplatform                 │  
+├──────────────┼───────────────────────────────────────┤
+│ Architecture │ MVI (State / Action / Event)          │
+├──────────────┼───────────────────────────────────────┤                                                                                                                                                        
+│ Navigation   │ Navigation Compose (type-safe routes) │
+├──────────────┼───────────────────────────────────────┤                                                                                                                                                        
+│ DI           │ Koin                                  │  
+├──────────────┼───────────────────────────────────────┤                                                                                                                                                        
+│ Local DB     │ Room (KMP)                            │
+├──────────────┼───────────────────────────────────────┤                                                                                                                                                        
+│ Async        │ Kotlin Coroutines + Flow              │  
+├──────────────┼───────────────────────────────────────┤                                                                                                                                                        
+│ Testing      │ kotlin.test, Turbine, Koin test       │
+└──────────────┴───────────────────────────────────────┘
 
-### Build and Run iOS Application
+Architecture
 
-To build and run the development version of the iOS app, use the run configuration from the run widget
-in your IDE’s toolbar or open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+The app follows a strict layered architecture:
 
----
+presentation/   ← Composables, ViewModels, State/Action/Event                                                                                                                                                   
+domain/         ← Use cases, repository interfaces, domain models                                                                                                                                               
+data/           ← Room DAOs, entities, repository implementations                                                                                                                                               
+core/           ← Shared types: Result, DataError, UiText, design system
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+GameSessionCoordinator is the central domain object — it manages in-memory game session state across turns and is the single source of truth for the active game, keeping ViewModels thin.
+
+Building
+
+# Android
+./gradlew :composeApp:assembleDebug
+
+# Desktop
+./gradlew :composeApp:run
+
+# iOS — open iosApp/iosApp.xcodeproj in Xcode
+
+Running tests
+
+./gradlew :composeApp:cleanAllTests :composeApp:allTests                                                              

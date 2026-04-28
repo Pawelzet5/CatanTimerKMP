@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <!-- Solid amber hex -->
+  <polygon points="60,8 102,32 102,80 60,104 18,80 18,32" fill="#D97706"/>
+  <!-- Short clock hand (12 o'clock) -->
+  <line x1="60" y1="60" x2="60" y2="30" stroke="#FFEDD5" stroke-width="7" stroke-linecap="round"/>
+  <!-- Long clock hand (4 o'clock) -->
+  <line x1="60" y1="60" x2="84" y2="80" stroke="#FFEDD5" stroke-width="5" stroke-linecap="round"/>
+  <!-- Hub dot -->
+  <circle cx="60" cy="60" r="6" fill="#9A3412"/>
+</svg>
