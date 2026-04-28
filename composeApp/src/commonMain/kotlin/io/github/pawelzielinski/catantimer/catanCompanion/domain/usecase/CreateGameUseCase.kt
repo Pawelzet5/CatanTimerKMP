@@ -8,6 +8,10 @@ import io.github.pawelzielinski.catantimer.core.domain.Result
 class CreateGameUseCase(
     private val gameRepository: GameRepository
 ) {
+    /**
+     * Validates the player list and game settings, then creates a new game.
+     * Returns the new game's id on success, or a [GameValidationError] on invalid input or storage failure.
+     */
     suspend operator fun invoke(
         turnDurationMillis: Long,
         expansions: Set<GameExpansion>,
