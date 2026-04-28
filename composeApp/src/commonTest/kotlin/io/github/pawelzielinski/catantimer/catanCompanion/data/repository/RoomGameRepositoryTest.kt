@@ -5,16 +5,12 @@ import kotlinx.coroutines.test.runTest
 import io.github.pawelzielinski.catantimer.catanCompanion.data.fakes.dao.FakeGameDao
 import io.github.pawelzielinski.catantimer.catanCompanion.data.fakes.dao.FakeGamePlayerDao
 import io.github.pawelzielinski.catantimer.catanCompanion.data.fakes.dao.FakePlayerDao
-import io.github.pawelzielinski.catantimer.catanCompanion.data.local.CatanCompanionDatabase
-import io.github.pawelzielinski.catantimer.catanCompanion.data.local.dao.GameDao
-import io.github.pawelzielinski.catantimer.catanCompanion.data.local.dao.GamePlayerDao
-import io.github.pawelzielinski.catantimer.catanCompanion.data.local.dao.PlayerDao
-import io.github.pawelzielinski.catantimer.catanCompanion.data.local.dao.TurnDao
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.entity.GameEntity
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.entity.GamePlayerEntity
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.entity.PlayerEntity
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.enums.GameExpansion
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.enums.GameStatus
+import io.github.pawelzielinski.catantimer.core.data.TransactionRunner
 import io.github.pawelzielinski.catantimer.core.domain.DataError
 import io.github.pawelzielinski.catantimer.core.domain.Result
 import kotlin.test.Test
@@ -28,9 +24,10 @@ class RoomGameRepositoryTest {
     private val fakeGameDao = FakeGameDao()
     private val fakeGamePlayerDao = FakeGamePlayerDao()
     private val fakePlayerDao = FakePlayerDao()
-    // createGame requires a real Room writer connection and is covered by integration tests
     private val repository = RoomGameRepository(
-        database = StubDatabase(),
+        transactionRunner = object : TransactionRunner {
+            override suspend fun <T> run(block: suspend () -> T): T = block()
+        },
         gameDao = fakeGameDao,
         gamePlayerDao = fakeGamePlayerDao,
         playerDao = fakePlayerDao
@@ -133,6 +130,33 @@ class RoomGameRepositoryTest {
     // region write methods
 
     @Test
+    fun `createGame, valid players, inserts game and game-player associations`() = runTest {
+        fakePlayerDao.addPlayers(
+            PlayerEntity(id = 1L, name = "Alice"),
+            PlayerEntity(id = 2L, name = "Bob"),
+            PlayerEntity(id = 3L, name = "Charlie")
+        )
+
+        val result = repository.createGame(
+            turnDurationMillis = 60_000L,
+            expansions = setOf(GameExpansion.SEAFARERS),
+            specialTurnRuleEnabled = false,
+            playerIds = listOf(1L, 2L, 3L)
+        )
+
+        assertIs<Result.Success<Long>>(result)
+        val gameId = result.data
+        repository.getGameById(gameId).test {
+            val game = awaitItem()
+            assertEquals(GameStatus.IN_PROGRESS, game?.status)
+            assertEquals(setOf(GameExpansion.SEAFARERS), game?.expansions)
+            assertEquals(3, game?.players?.size)
+            assertEquals(0, game?.players?.get(0)?.orderIndex)
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
     fun `updateGameSettings, game exists, updates expansions and specialTurnRuleEnabled`() = runTest {
         fakeGameDao.insert(baseGame.copy(id = 1L, expansions = emptySet(), specialTurnRuleEnabled = false))
 
@@ -208,11 +232,4 @@ class RoomGameRepositoryTest {
     }
 
     // endregion
-}
-
-private class StubDatabase : CatanCompanionDatabase() {
-    override fun playerDao(): PlayerDao = error("not needed in unit tests")
-    override fun gameDao(): GameDao = error("not needed in unit tests")
-    override fun gamePlayerDao(): GamePlayerDao = error("not needed in unit tests")
-    override fun turnDao(): TurnDao = error("not needed in unit tests")
 }
