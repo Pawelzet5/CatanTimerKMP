@@ -15,6 +15,7 @@ import io.github.pawelzielinski.catantimer.core.domain.EmptyResult
 import io.github.pawelzielinski.catantimer.core.domain.Error
 import io.github.pawelzielinski.catantimer.core.domain.IllegalOperationError
 import io.github.pawelzielinski.catantimer.core.domain.Result
+import io.github.pawelzielinski.catantimer.core.domain.getOrElse
 import io.github.pawelzielinski.catantimer.core.domain.onFailure
 import io.github.pawelzielinski.catantimer.core.domain.onSuccess
 
@@ -74,8 +75,7 @@ class DefaultGameSessionCoordinator(
         val currentTurn = if (turns.isEmpty()) {
             val template = TurnFactory.createFirst(game)
             val turnId = turnRepository.createTurn(gameId, template.playerId, template.number)
-                .onFailure { return Result.Failure(it) }
-                .let { (it as Result.Success).data }
+                .getOrElse { return Result.Failure(it) }
             if (template.secondaryPlayerId != null) {
                 turnRepository.setSecondaryPlayer(turnId, template.secondaryPlayerId)
                     .onFailure { return Result.Failure(it) }
@@ -133,8 +133,7 @@ class DefaultGameSessionCoordinator(
 
         val nextTemplate = TurnFactory.createNext(completedTurn, session.game)
         val nextTurnId = turnRepository.createTurn(gameId, nextTemplate.playerId, nextTemplate.number)
-            .onFailure { return Result.Failure(it) }
-            .let { (it as Result.Success).data }
+            .getOrElse { return Result.Failure(it) }
         if (nextTemplate.secondaryPlayerId != null) {
             turnRepository.setSecondaryPlayer(nextTurnId, nextTemplate.secondaryPlayerId)
                 .onFailure { return Result.Failure(it) }
