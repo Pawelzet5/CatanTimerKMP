@@ -7,6 +7,7 @@ import io.github.pawelzielinski.catantimer.catanCompanion.data.local.dao.PlayerD
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.entity.PlayerEntity
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.mapper.toDomain
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.mapper.toEntity
+import io.github.pawelzielinski.catantimer.catanCompanion.data.local.entity.PlayerWithGameCount
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.dataclass.Player
 import io.github.pawelzielinski.catantimer.catanCompanion.domain.repository.PlayerRepository
 import io.github.pawelzielinski.catantimer.core.data.tryLocalWrite
@@ -19,20 +20,10 @@ class RoomPlayerRepository(
 ) : PlayerRepository {
 
     override fun getAllPlayers(): Flow<List<Player>> =
-        playerDao.getAll().map { entities ->
-            entities.map { entity ->
-                val gamesPlayed = playerDao.getGameCount(entity.id)
-                entity.toDomain(gamesPlayed = gamesPlayed)
-            }
-        }
+        playerDao.getAllWithGameCount().map { it.map(PlayerWithGameCount::toDomain) }
 
     override fun getVisiblePlayers(): Flow<List<Player>> =
-        playerDao.getVisible().map { entities ->
-            entities.map { entity ->
-                val gamesPlayed = playerDao.getGameCount(entity.id)
-                entity.toDomain(gamesPlayed = gamesPlayed)
-            }
-        }
+        playerDao.getVisibleWithGameCount().map { it.map(PlayerWithGameCount::toDomain) }
 
     override fun getPlayerById(id: Long): Flow<Player?> =
         playerDao.getById(id).map { entity -> entity?.toDomain() }

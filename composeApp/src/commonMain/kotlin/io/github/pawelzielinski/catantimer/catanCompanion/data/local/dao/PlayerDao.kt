@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 import io.github.pawelzielinski.catantimer.catanCompanion.data.local.entity.PlayerEntity
+import io.github.pawelzielinski.catantimer.catanCompanion.data.local.entity.PlayerWithGameCount
 
 @Dao
 interface PlayerDao {
@@ -15,6 +16,25 @@ interface PlayerDao {
 
     @Query("SELECT * FROM players WHERE isHidden = 0 ORDER BY name ASC")
     fun getVisible(): Flow<List<PlayerEntity>>
+
+    @Query("""
+        SELECT p.*, COUNT(gp.gameId) AS gamesPlayed
+        FROM players p
+        LEFT JOIN game_players gp ON gp.playerId = p.id
+        GROUP BY p.id
+        ORDER BY gamesPlayed ASC
+    """)
+    fun getAllWithGameCount(): Flow<List<PlayerWithGameCount>>
+
+    @Query("""
+        SELECT p.*, COUNT(gp.gameId) AS gamesPlayed
+        FROM players p
+        LEFT JOIN game_players gp ON gp.playerId = p.id
+        WHERE p.isHidden = 0
+        GROUP BY p.id
+        ORDER BY gamesPlayed ASC
+    """)
+    fun getVisibleWithGameCount(): Flow<List<PlayerWithGameCount>>
 
     @Query("SELECT * FROM players WHERE id = :id")
     fun getById(id: Long): Flow<PlayerEntity?>
